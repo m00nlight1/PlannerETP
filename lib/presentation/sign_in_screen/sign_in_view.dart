@@ -4,8 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'widgets/SignInButton.dart';
 import 'widgets/SignInTextField.dart';
 
-class SignIn extends StatelessWidget {
-  const SignIn({super.key});
+class SignInView extends StatelessWidget {
+  const SignInView({super.key});
 
   void signUserIn() {}
 
@@ -96,9 +96,12 @@ class SignIn extends StatelessWidget {
                     style: theme.textTheme.bodyMedium,
                   ),
                   const SizedBox(width: 4),
-                  Text(
-                    'Register now',
-                    style: theme.textTheme.labelMedium,
+                  TextButton(
+                    child: Text(
+                      'Register now',
+                      style: theme.textTheme.labelMedium,
+                    ),
+                    onPressed: () => Navigator.of(context).pushNamed('/sign-up'),
                   ),
                 ],
               )

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'config/app_theme.dart';
-import 'presentation/sign_in_screen/sign_in_view.dart';
+import 'config/router/app_router.dart';
+import 'config/theme/app_theme.dart';
 
 void main() {
   runApp(const PlannerETP());
@@ -15,7 +15,7 @@ class PlannerETP extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
-      home: const SignIn(),
+      routes: routes,
     );
   }
 }
