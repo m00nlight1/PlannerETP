@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-class SignInTextField extends StatelessWidget {
+class AuthTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
+  final Icon prefixIcon;
 
-  const SignInTextField({
+  const AuthTextField({
     super.key,
     required this.hintText,
-    required this.obscureText
+    required this.obscureText,
+    required this.prefixIcon
   });
 
   @override
@@ -25,6 +27,7 @@ class SignInTextField extends StatelessWidget {
             ),
             fillColor: Colors.grey.shade200,
             filled: true,
+            prefixIcon: prefixIcon,
             hintText: hintText,
             hintStyle: TextStyle(color: Colors.grey[500])),
       ),

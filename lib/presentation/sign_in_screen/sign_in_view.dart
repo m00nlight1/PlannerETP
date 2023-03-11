@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import 'widgets/SignInButton.dart';
-import 'widgets/SignInTextField.dart';
+import 'package:planner_etp/presentation/widgets/SignInButton.dart';
+import 'package:planner_etp/presentation/widgets/AuthTextField.dart';
 
 class SignInView extends StatelessWidget {
   const SignInView({super.key});
@@ -13,7 +12,6 @@ class SignInView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.grey[300],
       body: SafeArea(
         child: Center(
           child: Column(
@@ -40,24 +38,26 @@ class SignInView extends StatelessWidget {
 
               // welcome back, you've been missed!
               Text(
-                'Welcome back you\'ve been missed!',
+                'Welcome, back you\'ve been missed!',
                 style: theme.textTheme.bodyMedium
               ),
 
               const SizedBox(height: 25),
 
-              // username textfield
-              const SignInTextField(
-                hintText: 'Username',
+              // email textfield
+              const AuthTextField(
+                hintText: 'Email',
                 obscureText: false,
+                prefixIcon: Icon(Icons.email, color: Colors.grey),
               ),
 
               const SizedBox(height: 10),
 
               // password textfield
-              const SignInTextField(
+              const AuthTextField(
                 hintText: 'Password',
                 obscureText: true,
+                prefixIcon: Icon(Icons.lock, color: Colors.grey),
               ),
 
               const SizedBox(height: 10),
@@ -83,22 +83,20 @@ class SignInView extends StatelessWidget {
                 onTap: (signUserIn),
               ),
 
-              const SizedBox(height: 50),
+              const SizedBox(height: 100),
 
-              const SizedBox(height: 50),
-
-              // not a member? register now
+              // uou don't have an account? sign up
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Not a member?',
+                    'You don\'t have an account?',
                     style: theme.textTheme.bodyMedium,
                   ),
                   const SizedBox(width: 4),
                   TextButton(
                     child: Text(
-                      'Register now',
+                      'Sign Up',
                       style: theme.textTheme.labelMedium,
                     ),
                     onPressed: () => Navigator.of(context).pushNamed('/sign-up'),
