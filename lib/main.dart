@@ -1,22 +1,10 @@
-import 'package:flutter/material.dart';
-
-import 'config/router/app_router.dart';
-import 'config/theme/app_theme.dart';
+import 'package:planner_etp/app/presentation/main_app_builder.dart';
+import 'package:planner_etp/app/presentation/main_app_runner.dart';
 
 void main() {
-  runApp(const PlannerETP());
+  final runner = MainAppRunner();
+  final builder = MainAppBuilder();
+  runner.run(builder);
 }
 
-class PlannerETP extends StatelessWidget {
-  const PlannerETP({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: lightTheme,
-      routes: routes,
-    );
-  }
-}
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:planner_etp/presentation/widgets/AuthTextField.dart';
-import 'package:planner_etp/presentation/widgets/SignUpButton.dart';
+import 'package:planner_etp/app/presentation/widgets/AuthTextField.dart';
+import 'package:planner_etp/app/presentation/widgets/SignUpButton.dart';
 
 class SignUpView extends StatelessWidget {
   const SignUpView({super.key});
@@ -70,7 +70,7 @@ class SignUpView extends StatelessWidget {
 
               const SizedBox(height: 100),
 
-              // already have an account? login
+              // already have an account? sign in
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -81,7 +81,7 @@ class SignUpView extends StatelessWidget {
                   const SizedBox(width: 4),
                   TextButton(
                     child: Text(
-                      'Login',
+                      'Sign In',
                       style: theme.textTheme.labelMedium,
                     ),
                     onPressed: () => Navigator.of(context).pushNamed('/'),
