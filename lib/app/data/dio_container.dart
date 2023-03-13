@@ -13,9 +13,9 @@ class DioContainer {
     );
     dio = Dio(options);
   }
-  
-  void addInterceptor (Interceptor interceptor) {
-    if(dio.interceptors.contains(interceptor)) {
+
+  void addInterceptor(Interceptor interceptor) {
+    if (dio.interceptors.contains(interceptor)) {
       dio.interceptors.remove(interceptor);
     }
     deleteInterceptor(interceptor.runtimeType);
@@ -23,7 +23,7 @@ class DioContainer {
     dio.interceptors.add(interceptor);
   }
 
-  void deleteInterceptor (Type type) {
+  void deleteInterceptor(Type type) {
     dio.interceptors.removeWhere((element) => element.runtimeType == type);
   }
 }

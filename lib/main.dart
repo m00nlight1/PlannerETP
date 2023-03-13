@@ -7,5 +7,3 @@ void main() {
   final builder = MainAppBuilder();
   runner.run(builder);
 }
-
-
