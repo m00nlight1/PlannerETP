@@ -1,7 +1,7 @@
-import 'package:planner_etp/app/presentation/sign_in_screen/sign_in_view.dart';
-import 'package:planner_etp/app/presentation/sign_up_screen/sign_up_view.dart';
+import 'package:planner_etp/feature/auth/presentation/sign_in_screen.dart';
+import 'package:planner_etp/feature/auth/presentation/sign_up_screen.dart';
 
 final routes = {
-  '/': (context) => const SignInView(),
-  '/sign-up': (context) => const SignUpView()
+  '/': (context) => const SignInScreen(),
+  '/sign-up': (context) => const SignUpScreen()
 };

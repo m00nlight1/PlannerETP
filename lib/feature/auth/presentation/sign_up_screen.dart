@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:planner_etp/app/presentation/widgets/AuthTextField.dart';
 import 'package:planner_etp/app/presentation/widgets/SignUpButton.dart';
 
-class SignUpView extends StatelessWidget {
-  const SignUpView({super.key});
+class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({super.key});
 
   void signUserUp() {}
 

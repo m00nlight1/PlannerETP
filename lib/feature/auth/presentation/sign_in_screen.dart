@@ -3,8 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:planner_etp/app/presentation/widgets/AuthTextField.dart';
 import 'package:planner_etp/app/presentation/widgets/SignInButton.dart';
 
-class SignInView extends StatelessWidget {
-  const SignInView({super.key});
+class SignInScreen extends StatelessWidget {
+  const SignInScreen({super.key});
 
   void signUserIn() {}
 
