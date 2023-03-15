@@ -45,6 +45,7 @@ dependencies:
   freezed_annotation: ^2.2.0
   flutter_bloc: ^8.1.2
   email_validator: ^2.1.17
+  json_serializable: ^6.6.1
 
 dev_dependencies:
   flutter_test:

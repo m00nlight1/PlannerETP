@@ -11,6 +11,8 @@ import 'package:planner_etp/app/data/dio_container.dart' as _i7;
 import 'package:planner_etp/app/data/main_app_config.dart' as _i4;
 import 'package:planner_etp/app/domain/app_config.dart' as _i3;
 import 'package:planner_etp/feature/auth/data/mock_auth_repository.dart' as _i6;
+import 'package:planner_etp/feature/auth/data/network_auth_repository.dart'
+    as _i8;
 import 'package:planner_etp/feature/auth/domain/auth_repository.dart' as _i5;
 
 const String _prod = 'prod';
@@ -47,6 +49,10 @@ extension GetItInjectableX on _i1.GetIt {
       registerFor: {_test},
     );
     gh.singleton<_i7.DioContainer>(_i7.DioContainer(gh<_i3.AppConfig>()));
+    gh.factory<_i5.AuthRepository>(
+      () => _i8.NetworkAuthRepository(gh<_i7.DioContainer>()),
+      registerFor: {_prod},
+    );
     return this;
   }
 }
