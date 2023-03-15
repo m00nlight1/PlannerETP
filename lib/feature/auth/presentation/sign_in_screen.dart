@@ -1,8 +1,10 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:planner_etp/app/presentation/components/AuthTextField.dart';
 import 'package:planner_etp/app/presentation/components/AuthButton.dart';
+import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
@@ -11,7 +13,8 @@ class SignInScreen extends StatelessWidget {
   final passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
 
-  void signUserIn() {}
+  void _onTapToSignInButton(AuthCubit authCubit) => authCubit.signIn(
+      email: emailController.text, password: passwordController.text);
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +101,7 @@ class SignInScreen extends StatelessWidget {
                 AuthButton(
                   onTap: () {
                     if (formKey.currentState?.validate() == true) {
-                      print("OK");
+                      _onTapToSignInButton(context.read<AuthCubit>());
                     }
                   },
                   text: 'Sign In',
