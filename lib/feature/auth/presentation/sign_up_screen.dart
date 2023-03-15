@@ -1,9 +1,15 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:planner_etp/app/presentation/widgets/AuthTextField.dart';
-import 'package:planner_etp/app/presentation/widgets/SignUpButton.dart';
+import 'package:planner_etp/app/presentation/components/AuthButton.dart';
+import 'package:planner_etp/app/presentation/components/AuthTextField.dart';
 
 class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
+  SignUpScreen({super.key});
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final passwordRepeatController = TextEditingController();
+  final GlobalKey<FormState> globalKey = GlobalKey();
 
   void signUserUp() {}
 
@@ -36,36 +42,49 @@ class SignUpScreen extends StatelessWidget {
               const SizedBox(height: 55),
 
               // email textfield
-              const AuthTextField(
+              AuthTextField(
                 hintText: 'Email',
                 obscureText: false,
-                prefixIcon: Icon(Icons.email, color: Colors.grey),
+                prefixIcon: const Icon(Icons.email, color: Colors.grey),
+                controller: emailController,
+                validator: (email) =>
+                    email != null && !EmailValidator.validate(email)
+                        ? 'Введите правильный Email'
+                        : null,
               ),
 
               const SizedBox(height: 10),
 
               // password textfield
-              const AuthTextField(
+              AuthTextField(
                 hintText: 'Password',
                 obscureText: true,
-                prefixIcon: Icon(Icons.lock, color: Colors.grey),
+                prefixIcon: const Icon(Icons.lock, color: Colors.grey),
+                controller: passwordController,
+                validator: (value) => value != null && value.length < 6
+                    ? 'Минимум 6 символов'
+                    : null,
               ),
 
               const SizedBox(height: 10),
 
               //confirm password textfield
-              const AuthTextField(
+              AuthTextField(
                 hintText: 'Confirm password',
                 obscureText: true,
-                prefixIcon: Icon(Icons.lock, color: Colors.grey),
+                prefixIcon: const Icon(Icons.lock, color: Colors.grey),
+                controller: passwordRepeatController,
+                validator: (value) => value != null && value.length < 6
+                    ? 'Минимум 6 символов'
+                    : null,
               ),
 
               const SizedBox(height: 45),
 
               // sign up button
-              SignUpButton(
+              AuthButton(
                 onTap: (signUserUp),
-
+                text: 'Sign Up',
               ),
 
               const SizedBox(height: 100),

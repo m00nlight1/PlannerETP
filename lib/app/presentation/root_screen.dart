@@ -10,7 +10,7 @@ class RootScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AuthBuilder(
-        isNotAuthorized: (context) => const SignInScreen(),
+        isNotAuthorized: (context) => SignInScreen(),
         isWaiting: (context) => const AppLoader(),
         isAuthorized: (context, value, child) =>
             DashboardScreen(userEntity: value));
