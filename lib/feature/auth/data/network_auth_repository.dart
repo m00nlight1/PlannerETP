@@ -29,8 +29,8 @@ class NetworkAuthRepository implements AuthRepository {
     required String email,
   }) async {
     try {
-      final response = await dioContainer.dio.post("/auth/token", data: {
-        "username": email,
+      final response = await dioContainer.dio.post("/data/token", data: {
+        "email": email,
         "password": password,
       });
       return UserDTO.fromJson(response.data["data"]).toEntity();
@@ -46,7 +46,7 @@ class NetworkAuthRepository implements AuthRepository {
     required String username,
   }) async {
     try {
-      final response = await dioContainer.dio.put("/auth/token", data: {
+      final response = await dioContainer.dio.put("/data/token", data: {
         "email": email,
         "password": password,
         "username": username,

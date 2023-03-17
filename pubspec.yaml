@@ -37,15 +37,17 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flutter_svg: ^1.1.6
-  injectable: ^2.1.0
+  injectable: ^1.5.3
   get_it: ^7.2.0
-  injectable_generator: ^2.1.4
-  dio: ^5.0.2
-  freezed: ^2.3.2
-  freezed_annotation: ^2.2.0
-  flutter_bloc: ^8.1.2
+  injectable_generator: ^1.5.4
+  dio: ^4.0.6
+  freezed: ^2.1.0+1
+  freezed_annotation: ^2.1.0
+  flutter_bloc: ^8.1.1
   email_validator: ^2.1.17
   json_serializable: ^6.6.1
+  hydrated_bloc: ^8.1.0
+  path_provider: ^2.0.11
 
 dev_dependencies:
   flutter_test:

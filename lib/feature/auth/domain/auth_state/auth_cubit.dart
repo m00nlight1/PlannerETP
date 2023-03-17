@@ -1,5 +1,5 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:planner_etp/feature/auth/domain/auth_repository.dart';
 import 'package:planner_etp/feature/auth/domain/entities/user_entity/user_entity.dart';
 
@@ -7,7 +7,9 @@ part 'auth_state.dart';
 
 part 'auth_cubit.freezed.dart';
 
-class AuthCubit extends Cubit<AuthState> {
+part 'auth_cubit.g.dart';
+
+class AuthCubit extends HydratedCubit<AuthState> {
   AuthCubit(this.authRepository) : super(AuthState.notAuthorized());
 
   final AuthRepository authRepository;
@@ -23,11 +25,12 @@ class AuthCubit extends Cubit<AuthState> {
         password: password,
       );
       emit(AuthState.authorized(userEntity));
-    } catch (error) {
-      emit(AuthState.error(error));
-      rethrow;
+    } catch (error, stackTrace) {
+      addError(error, stackTrace);
     }
   }
+
+  void logOut() => emit(AuthState.notAuthorized());
 
   Future<void> signUp({
     required String email,
@@ -39,9 +42,32 @@ class AuthCubit extends Cubit<AuthState> {
       final UserEntity userEntity = await authRepository.signUp(
           password: password, email: email, username: username);
       emit(AuthState.authorized(userEntity));
-    } catch (error) {
-      emit(AuthState.error(error));
-      rethrow;
+    } catch (error, stackTrace) {
+      addError(error, stackTrace);
     }
+  }
+
+  @override
+  AuthState? fromJson(Map<String, dynamic> json) {
+    final state = AuthState.fromJson(json);
+    return state.whenOrNull(
+      authorized: (userEntity) => AuthState.authorized(userEntity),
+    );
+  }
+
+  @override
+  Map<String, dynamic>? toJson(AuthState state) {
+    return state
+            .whenOrNull(
+              authorized: (userEntity) => AuthState.authorized(userEntity),
+            )
+            ?.toJson() ??
+        AuthState.notAuthorized().toJson();
+  }
+
+  @override
+  void addError(Object error, [StackTrace? stackTrace]) {
+    emit(AuthState.error(error));
+    super.addError(error, stackTrace);
   }
 }
