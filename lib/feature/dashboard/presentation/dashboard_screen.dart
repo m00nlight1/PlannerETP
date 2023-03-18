@@ -15,13 +15,24 @@ class DashboardScreen extends StatelessWidget {
         title: const Text("Dashboard"),
         actions: [
           IconButton(
+            onPressed: () => context.read<AuthCubit>().refreshToken(),
+            icon: const Icon(Icons.refresh),
+          ),
+          IconButton(
             onPressed: () => context.read<AuthCubit>().logOut(),
             icon: const Icon(Icons.logout),
-          )
+          ),
         ],
       ),
-      body: Center(
-        child: Text(userEntity.email),
+      body: Column(
+        children: [
+          Text("email: ${userEntity.email}"),
+          const SizedBox(height: 20),
+          Text("accessToken: ${userEntity.accessToken}"),
+          const SizedBox(height: 20),
+          Text("refreshToken: ${userEntity.refreshToken}"),
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }
