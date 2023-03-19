@@ -5,14 +5,20 @@ import 'package:planner_etp/feature/auth/domain/auth_repository.dart';
 import 'package:planner_etp/feature/auth/domain/entities/user_entity/user_entity.dart';
 
 @Injectable(as: AuthRepository)
-@prod
 class NetworkAuthRepository implements AuthRepository {
   final DioContainer dioContainer;
 
   NetworkAuthRepository(this.dioContainer);
 
   @override
-  Future getProfile() async {}
+  Future getProfile() async {
+    try {
+      final response = await dioContainer.dio.get("/data/user");
+      return UserDTO.fromJson(response.data["data"]).toEntity();
+    } catch (_) {
+      rethrow;
+    }
+  }
 
   @override
   Future refreshToken({String? refreshToken}) async {

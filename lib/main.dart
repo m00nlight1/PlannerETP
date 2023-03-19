@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:planner_etp/app/presentation/main_app_builder.dart';
 import 'package:planner_etp/app/presentation/main_app_runner.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   const environment = String.fromEnvironment("env", defaultValue: "prod");
   const runner = MainAppRunner(environment);
   final builder = MainAppBuilder();
