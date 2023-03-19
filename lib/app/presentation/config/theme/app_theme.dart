@@ -14,18 +14,29 @@ final lightTheme = ThemeData(
   ),
   textTheme: TextTheme(
     labelLarge: const TextStyle(
-        color: Color(0xFF0d74ba),
-        fontSize: 28,
-        fontWeight: FontWeight.bold
-    ),
+        color: Color(0xFF0d74ba), fontSize: 28, fontWeight: FontWeight.bold),
     labelMedium: const TextStyle(
       color: Color(0xFF0d74ba),
       fontSize: 15,
       fontWeight: FontWeight.bold,
     ),
+    labelSmall: TextStyle(
+      color: Colors.grey[700],
+      fontSize: 22,
+      fontWeight: FontWeight.bold
+    ),
+    bodyLarge: const TextStyle(
+      color: Colors.white,
+      fontSize: 35,
+      fontWeight: FontWeight.bold,
+    ),
     bodyMedium: TextStyle(
       color: Colors.grey[700],
       fontSize: 16,
+    ),
+    bodySmall: const TextStyle(
+      color: Colors.white,
+      fontSize: 18,
     ),
   ),
 );
