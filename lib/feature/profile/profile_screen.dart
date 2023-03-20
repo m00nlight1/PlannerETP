@@ -1,7 +1,7 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:planner_etp/app/di/init_di.dart';
-import 'package:planner_etp/app/domain/app_api.dart';
+import 'package:planner_etp/app/presentation/components/AuthTextField.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -60,9 +60,9 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      locator.get<AppApi>().updateUser(
-                        email: "ivan111@gmail.com"
-                      );
+                      showDialog(
+                          context: context,
+                          builder: (context) => const _UpdateProfileDialog());
                     },
                     child: Container(
                       padding: const EdgeInsets.all(15),
@@ -94,6 +94,74 @@ class ProfileScreen extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class _UpdateProfileDialog extends StatefulWidget {
+  const _UpdateProfileDialog();
+
+  @override
+  State<StatefulWidget> createState() => _UpdateProfileDialogState();
+}
+
+class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
+  final emailController = TextEditingController();
+  final usernameController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    usernameController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SimpleDialog(
+      children: [
+        AuthTextField(
+          hintText: 'Username',
+          obscureText: false,
+          prefixIcon: const Icon(Icons.account_circle, color: Colors.grey),
+          controller: usernameController,
+          validator: (username) => username != null && username.length < 3
+              ? 'Введите правильный логин'
+              : null,
+        ),
+        const SizedBox(height: 10),
+        AuthTextField(
+          hintText: 'Email',
+          obscureText: false,
+          prefixIcon: const Icon(Icons.email, color: Colors.grey),
+          controller: emailController,
+          validator: (email) => email != null && !EmailValidator.validate(email)
+              ? 'Введите правильный Email'
+              : null,
+        ),
+        const SizedBox(height: 15),
+        GestureDetector(
+          onTap: () {
+            context.read<AuthCubit>().updateUser(
+                email: emailController.text, username: usernameController.text);
+          },
+          child: Container(
+            padding: const EdgeInsets.all(15),
+            margin: const EdgeInsets.symmetric(horizontal: 55),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(
+              child: Text(
+                "Save",
+                style: theme.textTheme.bodySmall,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
