@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planner_etp/app/di/init_di.dart';
+import 'package:planner_etp/app/domain/app_api.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -57,7 +59,11 @@ class ProfileScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      locator.get<AppApi>().updateUser(
+                        email: "ivan111@gmail.com"
+                      );
+                    },
                     child: Container(
                       padding: const EdgeInsets.all(15),
                       margin: const EdgeInsets.symmetric(horizontal: 55),

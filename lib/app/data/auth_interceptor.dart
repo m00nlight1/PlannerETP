@@ -24,7 +24,7 @@ class AuthInterceptor extends QueuedInterceptor {
       try {
         await locator.get<AuthCubit>().refreshToken();
         final request =
-            await locator.get<AppApi>().request(err.requestOptions.path);
+            await locator.get<AppApi>().fetch(err.requestOptions);
         return handler.resolve(request);
       } catch (_) {
         super.onError(err, handler);

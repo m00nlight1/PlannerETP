@@ -75,7 +75,10 @@ class DioAppApi implements AppApi {
 
   @override
   Future<Response> updateUser({String? email, String? username}) {
-    throw UnimplementedError();
+    return dio.post("/data/user", data: {
+      "email": email,
+      "username": username,
+    });
   }
 
   @override
@@ -85,5 +88,10 @@ class DioAppApi implements AppApi {
     } catch (_) {
       rethrow;
     }
+  }
+
+  @override
+  Future fetch(RequestOptions requestOptions) {
+    return dio.fetch(requestOptions);
   }
 }
