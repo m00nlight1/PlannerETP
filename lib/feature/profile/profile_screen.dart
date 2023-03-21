@@ -1,6 +1,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
+import 'package:planner_etp/app/presentation/app_loader.dart';
+import 'package:planner_etp/app/presentation/components/AppSnackBar.dart';
 import 'package:planner_etp/app/presentation/components/AuthTextField.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 
@@ -22,11 +25,29 @@ class ProfileScreen extends StatelessWidget {
               icon: const Icon(Icons.logout)),
         ],
       ),
-      body: BlocBuilder<AuthCubit, AuthState>(
+      body: BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {
+          state.whenOrNull(
+            authorized: (userEntity) {
+              if (userEntity.userState?.hasData == true) {
+                AppSnackBar.showSnackBarWithMessage(
+                    context, userEntity.userState?.data);
+              }
+              if (userEntity.userState?.hasError == true) {
+                AppSnackBar.showSnackBarWithError(context,
+                    ErrorEntity.fromException(userEntity.userState?.error));
+              }
+            },
+          );
+        },
         builder: (context, state) {
           final userEntity = state.whenOrNull(
             authorized: (userEntity) => userEntity,
           );
+          if (userEntity?.userState?.connectionState ==
+              ConnectionState.waiting) {
+            return const AppLoader();
+          }
           return Padding(
             padding: const EdgeInsets.all(16),
             child: Column(children: [
@@ -143,6 +164,7 @@ class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
         const SizedBox(height: 15),
         GestureDetector(
           onTap: () {
+            Navigator.pop(context);
             context.read<AuthCubit>().updateUser(
                 email: emailController.text, username: usernameController.text);
           },
