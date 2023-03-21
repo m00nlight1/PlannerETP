@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:planner_etp/app/domain/app_api.dart';
 import 'package:planner_etp/feature/auth/data/dto/user_dto.dart';
@@ -59,10 +60,15 @@ class NetworkAuthRepository implements AuthRepository {
   }
 
   @override
-  Future updatePassword(
-      {required String oldPassword, required String newPassword}) {
-    // TODO: implement updatePassword
-    throw UnimplementedError();
+  Future<String> updatePassword(
+      {required String oldPassword, required String newPassword}) async {
+    try {
+      final Response response =
+          await appApi.updatePassword(newPassword: newPassword, oldPassword: oldPassword);
+      return response.data["message"];
+    } catch (_) {
+      rethrow;
+    }
   }
 
   @override

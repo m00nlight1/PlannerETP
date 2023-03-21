@@ -102,7 +102,12 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                const _UpdatePasswordDialog());
+                      },
                       child: Text(
                         "Change password",
                         style: theme.textTheme.bodyMedium,
@@ -129,6 +134,7 @@ class _UpdateProfileDialog extends StatefulWidget {
 class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
   final emailController = TextEditingController();
   final usernameController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey();
 
   @override
   void dispose() {
@@ -142,44 +148,157 @@ class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
     final theme = Theme.of(context);
     return SimpleDialog(
       children: [
-        AuthTextField(
-          hintText: 'Username',
-          obscureText: false,
-          prefixIcon: const Icon(Icons.account_circle, color: Colors.grey),
-          controller: usernameController,
-          validator: (username) => username != null && username.length < 3
-              ? 'Введите правильный логин'
-              : null,
-        ),
-        const SizedBox(height: 10),
-        AuthTextField(
-          hintText: 'Email',
-          obscureText: false,
-          prefixIcon: const Icon(Icons.email, color: Colors.grey),
-          controller: emailController,
-          validator: (email) => email != null && !EmailValidator.validate(email)
-              ? 'Введите правильный Email'
-              : null,
-        ),
-        const SizedBox(height: 15),
-        GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-            context.read<AuthCubit>().updateUser(
-                email: emailController.text, username: usernameController.text);
-          },
-          child: Container(
-            padding: const EdgeInsets.all(15),
-            margin: const EdgeInsets.symmetric(horizontal: 55),
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(8),
+        Form(
+          key: formKey,
+          child: Center(
+            child: Column(
+              children: [
+                AuthTextField(
+                  hintText: 'Username',
+                  obscureText: false,
+                  prefixIcon:
+                      const Icon(Icons.account_circle, color: Colors.grey),
+                  controller: usernameController,
+                  validator: (username) =>
+                      username != null && username.length < 3
+                          ? 'Введите правильный логин'
+                          : null,
+                ),
+                const SizedBox(height: 10),
+                AuthTextField(
+                  hintText: 'Email',
+                  obscureText: false,
+                  prefixIcon: const Icon(Icons.email, color: Colors.grey),
+                  controller: emailController,
+                  validator: (email) =>
+                      email != null && !EmailValidator.validate(email)
+                          ? 'Введите правильный Email'
+                          : null,
+                ),
+                const SizedBox(height: 15),
+                GestureDetector(
+                  onTap: () {
+                    if (formKey.currentState?.validate() != true) return;
+                    Navigator.pop(context);
+                    context.read<AuthCubit>().updateUser(
+                        email: emailController.text,
+                        username: usernameController.text);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(15),
+                    margin: const EdgeInsets.symmetric(horizontal: 55),
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Save",
+                        style: theme.textTheme.bodySmall,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            child: Center(
-              child: Text(
-                "Save",
-                style: theme.textTheme.bodySmall,
-              ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _UpdatePasswordDialog extends StatefulWidget {
+  const _UpdatePasswordDialog();
+
+  @override
+  State<StatefulWidget> createState() => _UpdatePasswordDialogState();
+}
+
+class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
+  final newPasswordController = TextEditingController();
+  final oldPasswordController = TextEditingController();
+  final newPasswordRepeatController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey();
+
+  @override
+  void dispose() {
+    newPasswordController.dispose();
+    oldPasswordController.dispose();
+    newPasswordRepeatController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SimpleDialog(
+      children: [
+        Form(
+          key: formKey,
+          child: Center(
+            child: Column(
+              children: [
+                AuthTextField(
+                  hintText: 'Current password',
+                  obscureText: true,
+                  prefixIcon: const Icon(Icons.lock, color: Colors.grey),
+                  controller: oldPasswordController,
+                  validator: (value) => value != null && value.length < 6
+                      ? 'Минимум 6 символов'
+                      : null,
+                ),
+                const SizedBox(height: 10),
+                AuthTextField(
+                  hintText: 'New password',
+                  obscureText: false,
+                  prefixIcon: const Icon(Icons.lock, color: Colors.grey),
+                  controller: newPasswordController,
+                  validator: (value) => value != null && value.length < 6
+                      ? 'Минимум 6 символов'
+                      : null,
+                ),
+                const SizedBox(height: 10),
+                AuthTextField(
+                  hintText: 'Confirm password',
+                  obscureText: true,
+                  prefixIcon: const Icon(Icons.lock, color: Colors.grey),
+                  controller: newPasswordRepeatController,
+                  validator: (value) => value != null && value.length < 6
+                      ? 'Минимум 6 символов'
+                      : null,
+                ),
+                const SizedBox(height: 15),
+                GestureDetector(
+                  onTap: () {
+                    if (formKey.currentState?.validate() != true) return;
+                    if (newPasswordRepeatController.text !=
+                        newPasswordController.text) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Пароли должны совпадать")));
+                    } else {
+                      Navigator.pop(context);
+                      context.read<AuthCubit>().updatePassword(
+                          newPassword: newPasswordController.text,
+                          oldPassword: oldPasswordController.text);
+                    }
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(15),
+                    margin: const EdgeInsets.symmetric(horizontal: 55),
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Save",
+                        style: theme.textTheme.bodySmall,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

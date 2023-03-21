@@ -70,7 +70,10 @@ class DioAppApi implements AppApi {
   @override
   Future<Response> updatePassword(
       {required String oldPassword, required String newPassword}) {
-    throw UnimplementedError();
+    return dio.put("/data/user", queryParameters: {
+      "oldPassword": oldPassword,
+      "newPassword": newPassword,
+    });
   }
 
   @override

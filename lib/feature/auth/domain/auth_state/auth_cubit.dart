@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
 import 'package:planner_etp/feature/auth/domain/auth_repository.dart';
 import 'package:planner_etp/feature/auth/domain/entities/user_entity/user_entity.dart';
 
@@ -71,7 +72,8 @@ class AuthCubit extends HydratedCubit<AuthState> {
         authorized: (userEntity) => AuthState.authorized(userEntity.copyWith(
             email: newUserEntity.email, username: newUserEntity.username)),
       ));
-      _updateUserState(const AsyncSnapshot.withData(ConnectionState.done, "Успешное получение данных"));
+      _updateUserState(const AsyncSnapshot.withData(
+          ConnectionState.done, "Успешное получение данных"));
     } catch (error) {
       _updateUserState(AsyncSnapshot.withError(ConnectionState.done, error));
     }
@@ -95,7 +97,29 @@ class AuthCubit extends HydratedCubit<AuthState> {
         authorized: (userEntity) => AuthState.authorized(userEntity.copyWith(
             email: newUserEntity.email, username: newUserEntity.username)),
       ));
-      _updateUserState(const AsyncSnapshot.withData(ConnectionState.done, "Успешное обновление данных"));
+      _updateUserState(const AsyncSnapshot.withData(
+          ConnectionState.done, "Успешное обновление данных"));
+    } catch (error) {
+      _updateUserState(AsyncSnapshot.withError(ConnectionState.done, error));
+    }
+  }
+
+  Future<void> updatePassword({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    try {
+      _updateUserState(const AsyncSnapshot.waiting());
+      await Future.delayed(const Duration(seconds: 1));
+
+      if (newPassword.trim().isEmpty == true) {
+        throw ErrorEntity(message: "Пароль не может быть пустым");
+      }
+
+      final message = await authRepository.updatePassword(
+          newPassword: newPassword, oldPassword: oldPassword);
+
+      _updateUserState(AsyncSnapshot.withData(ConnectionState.done, message));
     } catch (error) {
       _updateUserState(AsyncSnapshot.withError(ConnectionState.done, error));
     }
