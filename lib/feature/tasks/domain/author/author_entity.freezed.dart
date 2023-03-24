@@ -20,7 +20,7 @@ AuthorEntity _$AuthorEntityFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$AuthorEntity {
-  String get id => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,7 +34,7 @@ abstract class $AuthorEntityCopyWith<$Res> {
           AuthorEntity value, $Res Function(AuthorEntity) then) =
       _$AuthorEntityCopyWithImpl<$Res, AuthorEntity>;
   @useResult
-  $Res call({String id});
+  $Res call({int id});
 }
 
 /// @nodoc
@@ -56,7 +56,7 @@ class _$AuthorEntityCopyWithImpl<$Res, $Val extends AuthorEntity>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
     ) as $Val);
   }
 }
@@ -69,7 +69,7 @@ abstract class _$$_AuthorEntityCopyWith<$Res>
       __$$_AuthorEntityCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id});
+  $Res call({int id});
 }
 
 /// @nodoc
@@ -89,7 +89,7 @@ class __$$_AuthorEntityCopyWithImpl<$Res>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
     ));
   }
 }
@@ -103,7 +103,7 @@ class _$_AuthorEntity implements _AuthorEntity {
       _$$_AuthorEntityFromJson(json);
 
   @override
-  final String id;
+  final int id;
 
   @override
   String toString() {
@@ -137,13 +137,13 @@ class _$_AuthorEntity implements _AuthorEntity {
 }
 
 abstract class _AuthorEntity implements AuthorEntity {
-  const factory _AuthorEntity({required final String id}) = _$_AuthorEntity;
+  const factory _AuthorEntity({required final int id}) = _$_AuthorEntity;
 
   factory _AuthorEntity.fromJson(Map<String, dynamic> json) =
       _$_AuthorEntity.fromJson;
 
   @override
-  String get id;
+  int get id;
   @override
   @JsonKey(ignore: true)
   _$$_AuthorEntityCopyWith<_$_AuthorEntity> get copyWith =>

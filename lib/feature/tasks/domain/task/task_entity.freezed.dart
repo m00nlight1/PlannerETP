@@ -20,12 +20,12 @@ TaskEntity _$TaskEntityFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$TaskEntity {
-  String get id => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String? get content => throw _privateConstructorUsedError;
-  String get createdAt => throw _privateConstructorUsedError;
-  String? get startOfWork => throw _privateConstructorUsedError;
-  String? get endOfWork => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime? get startOfWork => throw _privateConstructorUsedError;
+  DateTime? get endOfWork => throw _privateConstructorUsedError;
   String? get contractorCompany => throw _privateConstructorUsedError;
   String? get responsibleMaster => throw _privateConstructorUsedError;
   String? get representative => throw _privateConstructorUsedError;
@@ -47,12 +47,12 @@ abstract class $TaskEntityCopyWith<$Res> {
       _$TaskEntityCopyWithImpl<$Res, TaskEntity>;
   @useResult
   $Res call(
-      {String id,
+      {int id,
       String title,
       String? content,
-      String createdAt,
-      String? startOfWork,
-      String? endOfWork,
+      DateTime createdAt,
+      DateTime? startOfWork,
+      DateTime? endOfWork,
       String? contractorCompany,
       String? responsibleMaster,
       String? representative,
@@ -95,7 +95,7 @@ class _$TaskEntityCopyWithImpl<$Res, $Val extends TaskEntity>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -107,15 +107,15 @@ class _$TaskEntityCopyWithImpl<$Res, $Val extends TaskEntity>
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as String,
+              as DateTime,
       startOfWork: freezed == startOfWork
           ? _value.startOfWork
           : startOfWork // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
       endOfWork: freezed == endOfWork
           ? _value.endOfWork
           : endOfWork // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
       contractorCompany: freezed == contractorCompany
           ? _value.contractorCompany
           : contractorCompany // ignore: cast_nullable_to_non_nullable
@@ -169,12 +169,12 @@ abstract class _$$_TaskEntityCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String id,
+      {int id,
       String title,
       String? content,
-      String createdAt,
-      String? startOfWork,
-      String? endOfWork,
+      DateTime createdAt,
+      DateTime? startOfWork,
+      DateTime? endOfWork,
       String? contractorCompany,
       String? responsibleMaster,
       String? representative,
@@ -216,7 +216,7 @@ class __$$_TaskEntityCopyWithImpl<$Res>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -228,15 +228,15 @@ class __$$_TaskEntityCopyWithImpl<$Res>
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as String,
+              as DateTime,
       startOfWork: freezed == startOfWork
           ? _value.startOfWork
           : startOfWork // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
       endOfWork: freezed == endOfWork
           ? _value.endOfWork
           : endOfWork // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as DateTime?,
       contractorCompany: freezed == contractorCompany
           ? _value.contractorCompany
           : contractorCompany // ignore: cast_nullable_to_non_nullable
@@ -292,17 +292,17 @@ class _$_TaskEntity extends _TaskEntity {
       _$$_TaskEntityFromJson(json);
 
   @override
-  final String id;
+  final int id;
   @override
   final String title;
   @override
   final String? content;
   @override
-  final String createdAt;
+  final DateTime createdAt;
   @override
-  final String? startOfWork;
+  final DateTime? startOfWork;
   @override
-  final String? endOfWork;
+  final DateTime? endOfWork;
   @override
   final String? contractorCompany;
   @override
@@ -386,12 +386,12 @@ class _$_TaskEntity extends _TaskEntity {
 
 abstract class _TaskEntity extends TaskEntity {
   const factory _TaskEntity(
-      {required final String id,
+      {required final int id,
       required final String title,
       final String? content,
-      required final String createdAt,
-      final String? startOfWork,
-      final String? endOfWork,
+      required final DateTime createdAt,
+      final DateTime? startOfWork,
+      final DateTime? endOfWork,
       final String? contractorCompany,
       final String? responsibleMaster,
       final String? representative,
@@ -405,17 +405,17 @@ abstract class _TaskEntity extends TaskEntity {
       _$_TaskEntity.fromJson;
 
   @override
-  String get id;
+  int get id;
   @override
   String get title;
   @override
   String? get content;
   @override
-  String get createdAt;
+  DateTime get createdAt;
   @override
-  String? get startOfWork;
+  DateTime? get startOfWork;
   @override
-  String? get endOfWork;
+  DateTime? get endOfWork;
   @override
   String? get contractorCompany;
   @override

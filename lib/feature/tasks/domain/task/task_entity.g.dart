@@ -8,12 +8,16 @@ part of 'task_entity.dart';
 
 _$_TaskEntity _$$_TaskEntityFromJson(Map<String, dynamic> json) =>
     _$_TaskEntity(
-      id: json['id'] as String,
+      id: json['id'] as int,
       title: json['title'] as String,
       content: json['content'] as String?,
-      createdAt: json['createdAt'] as String,
-      startOfWork: json['startOfWork'] as String?,
-      endOfWork: json['endOfWork'] as String?,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      startOfWork: json['startOfWork'] == null
+          ? null
+          : DateTime.parse(json['startOfWork'] as String),
+      endOfWork: json['endOfWork'] == null
+          ? null
+          : DateTime.parse(json['endOfWork'] as String),
       contractorCompany: json['contractorCompany'] as String?,
       responsibleMaster: json['responsibleMaster'] as String?,
       representative: json['representative'] as String?,
@@ -30,9 +34,9 @@ Map<String, dynamic> _$$_TaskEntityToJson(_$_TaskEntity instance) =>
       'id': instance.id,
       'title': instance.title,
       'content': instance.content,
-      'createdAt': instance.createdAt,
-      'startOfWork': instance.startOfWork,
-      'endOfWork': instance.endOfWork,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'startOfWork': instance.startOfWork?.toIso8601String(),
+      'endOfWork': instance.endOfWork?.toIso8601String(),
       'contractorCompany': instance.contractorCompany,
       'responsibleMaster': instance.responsibleMaster,
       'representative': instance.representative,

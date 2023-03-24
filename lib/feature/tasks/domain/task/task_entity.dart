@@ -10,12 +10,12 @@ class TaskEntity with _$TaskEntity {
   const TaskEntity._();
 
   const factory TaskEntity({
-    required String id,
+    required int id,
     required String title,
     String? content,
-    required String createdAt,
-    String? startOfWork,
-    String? endOfWork,
+    required DateTime createdAt,
+    DateTime? startOfWork,
+    DateTime? endOfWork,
     String? contractorCompany,
     String? responsibleMaster,
     String? representative,

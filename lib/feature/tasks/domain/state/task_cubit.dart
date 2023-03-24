@@ -23,7 +23,16 @@ class TaskCubit extends HydratedCubit<TaskState> {
           taskList: iterable.map((e) => TaskEntity.fromJson(e)).toList(),
           asyncSnapshot:
               const AsyncSnapshot.withData(ConnectionState.done, true)));
-    }).catchError((error) {});
+    }).catchError((error) {
+      addError(error);
+    });
+  }
+
+  @override
+  void addError(Object error, [StackTrace? stackTrace]) {
+    emit(state.copyWith(
+        asyncSnapshot: AsyncSnapshot.withError(ConnectionState.done, error)));
+    super.addError(error, stackTrace);
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planner_etp/feature/auth/domain/entities/user_entity/user_entity.dart';
 import 'package:planner_etp/feature/profile/profile_screen.dart';
+import 'package:planner_etp/feature/tasks/presentation/task_list.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({Key? key, required this.userEntity}) : super(key: key);
@@ -23,7 +24,7 @@ class DashboardScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: const Center(),
+      body: const TaskList(),
       // bottomNavigationBar: Container(
       //   color: const Color(0xff252525),
       //   child: Padding(
