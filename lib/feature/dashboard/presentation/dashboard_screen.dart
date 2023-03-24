@@ -29,7 +29,7 @@ class DashboardScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const AddTaskScreen())),
+            .push(MaterialPageRoute(builder: (context) => AddTaskScreen())),
       ),
       // bottomNavigationBar: Container(
       //   color: const Color(0xff252525),
