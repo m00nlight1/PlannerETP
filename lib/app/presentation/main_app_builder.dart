@@ -6,6 +6,8 @@ import 'package:planner_etp/app/presentation/config/router/app_router.dart';
 import 'package:planner_etp/app/presentation/config/theme/app_theme.dart';
 import 'package:planner_etp/app/presentation/root_screen.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
+import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
+import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
 
 class MainAppBuilder implements AppBuilder {
   @override
@@ -28,7 +30,12 @@ class _GlobalProviders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider(create: (context) => locator.get<AuthCubit>())
+      BlocProvider(
+        create: (context) => locator.get<AuthCubit>(),
+      ),
+      BlocProvider(
+        create: (context) => TaskCubit(locator.get<TaskRepository>()),
+      )
     ], child: child);
   }
 }

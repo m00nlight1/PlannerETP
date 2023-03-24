@@ -10,7 +10,9 @@ import 'package:injectable/injectable.dart' as _i2;
 
 import '../../feature/auth/data/network_auth_repository.dart' as _i8;
 import '../../feature/auth/domain/auth_repository.dart' as _i7;
-import '../../feature/auth/domain/auth_state/auth_cubit.dart' as _i9;
+import '../../feature/auth/domain/auth_state/auth_cubit.dart' as _i11;
+import '../../feature/tasks/data/network_task_repository.dart' as _i10;
+import '../../feature/tasks/domain/task_repository.dart' as _i9;
 import '../data/dio_app_api.dart' as _i6;
 import '../data/main_app_config.dart' as _i4;
 import '../domain/app_api.dart' as _i5;
@@ -47,6 +49,8 @@ _i1.GetIt $initGetIt(
   gh.singleton<_i5.AppApi>(_i6.DioAppApi(get<_i3.AppConfig>()));
   gh.factory<_i7.AuthRepository>(
       () => _i8.NetworkAuthRepository(get<_i5.AppApi>()));
-  gh.singleton<_i9.AuthCubit>(_i9.AuthCubit(get<_i7.AuthRepository>()));
+  gh.factory<_i9.TaskRepository>(
+      () => _i10.NetworkTaskRepository(get<_i5.AppApi>()));
+  gh.singleton<_i11.AuthCubit>(_i11.AuthCubit(get<_i7.AuthRepository>()));
   return get;
 }

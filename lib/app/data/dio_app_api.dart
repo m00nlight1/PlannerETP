@@ -97,4 +97,9 @@ class DioAppApi implements AppApi {
   Future fetch(RequestOptions requestOptions) {
     return dio.fetch(requestOptions);
   }
+
+  @override
+  Future fetchTasks() {
+    return dio.get("/data/tasks");
+  }
 }
