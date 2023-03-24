@@ -40,7 +40,7 @@ class SignUpScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        'Create Account',
+                        'Создание аккаунта',
                         style: theme.textTheme.labelLarge,
                       ),
                     ],
@@ -51,7 +51,7 @@ class SignUpScreen extends StatelessWidget {
 
                 //username textfield
                 AuthTextField(
-                    hintText: 'Username',
+                    hintText: 'Логин',
                     obscureText: false,
                     prefixIcon:
                         const Icon(Icons.account_circle, color: Colors.grey),
@@ -79,7 +79,7 @@ class SignUpScreen extends StatelessWidget {
 
                 // password textfield
                 AuthTextField(
-                  hintText: 'Password',
+                  hintText: 'Пароль',
                   obscureText: true,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   controller: passwordController,
@@ -92,7 +92,7 @@ class SignUpScreen extends StatelessWidget {
 
                 //confirm password textfield
                 AuthTextField(
-                  hintText: 'Confirm password',
+                  hintText: 'Повторите пароль',
                   obscureText: true,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   controller: passwordRepeatController,
@@ -116,7 +116,7 @@ class SignUpScreen extends StatelessWidget {
                       Navigator.of(context).pop();
                     }
                   },
-                  text: 'Sign Up',
+                  text: 'Зарегистрироваться',
                 ),
 
                 const SizedBox(height: 100),
@@ -126,13 +126,13 @@ class SignUpScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Already have an account?',
+                      'У вас уже есть аккаунт?',
                       style: theme.textTheme.bodyMedium,
                     ),
                     const SizedBox(width: 4),
                     TextButton(
                       child: Text(
-                        'Sign In',
+                        'Войти',
                         style: theme.textTheme.labelMedium,
                       ),
                       onPressed: () => Navigator.of(context).pushNamed('/'),

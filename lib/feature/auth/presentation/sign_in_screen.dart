@@ -49,10 +49,10 @@ class SignInScreen extends StatelessWidget {
                 const SizedBox(height: 50),
 
                 // welcome back, you've been missed!
-                Text('Welcome, back you\'ve been missed!',
-                    style: theme.textTheme.bodyMedium),
+                // Text('Welcome, back you\'ve been missed!',
+                //     style: theme.textTheme.bodyMedium),
 
-                const SizedBox(height: 25),
+                // const SizedBox(height: 25),
 
                 // email textfield
                 AuthTextField(
@@ -70,7 +70,7 @@ class SignInScreen extends StatelessWidget {
 
                 // password textfield
                 AuthTextField(
-                  hintText: 'Password',
+                  hintText: 'Пароль',
                   obscureText: true,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   controller: passwordController,
@@ -88,7 +88,7 @@ class SignInScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        'Forgot Password?',
+                        'Забыли пароль?',
                         style: theme.textTheme.bodyMedium,
                       ),
                     ],
@@ -104,7 +104,7 @@ class SignInScreen extends StatelessWidget {
                       _onTapToSignInButton(context.read<AuthCubit>());
                     }
                   },
-                  text: 'Sign In',
+                  text: 'Войти',
                 ),
 
                 const SizedBox(height: 100),
@@ -114,13 +114,13 @@ class SignInScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'You don\'t have an account?',
+                      'Нет аккаунта?',
                       style: theme.textTheme.bodyMedium,
                     ),
                     const SizedBox(width: 4),
                     TextButton(
                       child: Text(
-                        'Sign Up',
+                        'Зарегистрироваться',
                         style: theme.textTheme.labelMedium,
                       ),
                       onPressed: () =>

@@ -15,7 +15,7 @@ class ProfileScreen extends StatelessWidget {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: const Text('Аккаунт'),
         actions: [
           IconButton(
               onPressed: () {
@@ -94,7 +94,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          "Edit Profile",
+                          "Редактировать",
                           style: theme.textTheme.bodySmall,
                         ),
                       ),
@@ -109,7 +109,7 @@ class ProfileScreen extends StatelessWidget {
                                 const _UpdatePasswordDialog());
                       },
                       child: Text(
-                        "Change password",
+                        "Изменить пароль",
                         style: theme.textTheme.bodyMedium,
                       )),
                 ],
@@ -154,7 +154,7 @@ class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
             child: Column(
               children: [
                 AuthTextField(
-                  hintText: 'Username',
+                  hintText: 'Логин',
                   obscureText: false,
                   prefixIcon:
                       const Icon(Icons.account_circle, color: Colors.grey),
@@ -193,7 +193,7 @@ class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
                     ),
                     child: Center(
                       child: Text(
-                        "Save",
+                        "Сохранить",
                         style: theme.textTheme.bodySmall,
                       ),
                     ),
@@ -240,7 +240,7 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
             child: Column(
               children: [
                 AuthTextField(
-                  hintText: 'Current password',
+                  hintText: 'Текущий пароль',
                   obscureText: true,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   controller: oldPasswordController,
@@ -250,7 +250,7 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
                 ),
                 const SizedBox(height: 10),
                 AuthTextField(
-                  hintText: 'New password',
+                  hintText: 'Новый пароль',
                   obscureText: false,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   controller: newPasswordController,
@@ -260,7 +260,7 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
                 ),
                 const SizedBox(height: 10),
                 AuthTextField(
-                  hintText: 'Confirm password',
+                  hintText: 'Повторите пароль',
                   obscureText: true,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   controller: newPasswordRepeatController,
@@ -292,7 +292,7 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
                     ),
                     child: Center(
                       child: Text(
-                        "Save",
+                        "Сохранить",
                         style: theme.textTheme.bodySmall,
                       ),
                     ),

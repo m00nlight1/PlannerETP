@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planner_etp/feature/auth/domain/entities/user_entity/user_entity.dart';
 import 'package:planner_etp/feature/profile/profile_screen.dart';
+import 'package:planner_etp/feature/tasks/presentation/add_task_screen.dart';
 import 'package:planner_etp/feature/tasks/presentation/task_list.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -12,7 +13,7 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Dashboard"),
+        title: const Text("Задачи"),
         actions: [
           IconButton(
             onPressed: () => Navigator.push(
@@ -25,6 +26,11 @@ class DashboardScreen extends StatelessWidget {
         ],
       ),
       body: const TaskList(),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const AddTaskScreen())),
+      ),
       // bottomNavigationBar: Container(
       //   color: const Color(0xff252525),
       //   child: Padding(
