@@ -120,7 +120,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pop(context);
               context.read<TaskCubit>().createTask({
                 "title": titleController.text,
                 "content": commentsController.text,
@@ -133,6 +132,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 "staffLevel": staffLevelController.text,
                 "resultsOfTheWork": resultsOfTheWorkController.text,
               });
+              Navigator.pop(context);
             },
             icon: const Icon(Icons.done),
           ),

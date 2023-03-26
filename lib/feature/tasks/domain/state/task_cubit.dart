@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
 
@@ -12,9 +15,18 @@ part 'task_cubit.g.dart';
 
 class TaskCubit extends HydratedCubit<TaskState> {
   final TaskRepository taskRepository;
+  final AuthCubit authCubit;
+  late final StreamSubscription authSub;
 
-  TaskCubit(this.taskRepository)
-      : super(const TaskState(asyncSnapshot: AsyncSnapshot.nothing()));
+  TaskCubit(this.taskRepository, this.authCubit)
+      : super(const TaskState(asyncSnapshot: AsyncSnapshot.nothing())) {
+    authSub = authCubit.stream.listen((event) {
+      event.mapOrNull(
+        authorized: (value) => fetchTasks(),
+        notAuthorized: (value) => logOut(),
+      );
+    });
+  }
 
   Future<void> fetchTasks() async {
     emit(state.copyWith(asyncSnapshot: const AsyncSnapshot.waiting()));
@@ -37,6 +49,13 @@ class TaskCubit extends HydratedCubit<TaskState> {
     });
   }
 
+  void logOut() {
+    emit(state.copyWith(
+      asyncSnapshot: const AsyncSnapshot.nothing(),
+      taskList: [],
+    ));
+  }
+
   @override
   void addError(Object error, [StackTrace? stackTrace]) {
     emit(state.copyWith(
@@ -52,5 +71,11 @@ class TaskCubit extends HydratedCubit<TaskState> {
   @override
   Map<String, dynamic>? toJson(TaskState state) {
     return state.toJson();
+  }
+
+  @override
+  Future<void> close() {
+    authSub.cancel();
+    return super.close();
   }
 }

@@ -19,7 +19,7 @@ class NetworkTaskRepository implements TaskRepository {
   }
 
   @override
-  Future<Iterable> createTask(Map args) async {
+  Future<String> createTask(Map args) async {
     try {
       final response = await appApi.createTask(args);
       return response.data["message"];
