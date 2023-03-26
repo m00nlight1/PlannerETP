@@ -23,5 +23,7 @@ abstract class AppApi {
 
   Future<dynamic> fetchTasks();
 
+  Future<dynamic> fetchTask(String id);
+
   Future<dynamic> createTask(Map args);
 }

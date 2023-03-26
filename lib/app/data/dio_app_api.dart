@@ -118,4 +118,9 @@ class DioAppApi implements AppApi {
       "resultsOfTheWork": args["resultsOfTheWork"],
     });
   }
+
+  @override
+  Future fetchTask(String id) {
+    return dio.get("/data/tasks/$id");
+  }
 }

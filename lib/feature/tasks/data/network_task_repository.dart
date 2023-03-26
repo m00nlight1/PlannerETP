@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:planner_etp/app/domain/app_api.dart';
+import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
 
 @Injectable(as: TaskRepository)
@@ -23,6 +24,16 @@ class NetworkTaskRepository implements TaskRepository {
     try {
       final response = await appApi.createTask(args);
       return response.data["message"];
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<TaskEntity> fetchTask(String id) async {
+    try {
+      final response = await appApi.fetchTask(id);
+      return TaskEntity.fromJson(response.data["data"]);
     } catch (_) {
       rethrow;
     }
