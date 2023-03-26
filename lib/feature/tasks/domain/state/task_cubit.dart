@@ -17,12 +17,21 @@ class TaskCubit extends HydratedCubit<TaskState> {
       : super(const TaskState(asyncSnapshot: AsyncSnapshot.nothing()));
 
   Future<void> fetchTasks() async {
+    emit(state.copyWith(asyncSnapshot: const AsyncSnapshot.waiting()));
     await taskRepository.fetchTasks().then((value) {
       final Iterable iterable = value;
       emit(state.copyWith(
           taskList: iterable.map((e) => TaskEntity.fromJson(e)).toList(),
           asyncSnapshot:
               const AsyncSnapshot.withData(ConnectionState.done, true)));
+    }).catchError((error) {
+      addError(error);
+    });
+  }
+
+  Future<void> createTask(Map args) async {
+    await taskRepository.createTask(args).then((value) {
+      fetchTasks();
     }).catchError((error) {
       addError(error);
     });

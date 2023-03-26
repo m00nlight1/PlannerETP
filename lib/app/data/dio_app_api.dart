@@ -102,4 +102,20 @@ class DioAppApi implements AppApi {
   Future fetchTasks() {
     return dio.get("/data/tasks");
   }
+
+  @override
+  Future createTask(Map args) {
+    return dio.post("/data/tasks", data: {
+      "title": args["title"],
+      "content": args["content"],
+      "startOfWork": args["startOfWork"],
+      "endOfWork": args["endOfWork"],
+      "contractorCompany": args["contractorCompany"],
+      "responsibleMaster": args["responsibleMaster"],
+      "representative": args["representative"],
+      "equipmentLevel": args["equipmentLevel"],
+      "staffLevel": args["staffLevel"],
+      "resultsOfTheWork": args["resultsOfTheWork"],
+    });
+  }
 }

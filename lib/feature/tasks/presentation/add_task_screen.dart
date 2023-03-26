@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:planner_etp/app/presentation/components/AuthTextField.dart';
-import 'package:planner_etp/feature/profile/profile_screen.dart';
+import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({Key? key}) : super(key: key);
@@ -98,7 +99,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     if (startWorkDateTime == null) {
       return 'select date timer';
     } else {
-      return DateFormat('yyyy-MM-dd – kk:mm').format(startWorkDateTime);
+      return DateFormat('yyyy-MM-dd kk:mm').format(startWorkDateTime);
     }
   }
 
@@ -118,12 +119,22 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         title: const Text("Создать задачу"),
         actions: [
           IconButton(
-            onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProfileScreen(),
-                )),
-            icon: const Icon(Icons.account_circle),
+            onPressed: () {
+              Navigator.pop(context);
+              context.read<TaskCubit>().createTask({
+                "title": titleController.text,
+                "content": commentsController.text,
+                "startOfWork": startWorkDateTime.toString(),
+                "endOfWork": endWorkDateTime.toString(),
+                "contractorCompany": companyController.text,
+                "responsibleMaster": masterController.text,
+                "representative": representativeController.text,
+                "equipmentLevel": equipmentLevelController.text,
+                "staffLevel": staffLevelController.text,
+                "resultsOfTheWork": resultsOfTheWorkController.text,
+              });
+            },
+            icon: const Icon(Icons.done),
           ),
         ],
       ),
