@@ -32,7 +32,9 @@ mixin _$TaskEntity {
   String? get equipmentLevel => throw _privateConstructorUsedError;
   String? get staffLevel => throw _privateConstructorUsedError;
   String? get resultsOfTheWork => throw _privateConstructorUsedError;
-  AuthorEntity? get author => throw _privateConstructorUsedError;
+  int? get idCategory => throw _privateConstructorUsedError;
+  CategoryEntity? get category => throw _privateConstructorUsedError;
+  UserEntity? get user => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -59,9 +61,12 @@ abstract class $TaskEntityCopyWith<$Res> {
       String? equipmentLevel,
       String? staffLevel,
       String? resultsOfTheWork,
-      AuthorEntity? author});
+      int? idCategory,
+      CategoryEntity? category,
+      UserEntity? user});
 
-  $AuthorEntityCopyWith<$Res>? get author;
+  $CategoryEntityCopyWith<$Res>? get category;
+  $UserEntityCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -89,7 +94,9 @@ class _$TaskEntityCopyWithImpl<$Res, $Val extends TaskEntity>
     Object? equipmentLevel = freezed,
     Object? staffLevel = freezed,
     Object? resultsOfTheWork = freezed,
-    Object? author = freezed,
+    Object? idCategory = freezed,
+    Object? category = freezed,
+    Object? user = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -140,22 +147,42 @@ class _$TaskEntityCopyWithImpl<$Res, $Val extends TaskEntity>
           ? _value.resultsOfTheWork
           : resultsOfTheWork // ignore: cast_nullable_to_non_nullable
               as String?,
-      author: freezed == author
-          ? _value.author
-          : author // ignore: cast_nullable_to_non_nullable
-              as AuthorEntity?,
+      idCategory: freezed == idCategory
+          ? _value.idCategory
+          : idCategory // ignore: cast_nullable_to_non_nullable
+              as int?,
+      category: freezed == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as CategoryEntity?,
+      user: freezed == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as UserEntity?,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $AuthorEntityCopyWith<$Res>? get author {
-    if (_value.author == null) {
+  $CategoryEntityCopyWith<$Res>? get category {
+    if (_value.category == null) {
       return null;
     }
 
-    return $AuthorEntityCopyWith<$Res>(_value.author!, (value) {
-      return _then(_value.copyWith(author: value) as $Val);
+    return $CategoryEntityCopyWith<$Res>(_value.category!, (value) {
+      return _then(_value.copyWith(category: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserEntityCopyWith<$Res>? get user {
+    if (_value.user == null) {
+      return null;
+    }
+
+    return $UserEntityCopyWith<$Res>(_value.user!, (value) {
+      return _then(_value.copyWith(user: value) as $Val);
     });
   }
 }
@@ -181,10 +208,14 @@ abstract class _$$_TaskEntityCopyWith<$Res>
       String? equipmentLevel,
       String? staffLevel,
       String? resultsOfTheWork,
-      AuthorEntity? author});
+      int? idCategory,
+      CategoryEntity? category,
+      UserEntity? user});
 
   @override
-  $AuthorEntityCopyWith<$Res>? get author;
+  $CategoryEntityCopyWith<$Res>? get category;
+  @override
+  $UserEntityCopyWith<$Res>? get user;
 }
 
 /// @nodoc
@@ -210,7 +241,9 @@ class __$$_TaskEntityCopyWithImpl<$Res>
     Object? equipmentLevel = freezed,
     Object? staffLevel = freezed,
     Object? resultsOfTheWork = freezed,
-    Object? author = freezed,
+    Object? idCategory = freezed,
+    Object? category = freezed,
+    Object? user = freezed,
   }) {
     return _then(_$_TaskEntity(
       id: null == id
@@ -261,10 +294,18 @@ class __$$_TaskEntityCopyWithImpl<$Res>
           ? _value.resultsOfTheWork
           : resultsOfTheWork // ignore: cast_nullable_to_non_nullable
               as String?,
-      author: freezed == author
-          ? _value.author
-          : author // ignore: cast_nullable_to_non_nullable
-              as AuthorEntity?,
+      idCategory: freezed == idCategory
+          ? _value.idCategory
+          : idCategory // ignore: cast_nullable_to_non_nullable
+              as int?,
+      category: freezed == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as CategoryEntity?,
+      user: freezed == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as UserEntity?,
     ));
   }
 }
@@ -285,7 +326,9 @@ class _$_TaskEntity extends _TaskEntity {
       this.equipmentLevel,
       this.staffLevel,
       this.resultsOfTheWork,
-      this.author})
+      this.idCategory,
+      this.category,
+      this.user})
       : super._();
 
   factory _$_TaskEntity.fromJson(Map<String, dynamic> json) =>
@@ -316,11 +359,15 @@ class _$_TaskEntity extends _TaskEntity {
   @override
   final String? resultsOfTheWork;
   @override
-  final AuthorEntity? author;
+  final int? idCategory;
+  @override
+  final CategoryEntity? category;
+  @override
+  final UserEntity? user;
 
   @override
   String toString() {
-    return 'TaskEntity(id: $id, title: $title, content: $content, createdAt: $createdAt, startOfWork: $startOfWork, endOfWork: $endOfWork, contractorCompany: $contractorCompany, responsibleMaster: $responsibleMaster, representative: $representative, equipmentLevel: $equipmentLevel, staffLevel: $staffLevel, resultsOfTheWork: $resultsOfTheWork, author: $author)';
+    return 'TaskEntity(id: $id, title: $title, content: $content, createdAt: $createdAt, startOfWork: $startOfWork, endOfWork: $endOfWork, contractorCompany: $contractorCompany, responsibleMaster: $responsibleMaster, representative: $representative, equipmentLevel: $equipmentLevel, staffLevel: $staffLevel, resultsOfTheWork: $resultsOfTheWork, idCategory: $idCategory, category: $category, user: $user)';
   }
 
   @override
@@ -349,7 +396,11 @@ class _$_TaskEntity extends _TaskEntity {
                 other.staffLevel == staffLevel) &&
             (identical(other.resultsOfTheWork, resultsOfTheWork) ||
                 other.resultsOfTheWork == resultsOfTheWork) &&
-            (identical(other.author, author) || other.author == author));
+            (identical(other.idCategory, idCategory) ||
+                other.idCategory == idCategory) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
+            (identical(other.user, user) || other.user == user));
   }
 
   @JsonKey(ignore: true)
@@ -368,7 +419,9 @@ class _$_TaskEntity extends _TaskEntity {
       equipmentLevel,
       staffLevel,
       resultsOfTheWork,
-      author);
+      idCategory,
+      category,
+      user);
 
   @JsonKey(ignore: true)
   @override
@@ -398,7 +451,9 @@ abstract class _TaskEntity extends TaskEntity {
       final String? equipmentLevel,
       final String? staffLevel,
       final String? resultsOfTheWork,
-      final AuthorEntity? author}) = _$_TaskEntity;
+      final int? idCategory,
+      final CategoryEntity? category,
+      final UserEntity? user}) = _$_TaskEntity;
   const _TaskEntity._() : super._();
 
   factory _TaskEntity.fromJson(Map<String, dynamic> json) =
@@ -429,7 +484,11 @@ abstract class _TaskEntity extends TaskEntity {
   @override
   String? get resultsOfTheWork;
   @override
-  AuthorEntity? get author;
+  int? get idCategory;
+  @override
+  CategoryEntity? get category;
+  @override
+  UserEntity? get user;
   @override
   @JsonKey(ignore: true)
   _$$_TaskEntityCopyWith<_$_TaskEntity> get copyWith =>

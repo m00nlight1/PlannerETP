@@ -116,6 +116,7 @@ class DioAppApi implements AppApi {
       "equipmentLevel": args["equipmentLevel"],
       "staffLevel": args["staffLevel"],
       "resultsOfTheWork": args["resultsOfTheWork"],
+      "idCategory": args["idCategory"],
     });
   }
 

@@ -56,7 +56,7 @@ class ProfileScreen extends StatelessWidget {
                   CircleAvatar(
                     radius: 50,
                     child: Text(
-                        userEntity?.username.split("").first ?? "Нет данных",
+                        userEntity?.username?.split("").first ?? "Нет данных",
                         style: theme.textTheme.bodyLarge),
                   ),
                   const SizedBox(height: 20),

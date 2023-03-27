@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:planner_etp/feature/tasks/domain/author/author_entity.dart';
+import 'package:planner_etp/feature/auth/domain/entities/user_entity/user_entity.dart';
+import 'package:planner_etp/feature/tasks/domain/category/category_entity.dart';
 
 part 'task_entity.freezed.dart';
 
@@ -22,7 +23,9 @@ class TaskEntity with _$TaskEntity {
     String? equipmentLevel,
     String? staffLevel,
     String? resultsOfTheWork,
-    AuthorEntity? author,
+    int? idCategory,
+    CategoryEntity? category,
+    UserEntity? user,
   }) = _TaskEntity;
 
   factory TaskEntity.fromJson(Map<String, dynamic> json) =>

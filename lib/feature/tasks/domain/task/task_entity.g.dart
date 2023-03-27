@@ -24,9 +24,13 @@ _$_TaskEntity _$$_TaskEntityFromJson(Map<String, dynamic> json) =>
       equipmentLevel: json['equipmentLevel'] as String?,
       staffLevel: json['staffLevel'] as String?,
       resultsOfTheWork: json['resultsOfTheWork'] as String?,
-      author: json['author'] == null
+      idCategory: json['idCategory'] as int?,
+      category: json['category'] == null
           ? null
-          : AuthorEntity.fromJson(json['author'] as Map<String, dynamic>),
+          : CategoryEntity.fromJson(json['category'] as Map<String, dynamic>),
+      user: json['user'] == null
+          ? null
+          : UserEntity.fromJson(json['user'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_TaskEntityToJson(_$_TaskEntity instance) =>
@@ -43,5 +47,7 @@ Map<String, dynamic> _$$_TaskEntityToJson(_$_TaskEntity instance) =>
       'equipmentLevel': instance.equipmentLevel,
       'staffLevel': instance.staffLevel,
       'resultsOfTheWork': instance.resultsOfTheWork,
-      'author': instance.author,
+      'idCategory': instance.idCategory,
+      'category': instance.category,
+      'user': instance.user,
     };
