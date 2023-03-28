@@ -13,7 +13,8 @@ class TaskItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => TaskScreen(id: taskEntity.id.toString())));
+            builder: (context) => TaskScreen(
+                id: taskEntity.id.toString(), taskEntity: taskEntity)));
       },
       child: Card(
         color: Colors.white,

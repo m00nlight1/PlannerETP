@@ -11,6 +11,11 @@ final lightTheme = ThemeData(
       fontSize: 20,
       fontWeight: FontWeight.w700,
     ),
+    toolbarTextStyle: TextStyle(
+      color: Colors.black,
+      fontSize: 18,
+      fontWeight: FontWeight.w700,
+    ),
   ),
   textTheme: TextTheme(
     labelLarge: const TextStyle(
@@ -38,7 +43,7 @@ final lightTheme = ThemeData(
     headlineSmall: const TextStyle(
       color: Colors.black,
       fontSize: 16,
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.w600,
     ),
     headlineMedium: const TextStyle(
       color: Colors.black,

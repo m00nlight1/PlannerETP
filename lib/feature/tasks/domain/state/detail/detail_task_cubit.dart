@@ -13,7 +13,7 @@ class DetailTaskCubit extends Cubit<DetailTaskState> {
   final TaskRepository taskRepository;
   final String id;
 
-  Future<void> fetchTask() async {
+  Future<void> fetchTasks() async {
     emit(state.copyWith(asyncSnapshot: const AsyncSnapshot.waiting()));
     await Future.delayed(const Duration(seconds: 1));
     await taskRepository.fetchTask(id).then((value) {

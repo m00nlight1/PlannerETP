@@ -33,7 +33,7 @@ class NetworkTaskRepository implements TaskRepository {
   Future<TaskEntity> fetchTask(String id) async {
     try {
       final response = await appApi.fetchTask(id);
-      return TaskEntity.fromJson(response.data["data"]);
+      return TaskEntity.fromJson(response.data);
     } catch (_) {
       rethrow;
     }

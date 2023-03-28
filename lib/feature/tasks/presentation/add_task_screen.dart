@@ -131,6 +131,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 "equipmentLevel": equipmentLevelController.text,
                 "staffLevel": staffLevelController.text,
                 "resultsOfTheWork": resultsOfTheWorkController.text,
+                "idCategory": 1
               });
               Navigator.pop(context);
             },
@@ -152,7 +153,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         color: Color(0xFF0d74ba)),
                     controller: titleController,
                     validator: (title) =>
-                        title != null ? 'Введите название' : null),
+                    title != null ? 'Введите название' : null),
                 const SizedBox(height: 10),
                 //start and end datetime
                 Row(
@@ -176,15 +177,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 children: [
                                   showStartWorkDateTime
                                       ? const Icon(Icons.date_range_outlined,
-                                          color: Color(0xFF0d74ba))
+                                      color: Color(0xFF0d74ba))
                                       : const SizedBox(),
                                   const SizedBox(width: 5),
                                   showStartWorkDateTime
                                       ? Flexible(
-                                          child: Text(
-                                          getStartWorkDateTime(),
-                                          style: theme.textTheme.bodyMedium,
-                                        ))
+                                      child: Text(
+                                        getStartWorkDateTime(),
+                                        style: theme.textTheme.bodyMedium,
+                                      ))
                                       : const SizedBox(),
                                 ],
                               ),
@@ -226,15 +227,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 children: [
                                   showEndWorkDateTime
                                       ? const Icon(Icons.date_range_outlined,
-                                          color: Color(0xFF0d74ba))
+                                      color: Color(0xFF0d74ba))
                                       : const SizedBox(),
                                   const SizedBox(width: 5),
                                   showEndWorkDateTime
                                       ? Flexible(
-                                          child: Text(
-                                          getEndWorkDateTime(),
-                                          style: theme.textTheme.bodyMedium,
-                                        ))
+                                      child: Text(
+                                        getEndWorkDateTime(),
+                                        style: theme.textTheme.bodyMedium,
+                                      ))
                                       : const SizedBox(),
                                 ],
                               ),
@@ -268,7 +269,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: companyController,
-                    validator: (company) => company != null
+                    validator: (company) =>
+                    company != null
                         ? 'Укажите компанию исполнителя'
                         : null),
                 const SizedBox(height: 10),
@@ -279,7 +281,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: masterController,
-                    validator: (master) => master != null
+                    validator: (master) =>
+                    master != null
                         ? 'Укажите ответственного мастера'
                         : null),
                 const SizedBox(height: 10),
@@ -290,7 +293,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: representativeController,
-                    validator: (representative) => representative != null
+                    validator: (representative) =>
+                    representative != null
                         ? 'Укажите представителя'
                         : null),
                 const SizedBox(height: 10),
@@ -301,7 +305,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: equipmentLevelController,
-                    validator: (equipmentLevel) => equipmentLevel != null
+                    validator: (equipmentLevel) =>
+                    equipmentLevel != null
                         ? 'Укажите уровень оснащения'
                         : null),
                 const SizedBox(height: 10),
@@ -312,7 +317,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: staffLevelController,
-                    validator: (staffLevel) => staffLevel != null
+                    validator: (staffLevel) =>
+                    staffLevel != null
                         ? 'Укажите уровень персонала'
                         : null),
                 const SizedBox(height: 10),
