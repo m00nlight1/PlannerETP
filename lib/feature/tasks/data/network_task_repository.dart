@@ -38,4 +38,13 @@ class NetworkTaskRepository implements TaskRepository {
       rethrow;
     }
   }
+
+  @override
+  Future deleteTask(String id) async {
+    try {
+      await appApi.deleteTask(id);
+    } catch (_) {
+      rethrow;
+    }
+  }
 }

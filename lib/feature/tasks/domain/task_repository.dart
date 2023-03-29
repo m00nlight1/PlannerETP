@@ -3,5 +3,7 @@ abstract class TaskRepository {
 
   Future fetchTask(String id);
 
+  Future deleteTask(String id);
+
   Future createTask(Map args);
 }

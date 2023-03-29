@@ -5,8 +5,8 @@ import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
 import 'package:planner_etp/app/presentation/components/AppSnackBar.dart';
-import 'package:planner_etp/feature/profile/profile_screen.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
+import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
 
@@ -20,7 +20,7 @@ class TaskScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          DetailTaskCubit(locator.get<TaskRepository>(), id)..fetchTasks(),
+          DetailTaskCubit(locator.get<TaskRepository>(), id)..fetchTask(),
       child: _DetailTaskView(taskEntity),
     );
   }
@@ -60,17 +60,22 @@ class _DetailTaskView extends StatelessWidget {
             )),
         actions: [
           IconButton(
-            onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProfileScreen(),
-                )),
-            icon: const Icon(Icons.account_circle),
+            onPressed: () {
+              context.read<DetailTaskCubit>().deleteTask().then((_) {
+                context.read<TaskCubit>().fetchTasks();
+                Navigator.of(context).pop();
+              });
+            },
+            icon: const Icon(Icons.delete),
           ),
         ],
       ),
       body: BlocConsumer<DetailTaskCubit, DetailTaskState>(
         listener: (context, state) {
+          if (state.asyncSnapshot.hasData) {
+            AppSnackBar.showSnackBarWithMessage(
+                context, state.asyncSnapshot.data.toString());
+          }
           if (state.asyncSnapshot.hasError) {
             AppSnackBar.showSnackBarWithError(
                 context, ErrorEntity.fromException(state.asyncSnapshot.error));
@@ -78,13 +83,13 @@ class _DetailTaskView extends StatelessWidget {
           }
         },
         builder: (context, state) {
+          if (state.asyncSnapshot.connectionState == ConnectionState.waiting) {
+            return const AppLoader();
+          }
           if (state.taskEntity != null) {
             return _DetailTaskItem(
               taskEntity: state.taskEntity!,
             );
-          }
-          if (state.asyncSnapshot.connectionState == ConnectionState.waiting) {
-            return const AppLoader();
           }
           return const Center(
             child: Text("Ошибка загрузки"),

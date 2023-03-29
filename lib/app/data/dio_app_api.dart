@@ -124,4 +124,9 @@ class DioAppApi implements AppApi {
   Future fetchTask(String id) {
     return dio.get("/data/tasks/$id");
   }
+
+  @override
+  Future deleteTask(String id) {
+    return dio.delete("/data/tasks/$id");
+  }
 }
