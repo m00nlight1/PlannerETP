@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
@@ -9,6 +8,7 @@ import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
+import 'package:planner_etp/feature/tasks/presentation/update_task_screen.dart';
 
 class TaskScreen extends StatelessWidget {
   const TaskScreen({super.key, required this.id, required this.taskEntity});
@@ -21,14 +21,15 @@ class TaskScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           DetailTaskCubit(locator.get<TaskRepository>(), id)..fetchTask(),
-      child: _DetailTaskView(taskEntity),
+      child: _DetailTaskView(taskEntity, id),
     );
   }
 }
 
 class _DetailTaskView extends StatelessWidget {
-  const _DetailTaskView(this.taskEntity);
+  const _DetailTaskView(this.taskEntity, this.id);
 
+  final String id;
   final TaskEntity taskEntity;
 
   @override
@@ -69,25 +70,8 @@ class _DetailTaskView extends StatelessWidget {
             icon: const Icon(Icons.delete),
           ),
           IconButton(
-            onPressed: () {
-              context.read<DetailTaskCubit>().updateTask({
-                "title": "Задача 57900",
-                "content": "dadsavd",
-                "startOfWork": "2023-02-20 10:10",
-                "endOfWork": "2023-02-20 18:10",
-                "contractorCompany": "daffdf",
-                "responsibleMaster": "adfdssd",
-                "representative": "dsadsad",
-                "equipmentLevel": "adafdfds",
-                "staffLevel": "adafdfd",
-                "resultsOfTheWork": "adfdsg",
-                "idCategory": 1
-              }).then((_) {
-                context.read<TaskCubit>().fetchTasks();
-                Navigator.of(context).pop();
-              });
-              // showDialog(context: context, builder: (context) => _UpdateTaskDialog());
-            },
+            onPressed: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => UpdateTaskScreen(id: id))),
             icon: const Icon(Icons.edit),
           ),
         ],
@@ -122,17 +106,8 @@ class _DetailTaskView extends StatelessWidget {
   }
 }
 
-class _DetailTaskItem extends StatefulWidget {
+class _DetailTaskItem extends StatelessWidget {
   const _DetailTaskItem({required this.taskEntity});
-
-  final TaskEntity taskEntity;
-
-  @override
-  State<StatefulWidget> createState() => _DetailTaskItemState(taskEntity);
-}
-
-class _DetailTaskItemState extends State<_DetailTaskItem> {
-  _DetailTaskItemState(this.taskEntity);
 
   final TaskEntity taskEntity;
 
@@ -403,130 +378,5 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
         ),
       ),
     );
-  }
-}
-
-class _UpdateTaskDialog extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _UpdateTaskDialogState();
-}
-
-class _UpdateTaskDialogState extends State<_UpdateTaskDialog> {
-  final titleController = TextEditingController();
-  final companyController = TextEditingController();
-  final masterController = TextEditingController();
-  final representativeController = TextEditingController();
-  final equipmentLevelController = TextEditingController();
-  final staffLevelController = TextEditingController();
-  final resultsOfTheWorkController = TextEditingController();
-  final commentsController = TextEditingController();
-  final GlobalKey<FormState> formKey = GlobalKey();
-
-  DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay.now();
-  DateTime startWorkDateTime = DateTime.now();
-  DateTime endWorkDateTime = DateTime.now();
-  bool showDate = false;
-  bool showTime = false;
-  bool showStartWorkDateTime = false;
-  bool showEndWorkDateTime = false;
-
-  // Select for Date
-  Future<DateTime> _selectDate(BuildContext context) async {
-    final selected = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
-    );
-    if (selected != null && selected != selectedDate) {
-      setState(() {
-        selectedDate = selected;
-      });
-    }
-    return selectedDate;
-  }
-
-  // Select for Time
-  Future<TimeOfDay> _selectTime(BuildContext context) async {
-    final selected = await showTimePicker(
-      context: context,
-      initialTime: selectedTime,
-    );
-    if (selected != null && selected != selectedTime) {
-      setState(() {
-        selectedTime = selected;
-      });
-    }
-    return selectedTime;
-  }
-
-  Future _selectStartWorkDateTime(BuildContext context) async {
-    final date = await _selectDate(context);
-    if (date == null) return;
-    final time = await _selectTime(context);
-
-    if (time == null) return;
-    setState(() {
-      startWorkDateTime = DateTime(
-        date.year,
-        date.month,
-        date.day,
-        time.hour,
-        time.minute,
-      );
-    });
-  }
-
-  Future _selectEndWorkDateTime(BuildContext context) async {
-    final date = await _selectDate(context);
-    if (date == null) return;
-    final time = await _selectTime(context);
-
-    if (time == null) return;
-    setState(() {
-      endWorkDateTime = DateTime(
-        date.year,
-        date.month,
-        date.day,
-        time.hour,
-        time.minute,
-      );
-    });
-  }
-
-  String getStartWorkDateTime() {
-    if (startWorkDateTime == null) {
-      return 'Не указано';
-    } else {
-      return DateFormat('yyyy-MM-dd kk:mm').format(startWorkDateTime);
-    }
-  }
-
-  String getEndWorkDateTime() {
-    if (endWorkDateTime == null) {
-      return 'Не указано';
-    } else {
-      return DateFormat('yyyy-MM-dd – kk:mm').format(endWorkDateTime);
-    }
-  }
-
-  @override
-  void dispose() {
-    titleController.dispose();
-    companyController.dispose();
-    masterController.dispose();
-    representativeController.dispose();
-    equipmentLevelController.dispose();
-    staffLevelController.dispose();
-    resultsOfTheWorkController.dispose();
-    commentsController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
   }
 }

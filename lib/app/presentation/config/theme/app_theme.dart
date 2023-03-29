@@ -27,6 +27,11 @@ final lightTheme = ThemeData(
     ),
     labelSmall: TextStyle(
         color: Colors.grey[700], fontSize: 22, fontWeight: FontWeight.bold),
+    displaySmall: const TextStyle(
+      color: Color(0xFF0d74ba),
+      fontSize: 13,
+      fontWeight: FontWeight.bold,
+    ),
     bodyLarge: const TextStyle(
       color: Colors.white,
       fontSize: 35,
@@ -34,7 +39,7 @@ final lightTheme = ThemeData(
     ),
     bodyMedium: TextStyle(
       color: Colors.grey[700],
-      fontSize: 16,
+      fontSize: 15,
     ),
     bodySmall: const TextStyle(
       color: Colors.white,
@@ -43,6 +48,11 @@ final lightTheme = ThemeData(
     headlineSmall: const TextStyle(
       color: Colors.black,
       fontSize: 16,
+      fontWeight: FontWeight.w600,
+    ),
+    headlineLarge: const TextStyle(
+      color: Colors.black,
+      fontSize: 14,
       fontWeight: FontWeight.w600,
     ),
     headlineMedium: const TextStyle(
