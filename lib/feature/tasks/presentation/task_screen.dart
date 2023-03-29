@@ -20,7 +20,7 @@ class TaskScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-      DetailTaskCubit(locator.get<TaskRepository>(), id)..fetchTasks(),
+          DetailTaskCubit(locator.get<TaskRepository>(), id)..fetchTasks(),
       child: _DetailTaskView(taskEntity),
     );
   }
@@ -47,9 +47,11 @@ class _DetailTaskView extends StatelessWidget {
                   Row(
                     children: [
                       const SizedBox(width: 10),
-                      CircleAvatar(radius: 16, child: Text(taskEntity.id.toString())),
+                      CircleAvatar(
+                          radius: 16, child: Text(taskEntity.id.toString())),
                       const SizedBox(width: 8),
-                      Text(taskEntity.title, style: theme.appBarTheme.toolbarTextStyle),
+                      Text(taskEntity.title,
+                          style: theme.appBarTheme.toolbarTextStyle),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -104,6 +106,7 @@ class _DetailTaskItem extends StatefulWidget {
 
 class _DetailTaskItemState extends State<_DetailTaskItem> {
   _DetailTaskItemState(this.taskEntity);
+
   final TaskEntity taskEntity;
 
   DateTime selectedDate = DateTime.now();
@@ -130,6 +133,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
     }
     return selectedDate;
   }
+
   // Select for Time
   Future<TimeOfDay> _selectTime(BuildContext context) async {
     final selected = await showTimePicker(
@@ -180,7 +184,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
 
   String getStartWorkDateTime() {
     if (startWorkDateTime == null) {
-      return 'select date timer';
+      return 'Не указано';
     } else {
       return DateFormat('yyyy-MM-dd kk:mm').format(startWorkDateTime);
     }
@@ -188,7 +192,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
 
   String getEndWorkDateTime() {
     if (endWorkDateTime == null) {
-      return 'select date timer';
+      return 'Не указано';
     } else {
       return DateFormat('yyyy-MM-dd – kk:mm').format(endWorkDateTime);
     }
@@ -198,160 +202,394 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            Text("${taskEntity.category?.name}", style: theme.textTheme.headlineSmall),
-            const SizedBox(height: 10),
-            //title
-            Card(
-              color: Colors.grey.shade200,
-              child: SizedBox(
-                width: 370,
-                height: 90,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Название', style: theme.textTheme.headlineSmall),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(taskEntity.title, style: theme.textTheme.bodyMedium),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.edit, color: Color(0xFF0d74ba)),
-                          ),
-                        ],
-                      ),
-                    ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              Text("${taskEntity.category?.name}",
+                  style: theme.textTheme.headlineSmall),
+              const SizedBox(height: 10),
+              //title
+              Card(
+                color: Colors.grey.shade200,
+                child: SizedBox(
+                  width: 370,
+                  height: 90,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Название', style: theme.textTheme.headlineSmall),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(taskEntity.title,
+                                style: theme.textTheme.bodyMedium),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.edit,
+                                  color: Color(0xFF0d74ba)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            //start and end datetime
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                //start of work
-                Card(
-                  color: Colors.grey.shade200,
-                  child: SizedBox(
-                    width: 180,
-                    height: 135,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Начало работ',
-                              style: theme.textTheme.headlineSmall),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              showStartWorkDateTime
-                                  ? const Icon(Icons.date_range_outlined,
-                                  color: Color(0xFF0d74ba))
-                                  : Flexible(child: Text(taskEntity.startOfWork.toString().split(".")[0], textAlign: TextAlign.center)),
-                              const SizedBox(width: 5),
-                              showStartWorkDateTime
-                                  ? Flexible(
-                                  child: Text(
-                                    getStartWorkDateTime(),
-                                    style: theme.textTheme.bodyMedium,
-                                  ))
-                                  : const SizedBox(),
-                            ],
-                          ),
-                          MaterialButton(
-                            onPressed: () {
-                              _selectStartWorkDateTime(context);
-                              showStartWorkDateTime = true;
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 3.0),
-                              child: Text(
-                                'Редактировать\nдату и время',
-                                style: theme.textTheme.labelMedium,
-                                textAlign: TextAlign.center,
+              const SizedBox(height: 10),
+              //start and end datetime
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //start of work
+                  Card(
+                    color: Colors.grey.shade200,
+                    child: SizedBox(
+                      width: 180,
+                      height: 135,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Начало работ',
+                                style: theme.textTheme.headlineSmall),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                showStartWorkDateTime
+                                    ? const Icon(Icons.date_range_outlined,
+                                        color: Color(0xFF0d74ba))
+                                    : Flexible(
+                                        child: Text(
+                                            taskEntity.startOfWork
+                                                .toString()
+                                                .split(".")[0],
+                                            textAlign: TextAlign.center)),
+                                const SizedBox(width: 5),
+                                showStartWorkDateTime
+                                    ? Flexible(
+                                        child: Text(
+                                        getStartWorkDateTime(),
+                                        style: theme.textTheme.bodyMedium,
+                                      ))
+                                    : const SizedBox(),
+                              ],
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                _selectStartWorkDateTime(context);
+                                showStartWorkDateTime = true;
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 3.0),
+                                child: Text(
+                                  'Редактировать\nдату и время',
+                                  style: theme.textTheme.labelMedium,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                //end of work
-                Card(
-                  color: Colors.grey.shade200,
-                  child: SizedBox(
-                    width: 180,
-                    height: 135,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Окончание работ',
-                              style: theme.textTheme.headlineSmall),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              showEndWorkDateTime
-                                  ? const Icon(Icons.date_range_outlined,
-                                  color: Color(0xFF0d74ba))
-                                  : Flexible(child: Text(taskEntity.endOfWork.toString().split(".")[0], textAlign: TextAlign.center)),
-                              const SizedBox(width: 5),
-                              showEndWorkDateTime
-                                  ? Flexible(
-                                  child: Text(
-                                    getEndWorkDateTime(),
-                                    style: theme.textTheme.bodyMedium,
-                                  ))
-                                  : const SizedBox(),
-                            ],
-                          ),
-                          MaterialButton(
-                            onPressed: () {
-                              _selectEndWorkDateTime(context);
-                              showEndWorkDateTime = true;
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 3.0),
-                              child: Text(
-                                'Редактировать\nдату и время',
-                                style: theme.textTheme.labelMedium,
-                                textAlign: TextAlign.center,
+                  //end of work
+                  Card(
+                    color: Colors.grey.shade200,
+                    child: SizedBox(
+                      width: 180,
+                      height: 135,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Окончание работ',
+                                style: theme.textTheme.headlineSmall),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                showEndWorkDateTime
+                                    ? const Icon(Icons.date_range_outlined,
+                                        color: Color(0xFF0d74ba))
+                                    : Flexible(
+                                        child: Text(
+                                            taskEntity.endOfWork
+                                                .toString()
+                                                .split(".")[0],
+                                            textAlign: TextAlign.center)),
+                                const SizedBox(width: 5),
+                                showEndWorkDateTime
+                                    ? Flexible(
+                                        child: Text(
+                                        getEndWorkDateTime(),
+                                        style: theme.textTheme.bodyMedium,
+                                      ))
+                                    : const SizedBox(),
+                              ],
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                _selectEndWorkDateTime(context);
+                                showEndWorkDateTime = true;
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 3.0),
+                                child: Text(
+                                  'Редактировать\nдату и время',
+                                  style: theme.textTheme.labelMedium,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              //contractor company
+              Card(
+                color: Colors.grey.shade200,
+                child: SizedBox(
+                  width: 370,
+                  height: 90,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Компания исполнитель',
+                            style: theme.textTheme.headlineSmall),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(taskEntity.contractorCompany ?? "Не указано",
+                                style: theme.textTheme.bodyMedium),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.edit,
+                                  color: Color(0xFF0d74ba)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 10),
-          ],
+              ),
+              const SizedBox(height: 10),
+              //responsible master
+              Card(
+                color: Colors.grey.shade200,
+                child: SizedBox(
+                  width: 370,
+                  height: 90,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Ответственный мастер',
+                            style: theme.textTheme.headlineSmall),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(taskEntity.responsibleMaster ?? "Не указано",
+                                style: theme.textTheme.bodyMedium),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.edit,
+                                  color: Color(0xFF0d74ba)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              //representative
+              Card(
+                color: Colors.grey.shade200,
+                child: SizedBox(
+                  width: 370,
+                  height: 90,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Представитель',
+                            style: theme.textTheme.headlineSmall),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(taskEntity.representative ?? "Не указано",
+                                style: theme.textTheme.bodyMedium),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.edit,
+                                  color: Color(0xFF0d74ba)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              //equipment level
+              Card(
+                color: Colors.grey.shade200,
+                child: SizedBox(
+                  width: 370,
+                  height: 90,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Уровень оснащения',
+                            style: theme.textTheme.headlineSmall),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(taskEntity.equipmentLevel ?? "Не указано",
+                                style: theme.textTheme.bodyMedium),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.edit,
+                                  color: Color(0xFF0d74ba)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              //staff level
+              Card(
+                color: Colors.grey.shade200,
+                child: SizedBox(
+                  width: 370,
+                  height: 90,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Уровень песонала',
+                            style: theme.textTheme.headlineSmall),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(taskEntity.staffLevel ?? "Не указано",
+                                style: theme.textTheme.bodyMedium),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.edit,
+                                  color: Color(0xFF0d74ba)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              //resultsOfTheWork
+              Card(
+                color: Colors.grey.shade200,
+                child: SizedBox(
+                  width: 370,
+                  height: 120,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Результаты работы',
+                            style: theme.textTheme.headlineSmall),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                  taskEntity.resultsOfTheWork ?? "Не указано",
+                                  style: theme.textTheme.bodyMedium),
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.edit,
+                                  color: Color(0xFF0d74ba)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              //comments
+              Card(
+                color: Colors.grey.shade200,
+                child: SizedBox(
+                  width: 370,
+                  height: 120,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Комментарии',
+                            style: theme.textTheme.headlineSmall),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Text(taskEntity.content ?? "Не указано",
+                                  style: theme.textTheme.bodyMedium),
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.edit,
+                                  color: Color(0xFF0d74ba)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              //created at date and author
+              Text("Создано ${taskEntity.createdAt.toString().split(" ")[0]}",
+                  style: theme.textTheme.bodyMedium),
+              const SizedBox(height: 10),
+              Text(
+                  "Автор: ${taskEntity.user?.username} (${taskEntity.user?.email})",
+                  style: theme.textTheme.bodyMedium),
+            ],
+          ),
         ),
       ),
     );
-
-    //     Text("Created at: ${taskEntity.createdAt}"),
-    //     Text("Компания исполнитель: ${taskEntity.contractorCompany}"),
-    //     Text("Ответственный мастер: ${taskEntity.responsibleMaster}"),
-    //     Text("Представитель: ${taskEntity.representative}"),
-    //     Text("Уровень оснащения: ${taskEntity.equipmentLevel}"),
-    //     Text("Уровень песонала: ${taskEntity.staffLevel}"),
-    //     Text("Результаты работы: ${taskEntity.resultsOfTheWork}"),
-    //     Text("Комментарии: ${taskEntity.content}"),
-    //     Text("Создал: ${taskEntity.user?.username}"),
   }
 }
