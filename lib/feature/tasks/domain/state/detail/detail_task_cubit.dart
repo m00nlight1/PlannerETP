@@ -21,8 +21,8 @@ class DetailTaskCubit extends Cubit<DetailTaskState> {
     await taskRepository.fetchTask(id).then((value) {
       emit(state.copyWith(
           taskEntity: value,
-          asyncSnapshot:
-              const AsyncSnapshot.withData(ConnectionState.done, "Успешное открытие задачи")));
+          asyncSnapshot: const AsyncSnapshot.withData(
+              ConnectionState.done, "Успешное открытие задачи")));
     }).catchError((error) {
       addError(error);
     });
@@ -35,6 +35,18 @@ class DetailTaskCubit extends Cubit<DetailTaskState> {
       emit(state.copyWith(
           asyncSnapshot: const AsyncSnapshot.withData(
               ConnectionState.done, "Задача удалена")));
+    }).catchError((error) {
+      addError(error);
+    });
+  }
+
+  Future<void> updateTask(Map args) async {
+    emit(state.copyWith(asyncSnapshot: const AsyncSnapshot.waiting()));
+    await Future.delayed(const Duration(seconds: 1));
+    await taskRepository.updateTask(id, args).then((value) {
+      emit(state.copyWith(
+          asyncSnapshot: const AsyncSnapshot.withData(
+              ConnectionState.done, "Изменения сохранены")));
     }).catchError((error) {
       addError(error);
     });

@@ -27,5 +27,7 @@ abstract class AppApi {
 
   Future<dynamic> createTask(Map args);
 
+  Future<dynamic> updateTask(String id, Map args);
+
   Future<dynamic> deleteTask(String id);
 }

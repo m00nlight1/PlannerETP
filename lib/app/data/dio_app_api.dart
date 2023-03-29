@@ -129,4 +129,21 @@ class DioAppApi implements AppApi {
   Future deleteTask(String id) {
     return dio.delete("/data/tasks/$id");
   }
+
+  @override
+  Future updateTask(String id, Map args) {
+    return dio.put("/data/tasks/$id", data: {
+      "title": args["title"],
+      "content": args["content"],
+      "startOfWork": args["startOfWork"],
+      "endOfWork": args["endOfWork"],
+      "contractorCompany": args["contractorCompany"],
+      "responsibleMaster": args["responsibleMaster"],
+      "representative": args["representative"],
+      "equipmentLevel": args["equipmentLevel"],
+      "staffLevel": args["staffLevel"],
+      "resultsOfTheWork": args["resultsOfTheWork"],
+      "idCategory": args["idCategory"],
+    });
+  }
 }
