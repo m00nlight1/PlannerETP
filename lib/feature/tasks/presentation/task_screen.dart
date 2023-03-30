@@ -152,7 +152,7 @@ class _DetailTaskItem extends StatelessWidget {
                     color: Colors.grey.shade200,
                     child: SizedBox(
                       width: 180,
-                      height: 135,
+                      height: 100,
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Column(
@@ -184,7 +184,7 @@ class _DetailTaskItem extends StatelessWidget {
                     color: Colors.grey.shade200,
                     child: SizedBox(
                       width: 180,
-                      height: 135,
+                      height: 100,
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Column(

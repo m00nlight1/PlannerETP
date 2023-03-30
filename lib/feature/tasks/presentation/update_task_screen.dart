@@ -61,12 +61,17 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
   void initState() {
     super.initState();
     titleController = TextEditingController(text: taskEntity.title);
-    companyController = TextEditingController(text: taskEntity.contractorCompany);
-    masterController = TextEditingController(text: taskEntity.responsibleMaster);
-    representativeController = TextEditingController(text: taskEntity.representative);
-    equipmentLevelController = TextEditingController(text: taskEntity.equipmentLevel);
+    companyController =
+        TextEditingController(text: taskEntity.contractorCompany);
+    masterController =
+        TextEditingController(text: taskEntity.responsibleMaster);
+    representativeController =
+        TextEditingController(text: taskEntity.representative);
+    equipmentLevelController =
+        TextEditingController(text: taskEntity.equipmentLevel);
     staffLevelController = TextEditingController(text: taskEntity.staffLevel);
-    resultsOfTheWorkController = TextEditingController(text: taskEntity.resultsOfTheWork);
+    resultsOfTheWorkController =
+        TextEditingController(text: taskEntity.resultsOfTheWork);
     commentsController = TextEditingController(text: taskEntity.content);
   }
 
@@ -85,6 +90,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
     }
     return selectedDate;
   }
+
   // Select for Time
   Future<TimeOfDay> _selectTime(BuildContext context) async {
     final selected = await showTimePicker(
@@ -187,7 +193,13 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
             child: Column(
               children: [
                 //title
-                const Text("Название"),
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Название", style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AuthTextField(
                     hintText: 'Название',
                     obscureText: false,
@@ -220,7 +232,12 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                   showStartWorkDateTime
                                       ? const Icon(Icons.date_range_outlined,
                                           color: Color(0xFF0d74ba))
-                                      : const SizedBox(),
+                                      : Flexible(
+                                          child: Text(
+                                              taskEntity.startOfWork
+                                                  .toString()
+                                                  .split(".")[0],
+                                              textAlign: TextAlign.center)),
                                   const SizedBox(width: 5),
                                   showStartWorkDateTime
                                       ? Flexible(
@@ -240,7 +257,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 5.0),
                                   child: Text(
-                                    'Установить\nдату и время',
+                                    'Изменить\nдату и время',
                                     style: theme.textTheme.labelMedium,
                                     textAlign: TextAlign.center,
                                   ),
@@ -270,7 +287,12 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                   showEndWorkDateTime
                                       ? const Icon(Icons.date_range_outlined,
                                           color: Color(0xFF0d74ba))
-                                      : const SizedBox(),
+                                      : Flexible(
+                                          child: Text(
+                                              taskEntity.endOfWork
+                                                  .toString()
+                                                  .split(".")[0],
+                                              textAlign: TextAlign.center)),
                                   const SizedBox(width: 5),
                                   showEndWorkDateTime
                                       ? Flexible(
@@ -290,7 +312,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 5.0),
                                   child: Text(
-                                    'Установить\nдату и время',
+                                    'Изменить\nдату и время',
                                     style: theme.textTheme.labelMedium,
                                     textAlign: TextAlign.center,
                                   ),
@@ -305,6 +327,13 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 ),
                 const SizedBox(height: 10),
                 //contractor company
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Компания исполнитель", style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AuthTextField(
                     hintText: 'Компания исполнитель',
                     obscureText: false,
@@ -316,6 +345,13 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                         : null),
                 const SizedBox(height: 10),
                 //responsible master
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Ответственный мастер", style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AuthTextField(
                     hintText: 'Ответственный мастер',
                     obscureText: false,
@@ -327,6 +363,13 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                         : null),
                 const SizedBox(height: 10),
                 //representative
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Представитель", style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AuthTextField(
                     hintText: 'Представитель',
                     obscureText: false,
@@ -338,6 +381,13 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                         : null),
                 const SizedBox(height: 10),
                 //equipment level
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Уровень оснащения", style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AuthTextField(
                     hintText: 'Уровень оснащения',
                     obscureText: false,
@@ -349,6 +399,13 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                         : null),
                 const SizedBox(height: 10),
                 //staff level
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Уровень песонала", style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AuthTextField(
                     hintText: 'Уровень песонала',
                     obscureText: false,
