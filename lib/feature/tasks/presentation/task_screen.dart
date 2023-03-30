@@ -71,7 +71,7 @@ class _DetailTaskView extends StatelessWidget {
           ),
           IconButton(
             onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => UpdateTaskScreen(id: id))),
+              .push(MaterialPageRoute(builder: (context) => UpdateTaskScreen(id: id, taskEntity: taskEntity))),
             icon: const Icon(Icons.edit),
           ),
         ],

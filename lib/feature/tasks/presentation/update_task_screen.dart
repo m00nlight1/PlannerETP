@@ -5,25 +5,32 @@ import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/presentation/components/AuthTextField.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
+import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
 
 class UpdateTaskScreen extends StatelessWidget {
-  const UpdateTaskScreen({Key? key, required this.id}) : super(key: key);
+  const UpdateTaskScreen({Key? key, required this.id, required this.taskEntity})
+      : super(key: key);
 
   final String id;
+  final TaskEntity taskEntity;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) => DetailTaskCubit(locator.get<TaskRepository>(), id),
-      child: _UpdateTaskView(),
+      create: (context) => DetailTaskCubit(locator.get<TaskRepository>(), id),
+      child: _UpdateTaskView(taskEntity: taskEntity),
     );
   }
 }
 
 class _UpdateTaskView extends StatefulWidget {
+  final TaskEntity taskEntity;
+
+  const _UpdateTaskView({required this.taskEntity});
+
   @override
-  State<StatefulWidget> createState() => _UpdateTaskViewState();
+  State<StatefulWidget> createState() => _UpdateTaskViewState(taskEntity);
 }
 
 class _UpdateTaskViewState extends State<_UpdateTaskView> {
@@ -36,15 +43,32 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
   bool showStartWorkDateTime = false;
   bool showEndWorkDateTime = false;
 
-  final titleController = TextEditingController();
-  final companyController = TextEditingController();
-  final masterController = TextEditingController();
-  final representativeController = TextEditingController();
-  final equipmentLevelController = TextEditingController();
-  final staffLevelController = TextEditingController();
-  final resultsOfTheWorkController = TextEditingController();
-  final commentsController = TextEditingController();
+  TextEditingController? titleController;
+  TextEditingController? companyController;
+  TextEditingController? masterController;
+  TextEditingController? representativeController;
+  TextEditingController? equipmentLevelController;
+  TextEditingController? staffLevelController;
+  TextEditingController? resultsOfTheWorkController;
+  TextEditingController? commentsController;
   final GlobalKey<FormState> formKey = GlobalKey();
+
+  final TaskEntity taskEntity;
+
+  _UpdateTaskViewState(this.taskEntity);
+
+  @override
+  void initState() {
+    super.initState();
+    titleController = TextEditingController(text: taskEntity.title);
+    companyController = TextEditingController(text: taskEntity.contractorCompany);
+    masterController = TextEditingController(text: taskEntity.responsibleMaster);
+    representativeController = TextEditingController(text: taskEntity.representative);
+    equipmentLevelController = TextEditingController(text: taskEntity.equipmentLevel);
+    staffLevelController = TextEditingController(text: taskEntity.staffLevel);
+    resultsOfTheWorkController = TextEditingController(text: taskEntity.resultsOfTheWork);
+    commentsController = TextEditingController(text: taskEntity.content);
+  }
 
   // Select for Date
   Future<DateTime> _selectDate(BuildContext context) async {
@@ -61,7 +85,6 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
     }
     return selectedDate;
   }
-
   // Select for Time
   Future<TimeOfDay> _selectTime(BuildContext context) async {
     final selected = await showTimePicker(
@@ -136,16 +159,16 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
           IconButton(
             onPressed: () {
               context.read<DetailTaskCubit>().updateTask({
-                "title": titleController.text,
-                "content": commentsController.text,
+                "title": titleController?.text,
+                "content": commentsController?.text,
                 "startOfWork": startWorkDateTime.toString(),
                 "endOfWork": endWorkDateTime.toString(),
-                "contractorCompany": companyController.text,
-                "responsibleMaster": masterController.text,
-                "representative": representativeController.text,
-                "equipmentLevel": equipmentLevelController.text,
-                "staffLevel": staffLevelController.text,
-                "resultsOfTheWork": resultsOfTheWorkController.text,
+                "contractorCompany": companyController?.text,
+                "responsibleMaster": masterController?.text,
+                "representative": representativeController?.text,
+                "equipmentLevel": equipmentLevelController?.text,
+                "staffLevel": staffLevelController?.text,
+                "resultsOfTheWork": resultsOfTheWorkController?.text,
                 "idCategory": 1
               }).then((_) {
                 context.read<TaskCubit>().fetchTasks();
@@ -164,14 +187,15 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
             child: Column(
               children: [
                 //title
+                const Text("Название"),
                 AuthTextField(
                     hintText: 'Название',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: titleController,
+                    controller: titleController!,
                     validator: (title) =>
-                    title != null ? 'Введите название' : null),
+                        title != null ? 'Введите название' : null),
                 const SizedBox(height: 10),
                 //start and end datetime
                 Row(
@@ -195,15 +219,15 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                 children: [
                                   showStartWorkDateTime
                                       ? const Icon(Icons.date_range_outlined,
-                                      color: Color(0xFF0d74ba))
+                                          color: Color(0xFF0d74ba))
                                       : const SizedBox(),
                                   const SizedBox(width: 5),
                                   showStartWorkDateTime
                                       ? Flexible(
-                                      child: Text(
-                                        getStartWorkDateTime(),
-                                        style: theme.textTheme.bodyMedium,
-                                      ))
+                                          child: Text(
+                                          getStartWorkDateTime(),
+                                          style: theme.textTheme.bodyMedium,
+                                        ))
                                       : const SizedBox(),
                                 ],
                               ),
@@ -245,15 +269,15 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                 children: [
                                   showEndWorkDateTime
                                       ? const Icon(Icons.date_range_outlined,
-                                      color: Color(0xFF0d74ba))
+                                          color: Color(0xFF0d74ba))
                                       : const SizedBox(),
                                   const SizedBox(width: 5),
                                   showEndWorkDateTime
                                       ? Flexible(
-                                      child: Text(
-                                        getEndWorkDateTime(),
-                                        style: theme.textTheme.bodyMedium,
-                                      ))
+                                          child: Text(
+                                          getEndWorkDateTime(),
+                                          style: theme.textTheme.bodyMedium,
+                                        ))
                                       : const SizedBox(),
                                 ],
                               ),
@@ -286,7 +310,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: companyController,
+                    controller: companyController!,
                     validator: (company) => company != null
                         ? 'Укажите компанию исполнителя'
                         : null),
@@ -297,7 +321,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: masterController,
+                    controller: masterController!,
                     validator: (master) => master != null
                         ? 'Укажите ответственного мастера'
                         : null),
@@ -308,7 +332,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: representativeController,
+                    controller: representativeController!,
                     validator: (representative) => representative != null
                         ? 'Укажите представителя'
                         : null),
@@ -319,7 +343,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: equipmentLevelController,
+                    controller: equipmentLevelController!,
                     validator: (equipmentLevel) => equipmentLevel != null
                         ? 'Укажите уровень оснащения'
                         : null),
@@ -330,7 +354,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: staffLevelController,
+                    controller: staffLevelController!,
                     validator: (staffLevel) => staffLevel != null
                         ? 'Укажите уровень персонала'
                         : null),

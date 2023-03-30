@@ -27,7 +27,7 @@ class TaskItem extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Создано ${taskEntity.user?.id ?? ""}"),
+                  Text("Создано ${taskEntity.user?.username ?? ""} \n(${taskEntity.user?.email ?? ""})"),
                   Text("от ${taskEntity.createdAt.toString().split(" ")[0]}"),
                 ],
               ),
