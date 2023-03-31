@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:planner_etp/app/presentation/components/AuthTextField.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
@@ -30,6 +33,21 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   final resultsOfTheWorkController = TextEditingController();
   final commentsController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
+
+  File? imageFile;
+
+  void _getImgFromGallery() async {
+    PickedFile? pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+      maxWidth: 320,
+      maxHeight: 320,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+      });
+    }
+  }
 
   // Select for Date
   Future<DateTime> _selectDate(BuildContext context) async {
@@ -125,6 +143,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 "content": commentsController.text,
                 "startOfWork": startWorkDateTime.toString(),
                 "endOfWork": endWorkDateTime.toString(),
+                "imageUrl": imageFile.toString(),
                 "contractorCompany": companyController.text,
                 "responsibleMaster": masterController.text,
                 "representative": representativeController.text,
@@ -153,7 +172,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         color: Color(0xFF0d74ba)),
                     controller: titleController,
                     validator: (title) =>
-                    title != null ? 'Введите название' : null),
+                        title != null ? 'Введите название' : null),
                 const SizedBox(height: 10),
                 //start and end datetime
                 Row(
@@ -177,15 +196,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 children: [
                                   showStartWorkDateTime
                                       ? const Icon(Icons.date_range_outlined,
-                                      color: Color(0xFF0d74ba))
+                                          color: Color(0xFF0d74ba))
                                       : const SizedBox(),
                                   const SizedBox(width: 5),
                                   showStartWorkDateTime
                                       ? Flexible(
-                                      child: Text(
-                                        getStartWorkDateTime(),
-                                        style: theme.textTheme.bodyMedium,
-                                      ))
+                                          child: Text(
+                                          getStartWorkDateTime(),
+                                          style: theme.textTheme.bodyMedium,
+                                        ))
                                       : const SizedBox(),
                                 ],
                               ),
@@ -227,15 +246,15 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 children: [
                                   showEndWorkDateTime
                                       ? const Icon(Icons.date_range_outlined,
-                                      color: Color(0xFF0d74ba))
+                                          color: Color(0xFF0d74ba))
                                       : const SizedBox(),
                                   const SizedBox(width: 5),
                                   showEndWorkDateTime
                                       ? Flexible(
-                                      child: Text(
-                                        getEndWorkDateTime(),
-                                        style: theme.textTheme.bodyMedium,
-                                      ))
+                                          child: Text(
+                                          getEndWorkDateTime(),
+                                          style: theme.textTheme.bodyMedium,
+                                        ))
                                       : const SizedBox(),
                                 ],
                               ),
@@ -269,8 +288,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: companyController,
-                    validator: (company) =>
-                    company != null
+                    validator: (company) => company != null
                         ? 'Укажите компанию исполнителя'
                         : null),
                 const SizedBox(height: 10),
@@ -281,8 +299,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: masterController,
-                    validator: (master) =>
-                    master != null
+                    validator: (master) => master != null
                         ? 'Укажите ответственного мастера'
                         : null),
                 const SizedBox(height: 10),
@@ -293,10 +310,76 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: representativeController,
-                    validator: (representative) =>
-                    representative != null
+                    validator: (representative) => representative != null
                         ? 'Укажите представителя'
                         : null),
+                const SizedBox(height: 10),
+                //images
+                Card(
+                  color: Colors.grey.shade200,
+                  child: imageFile == null
+                      ? SizedBox(
+                          width: 342,
+                          height: 100,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Фото',
+                                    style: theme.textTheme.headlineSmall),
+                                MaterialButton(
+                                  onPressed: () {
+                                    _getImgFromGallery();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 55.0),
+                                    child: Text(
+                                      'Добавить медиафайл',
+                                      style: theme.textTheme.labelMedium,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : SizedBox(
+                          width: 342,
+                          height: 320,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Фото',
+                                    style: theme.textTheme.headlineSmall),
+                                const SizedBox(height: 10),
+                                Image.file(
+                                  imageFile!,
+                                  fit: BoxFit.cover,
+                                ),
+                                const SizedBox(height: 10),
+                                MaterialButton(
+                                  onPressed: () {
+                                    _getImgFromGallery();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 75.0),
+                                    child: Text(
+                                      'Выбрать другой медиафайл',
+                                      style: theme.textTheme.labelMedium,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                ),
                 const SizedBox(height: 10),
                 //equipment level
                 AuthTextField(
@@ -305,8 +388,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: equipmentLevelController,
-                    validator: (equipmentLevel) =>
-                    equipmentLevel != null
+                    validator: (equipmentLevel) => equipmentLevel != null
                         ? 'Укажите уровень оснащения'
                         : null),
                 const SizedBox(height: 10),
@@ -317,8 +399,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: staffLevelController,
-                    validator: (staffLevel) =>
-                    staffLevel != null
+                    validator: (staffLevel) => staffLevel != null
                         ? 'Укажите уровень персонала'
                         : null),
                 const SizedBox(height: 10),

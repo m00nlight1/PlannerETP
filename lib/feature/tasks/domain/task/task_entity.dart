@@ -17,6 +17,7 @@ class TaskEntity with _$TaskEntity {
     required DateTime createdAt,
     DateTime? startOfWork,
     DateTime? endOfWork,
+    String? imageUrl,
     String? contractorCompany,
     String? responsibleMaster,
     String? representative,
