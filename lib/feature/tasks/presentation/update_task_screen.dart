@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:getwidget/getwidget.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/presentation/components/AuthTextField.dart';
+import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
@@ -54,12 +59,32 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
   final GlobalKey<FormState> formKey = GlobalKey();
 
   final TaskEntity taskEntity;
+  final Storage storage = Storage();
+  Future<String>? imgDownload;
 
   _UpdateTaskViewState(this.taskEntity);
 
+  File? imageFile;
+  String? fileName;
+
+  void _getImgFromGallery() async {
+    PickedFile? pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+      maxWidth: 320,
+      maxHeight: 320,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   void initState() {
-    super.initState();
+    if (taskEntity.imageUrl != null) {
+      imgDownload = storage.downloadImage(taskEntity.imageUrl ?? "");
+    }
     titleController = TextEditingController(text: taskEntity.title);
     companyController =
         TextEditingController(text: taskEntity.contractorCompany);
@@ -73,6 +98,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
     resultsOfTheWorkController =
         TextEditingController(text: taskEntity.resultsOfTheWork);
     commentsController = TextEditingController(text: taskEntity.content);
+    super.initState();
   }
 
   // Select for Date
@@ -164,11 +190,16 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
         actions: [
           IconButton(
             onPressed: () {
+              if (imageFile != null) {
+                fileName = storage.getRandomString(7);
+                storage.uploadImage(imageFile!.path, fileName!);
+              }
               context.read<DetailTaskCubit>().updateTask({
                 "title": titleController?.text,
                 "content": commentsController?.text,
                 "startOfWork": startWorkDateTime.toString(),
                 "endOfWork": endWorkDateTime.toString(),
+                "imageUrl": fileName,
                 "contractorCompany": companyController?.text,
                 "responsibleMaster": masterController?.text,
                 "representative": representativeController?.text,
@@ -330,7 +361,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 Row(
                   children: [
                     const SizedBox(width: 25),
-                    Text("Компания исполнитель", style: theme.textTheme.headlineSmall)
+                    Text("Компания исполнитель",
+                        style: theme.textTheme.headlineSmall)
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -348,7 +380,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 Row(
                   children: [
                     const SizedBox(width: 25),
-                    Text("Ответственный мастер", style: theme.textTheme.headlineSmall)
+                    Text("Ответственный мастер",
+                        style: theme.textTheme.headlineSmall)
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -380,11 +413,111 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                         ? 'Укажите представителя'
                         : null),
                 const SizedBox(height: 10),
+                //images
+                Card(
+                  color: Colors.grey.shade200,
+                  child: taskEntity.imageUrl == null && imageFile == null
+                      ? SizedBox(
+                          width: 342,
+                          height: 100,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Фото',
+                                    style: theme.textTheme.headlineSmall),
+                                const SizedBox(height: 10),
+                                MaterialButton(
+                                  onPressed: () {
+                                    _getImgFromGallery();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 55.0),
+                                    child: Text(
+                                      'Добавить медиафайл',
+                                      style: theme.textTheme.labelMedium,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : GFCard(
+                          boxFit: BoxFit.cover,
+                          title: GFListTile(
+                            title: Text('Фото',
+                                style: theme.textTheme.headlineSmall),
+                          ),
+                          content: SizedBox(
+                            child: imageFile == null
+                                ? FutureBuilder(
+                                    future: imgDownload,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<String> snapshot) {
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.done &&
+                                          snapshot.hasData) {
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            imageFile == null
+                                                ? Image.network(
+                                                    snapshot.data ?? "",
+                                                    height: 150,
+                                                    fit: BoxFit.fill,
+                                                  )
+                                                : Image.file(
+                                                    imageFile!,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                          ],
+                                        );
+                                      } else {
+                                        return const SizedBox();
+                                      }
+                                    },
+                                  )
+                                : SizedBox(
+                                    width: 342,
+                                    height: 220,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Image.file(
+                                            imageFile!,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                          ),
+                          buttonBar: GFButtonBar(
+                            children: <Widget>[
+                              GFButton(
+                                onPressed: () {
+                                  _getImgFromGallery();
+                                },
+                                text: 'Выбрать другой медиафайл',
+                              ),
+                            ],
+                          ),
+                        ),
+                ),
+                const SizedBox(height: 10),
                 //equipment level
                 Row(
                   children: [
                     const SizedBox(width: 25),
-                    Text("Уровень оснащения", style: theme.textTheme.headlineSmall)
+                    Text("Уровень оснащения",
+                        style: theme.textTheme.headlineSmall)
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -402,7 +535,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 Row(
                   children: [
                     const SizedBox(width: 25),
-                    Text("Уровень песонала", style: theme.textTheme.headlineSmall)
+                    Text("Уровень песонала",
+                        style: theme.textTheme.headlineSmall)
                   ],
                 ),
                 const SizedBox(height: 8),

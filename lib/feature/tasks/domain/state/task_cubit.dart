@@ -30,6 +30,7 @@ class TaskCubit extends HydratedCubit<TaskState> {
 
   Future<void> fetchTasks() async {
     emit(state.copyWith(asyncSnapshot: const AsyncSnapshot.waiting()));
+    await Future.delayed(const Duration(seconds: 1));
     await taskRepository.fetchTasks().then((value) {
       final Iterable iterable = value;
       emit(state.copyWith(

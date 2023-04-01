@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "744777671655",
+    "project_id": "etpplanner",
+    "storage_bucket": "etpplanner.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744777671655:android:aeff9a414c0f4546749342",
+        "android_client_info": {
+          "package_name": "com.example.planner_etp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744777671655-fsqth6c7te3207uu36holifu7ke2afub.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNNcnhSJjUbYgkaLL2NmAjrJC-uL224tA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744777671655-fsqth6c7te3207uu36holifu7ke2afub.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744777671655-pkqnn8iumkiv7sn86bqen2l94a4hbfqt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.plannerEtp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,10 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:planner_etp/app/presentation/components/AuthTextField.dart';
+import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 
 class AddTaskScreen extends StatefulWidget {
@@ -34,7 +34,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   final commentsController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
 
+  final Storage storage = Storage();
+
   File? imageFile;
+  String? fileName;
 
   void _getImgFromGallery() async {
     PickedFile? pickedFile = await ImagePicker().getImage(
@@ -113,21 +116,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     });
   }
 
-  String getStartWorkDateTime() {
-    if (startWorkDateTime == null) {
-      return 'select date timer';
-    } else {
-      return DateFormat('yyyy-MM-dd kk:mm').format(startWorkDateTime);
-    }
-  }
+  String getStartWorkDateTime() => DateFormat('yyyy-MM-dd kk:mm').format(startWorkDateTime);
 
-  String getEndWorkDateTime() {
-    if (endWorkDateTime == null) {
-      return 'select date timer';
-    } else {
-      return DateFormat('yyyy-MM-dd – kk:mm').format(endWorkDateTime);
-    }
-  }
+  String getEndWorkDateTime() => DateFormat('yyyy-MM-dd – kk:mm').format(endWorkDateTime);
+
 
   @override
   Widget build(BuildContext context) {
@@ -138,12 +130,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         actions: [
           IconButton(
             onPressed: () {
+              if (imageFile != null) {
+                fileName = storage.getRandomString(7);
+                storage.uploadImage(imageFile!.path, fileName!);
+              }
               context.read<TaskCubit>().createTask({
                 "title": titleController.text,
                 "content": commentsController.text,
                 "startOfWork": startWorkDateTime.toString(),
                 "endOfWork": endWorkDateTime.toString(),
-                "imageUrl": imageFile.toString(),
+                "imageUrl": fileName,
                 "contractorCompany": companyController.text,
                 "responsibleMaster": masterController.text,
                 "representative": representativeController.text,

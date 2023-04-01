@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:getwidget/components/card/gf_card.dart';
+import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
 import 'package:planner_etp/app/presentation/components/AppSnackBar.dart';
+import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
@@ -70,8 +73,9 @@ class _DetailTaskView extends StatelessWidget {
             icon: const Icon(Icons.delete),
           ),
           IconButton(
-            onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => UpdateTaskScreen(id: id, taskEntity: taskEntity))),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    UpdateTaskScreen(id: id, taskEntity: taskEntity))),
             icon: const Icon(Icons.edit),
           ),
         ],
@@ -106,10 +110,29 @@ class _DetailTaskView extends StatelessWidget {
   }
 }
 
-class _DetailTaskItem extends StatelessWidget {
+class _DetailTaskItem extends StatefulWidget {
   const _DetailTaskItem({required this.taskEntity});
 
   final TaskEntity taskEntity;
+
+  @override
+  State<StatefulWidget> createState() => _DetailTaskItemState(taskEntity);
+}
+
+class _DetailTaskItemState extends State<_DetailTaskItem> {
+  final TaskEntity taskEntity;
+  final Storage storage = Storage();
+  Future<String>? imgDownload;
+
+  _DetailTaskItemState(this.taskEntity);
+
+  @override
+  void initState() {
+    if (taskEntity.imageUrl != null) {
+      imgDownload = storage.downloadImage(taskEntity.imageUrl ?? "");
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -277,11 +300,60 @@ class _DetailTaskItem extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
+              //image
+              Card(
+                color: Colors.grey.shade200,
+                child: taskEntity.imageUrl == null
+                    ? SizedBox(
+                        width: 365,
+                        height: 100,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Фото',
+                                  style: theme.textTheme.headlineSmall),
+                            ],
+                          ),
+                        ),
+                      )
+                    : GFCard(
+                        boxFit: BoxFit.cover,
+                        title: GFListTile(
+                          title: Text('Фото',
+                              style: theme.textTheme.headlineSmall),
+                        ),
+                        content: FutureBuilder(
+                          future: imgDownload,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<String> snapshot) {
+                            if (snapshot.connectionState ==
+                                    ConnectionState.done &&
+                                snapshot.hasData) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Image.network(
+                                    snapshot.data ?? "",
+                                    height: 150,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return const SizedBox();
+                            }
+                          },
+                        ),
+                      ),
+              ),
+              const SizedBox(height: 10),
               //equipment level
               Card(
                 color: Colors.grey.shade200,
                 child: SizedBox(
-                  width: 370,
+                  width: 368,
                   height: 90,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
