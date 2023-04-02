@@ -32,7 +32,7 @@ class BarActionButton extends StatelessWidget {
         child: Material(
           color: color,
           child: InkWell(
-            splashColor: Colors.blue,
+            splashColor: const Color(0xFF0d74ba),
             onTap: onPressed,
             child: SizedBox(
               width: size,

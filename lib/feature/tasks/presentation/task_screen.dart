@@ -14,6 +14,7 @@ import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
+import 'package:planner_etp/feature/tasks/presentation/task_chat_screen.dart';
 import 'package:planner_etp/feature/tasks/presentation/update_task_screen.dart';
 
 class TaskScreen extends StatelessWidget {
@@ -67,6 +68,17 @@ class _DetailTaskView extends StatelessWidget {
             )),
         actions: [
           IconButton(
+            onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const TaskChatScreen())),
+            icon: const Icon(Icons.message_rounded),
+          ),
+          IconButton(
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    UpdateTaskScreen(id: id, taskEntity: taskEntity))),
+            icon: const Icon(Icons.edit),
+          ),
+          IconButton(
             onPressed: () {
               context.read<DetailTaskCubit>().deleteTask().then((_) {
                 context.read<TaskCubit>().fetchTasks();
@@ -74,12 +86,6 @@ class _DetailTaskView extends StatelessWidget {
               });
             },
             icon: const Icon(Icons.delete),
-          ),
-          IconButton(
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    UpdateTaskScreen(id: id, taskEntity: taskEntity))),
-            icon: const Icon(Icons.edit),
           ),
         ],
       ),
@@ -100,8 +106,14 @@ class _DetailTaskView extends StatelessWidget {
             return const AppLoader();
           }
           if (state.taskEntity != null) {
-            return _DetailTaskItem(
-              taskEntity: state.taskEntity!,
+            return Column(
+              children: [
+                Expanded(
+                  child: _DetailTaskItem(taskEntity: state.taskEntity!),
+                ),
+                //sent message action bar
+                _ActionBar(taskEntity: taskEntity),
+              ],
             );
           }
           return const Center(
@@ -448,8 +460,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
               Text(
                   "Автор: ${taskEntity.user?.username} (${taskEntity.user?.email})",
                   style: theme.textTheme.bodyMedium),
-              //sent message action bar
-              _ActionBar(taskEntity: taskEntity),
             ],
           ),
         ),
@@ -460,7 +470,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
 
 class _ActionBar extends StatefulWidget {
   final TaskEntity taskEntity;
-  // final void Function(String) onTextChanged;
 
   const _ActionBar({Key? key, required this.taskEntity}) : super(key: key);
 
@@ -470,8 +479,7 @@ class _ActionBar extends StatefulWidget {
 
 class __ActionBarState extends State<_ActionBar> {
   final TaskEntity taskEntity;
-  final TextEditingController messageController =
-  TextEditingController();
+  final TextEditingController messageController = TextEditingController();
 
   __ActionBarState(this.taskEntity);
 
@@ -486,22 +494,6 @@ class __ActionBarState extends State<_ActionBar> {
     }
   }
 
-  // void _onTextChange() {
-  //   widget.onTextChanged(messageController.text);
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   messageController.addListener(_onTextChange);
-  // }
-
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   messageController.removeListener(_onTextChange);
-  // }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -509,45 +501,44 @@ class __ActionBarState extends State<_ActionBar> {
       top: false,
       child: Row(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border(
-                right: BorderSide(
-                  width: 2,
-                  color: Theme.of(context).dividerColor,
-                ),
-              ),
-            ),
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Icon(
-                Icons.camera_alt
-              ),
-            ),
-          ),
+          // Container(
+          //   decoration: BoxDecoration(
+          //     border: Border(
+          //       right: BorderSide(
+          //         width: 2,
+          //         color: Theme.of(context).dividerColor,
+          //       ),
+          //     ),
+          //   ),
+          //   child: const Padding(
+          //     padding: EdgeInsets.symmetric(horizontal: 16.0),
+          //     // child: Icon(
+          //     //   Icons.add
+          //     // ),
+          //   ),
+          // ),
           Expanded(
             child: Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: TextField(
-              controller: messageController,
-              onChanged: (value) {
-                messageController.text = value;
-              },
-              style: const TextStyle(fontSize: 14),
-              decoration: const InputDecoration(
-                hintText: 'Введите сообщение...',
-                border: InputBorder.none,
+              padding: const EdgeInsets.only(left: 16.0, top: 15.0),
+              child: TextField(
+                controller: messageController,
+                style: const TextStyle(fontSize: 16),
+                decoration: InputDecoration(
+                  hintText: 'Введите сообщение...',
+                  filled: true,
+                  fillColor: Colors.grey.shade200,
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(50)),
+                ),
+                onSubmitted: (_) => _sendMessage(),
               ),
-              onSubmitted: (_) => _sendMessage(),
-            ),),
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-              left: 12,
-              right: 24.0,
-            ),
+            padding: const EdgeInsets.only(left: 12, right: 24.0, top: 15.0),
             child: BarActionButton(
-              color: Colors.blue,
+              color: const Color(0xFF0d74ba),
               icon: Icons.send_rounded,
               onPressed: _sendMessage,
             ),
