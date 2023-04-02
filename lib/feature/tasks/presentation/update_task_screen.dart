@@ -208,9 +208,10 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 "resultsOfTheWork": resultsOfTheWorkController?.text,
                 "idCategory": 1
               }).then((_) {
+                context.read<DetailTaskCubit>().fetchTask();
                 context.read<TaskCubit>().fetchTasks();
                 Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
               });
             },
             icon: const Icon(Icons.done),

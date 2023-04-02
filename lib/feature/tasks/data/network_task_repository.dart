@@ -57,4 +57,14 @@ class NetworkTaskRepository implements TaskRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<String> sentMessage(Map args) async {
+    try {
+      final response = await appApi.sentMessage(args);
+      return response.data["message"];
+    } catch (_) {
+      rethrow;
+    }
+  }
 }

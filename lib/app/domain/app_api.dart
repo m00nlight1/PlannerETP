@@ -30,4 +30,6 @@ abstract class AppApi {
   Future<dynamic> updateTask(String id, Map args);
 
   Future<dynamic> deleteTask(String id);
+
+  Future<dynamic> sentMessage(Map args);
 }

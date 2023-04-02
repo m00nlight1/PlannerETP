@@ -8,4 +8,6 @@ abstract class TaskRepository {
   Future createTask(Map args);
 
   Future updateTask(String id, Map args);
+
+  Future sentMessage(Map args);
 }

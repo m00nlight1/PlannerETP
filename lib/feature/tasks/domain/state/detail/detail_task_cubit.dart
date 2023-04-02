@@ -47,6 +47,17 @@ class DetailTaskCubit extends Cubit<DetailTaskState> {
       emit(state.copyWith(
           asyncSnapshot: const AsyncSnapshot.withData(
               ConnectionState.done, "Изменения сохранены")));
+      fetchTask();
+    }).catchError((error) {
+      addError(error);
+    });
+  }
+
+  Future<void> sentMessage(Map args) async {
+    await taskRepository.sentMessage(args).then((value) {
+      emit(state.copyWith(
+          asyncSnapshot: const AsyncSnapshot.withData(
+              ConnectionState.done, "Сообщение отправлено")));
     }).catchError((error) {
       addError(error);
     });

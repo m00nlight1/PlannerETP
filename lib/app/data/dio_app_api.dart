@@ -148,4 +148,12 @@ class DioAppApi implements AppApi {
       "idCategory": args["idCategory"],
     });
   }
+
+  @override
+  Future sentMessage(Map args) {
+    return dio.post("/data/messages", data:  {
+      "content": args["content"],
+      "idTask": args["idTask"],
+    });
+  }
 }
