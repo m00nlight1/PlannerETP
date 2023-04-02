@@ -15,11 +15,41 @@ class MessagesList extends StatelessWidget {
         if (state.messageList.isNotEmpty) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
-            child: ListView.builder(
+            child: ListView.separated(
               shrinkWrap: true,
-              itemCount: state.messageList.length,
+              reverse: true,
+              itemCount: state.messageList.length + 1,
+              separatorBuilder: (context, index) {
+                if (index == state.messageList.length - 1) {
+                  return SizedBox(
+                    child: Text(state.messageList[index].sentTo.toString()),
+                  );
+                }
+                if (state.messageList.length == 1) {
+                  return const SizedBox.shrink();
+                } else if (index >= state.messageList.length - 1) {
+                  return const SizedBox.shrink();
+                } else if (index <= state.messageList.length) {
+                  final message = state.messageList[index];
+                  final nextMessage = state.messageList[index + 1];
+                  if ((message.sentTo.toLocal().toString() ==
+                      nextMessage.sentTo.toLocal().toString())) {
+                    return SizedBox(
+                      child: Text(message.sentTo.day.toString()),
+                    );
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
               itemBuilder: (context, index) {
-                return MessageItem(messageEntity: state.messageList[index]);
+                if (index < state.messageList.length) {
+                  return MessageItem(messageEntity: state.messageList[index]);
+                } else {
+                  return const SizedBox.shrink();
+                }
               },
             ),
           );
