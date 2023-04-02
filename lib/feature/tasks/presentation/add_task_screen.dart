@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:planner_etp/app/presentation/components/AuthTextField.dart';
+import 'package:planner_etp/app/presentation/components/app_text_field.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 
@@ -161,7 +161,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             child: Column(
               children: [
                 //title
-                AuthTextField(
+                AppTextField(
                     hintText: 'Название',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
@@ -278,7 +278,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ),
                 const SizedBox(height: 10),
                 //contractor company
-                AuthTextField(
+                AppTextField(
                     hintText: 'Компания исполнитель',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
@@ -289,7 +289,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         : null),
                 const SizedBox(height: 10),
                 //responsible master
-                AuthTextField(
+                AppTextField(
                     hintText: 'Ответственный мастер',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
@@ -300,7 +300,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         : null),
                 const SizedBox(height: 10),
                 //representative
-                AuthTextField(
+                AppTextField(
                     hintText: 'Представитель',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
@@ -378,7 +378,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 ),
                 const SizedBox(height: 10),
                 //equipment level
-                AuthTextField(
+                AppTextField(
                     hintText: 'Уровень оснащения',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
@@ -389,7 +389,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         : null),
                 const SizedBox(height: 10),
                 //staff level
-                AuthTextField(
+                AppTextField(
                     hintText: 'Уровень песонала',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,

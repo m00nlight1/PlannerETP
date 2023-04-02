@@ -7,7 +7,7 @@ import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
-import 'package:planner_etp/app/presentation/components/AppSnackBar.dart';
+import 'package:planner_etp/app/presentation/components/app_snack_bar.dart';
 import 'package:planner_etp/app/presentation/components/bar_action_button.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';

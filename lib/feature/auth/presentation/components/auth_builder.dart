@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
-import 'package:planner_etp/app/presentation/components/AppSnackBar.dart';
+import 'package:planner_etp/app/presentation/components/app_snack_bar.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 
 class AuthBuilder extends StatelessWidget {

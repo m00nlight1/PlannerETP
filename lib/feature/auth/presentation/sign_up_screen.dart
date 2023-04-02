@@ -1,8 +1,8 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:planner_etp/app/presentation/components/AuthButton.dart';
-import 'package:planner_etp/app/presentation/components/AuthTextField.dart';
+import 'package:planner_etp/app/presentation/components/app_button.dart';
+import 'package:planner_etp/app/presentation/components/app_text_field.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 
 class SignUpScreen extends StatelessWidget {
@@ -50,7 +50,7 @@ class SignUpScreen extends StatelessWidget {
                 const SizedBox(height: 55),
 
                 //username textfield
-                AuthTextField(
+                AppTextField(
                     hintText: 'Логин',
                     obscureText: false,
                     prefixIcon:
@@ -64,7 +64,7 @@ class SignUpScreen extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 // email textfield
-                AuthTextField(
+                AppTextField(
                   hintText: 'Email',
                   obscureText: false,
                   prefixIcon: const Icon(Icons.email, color: Colors.grey),
@@ -78,7 +78,7 @@ class SignUpScreen extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 // password textfield
-                AuthTextField(
+                AppTextField(
                   hintText: 'Пароль',
                   obscureText: true,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
@@ -91,7 +91,7 @@ class SignUpScreen extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 //confirm password textfield
-                AuthTextField(
+                AppTextField(
                   hintText: 'Повторите пароль',
                   obscureText: true,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
@@ -104,7 +104,7 @@ class SignUpScreen extends StatelessWidget {
                 const SizedBox(height: 45),
 
                 // sign up button
-                AuthButton(
+                AppButton(
                   onTap: () {
                     if (formKey.currentState?.validate() != true) return;
                     if (passwordRepeatController.text !=

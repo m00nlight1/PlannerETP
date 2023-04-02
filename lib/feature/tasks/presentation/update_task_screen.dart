@@ -6,7 +6,7 @@ import 'package:getwidget/getwidget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:planner_etp/app/di/init_di.dart';
-import 'package:planner_etp/app/presentation/components/AuthTextField.dart';
+import 'package:planner_etp/app/presentation/components/app_text_field.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
@@ -165,21 +165,9 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
     });
   }
 
-  String getStartWorkDateTime() {
-    if (startWorkDateTime == null) {
-      return 'select date timer';
-    } else {
-      return DateFormat('yyyy-MM-dd kk:mm').format(startWorkDateTime);
-    }
-  }
+  String getStartWorkDateTime() => DateFormat('yyyy-MM-dd kk:mm').format(startWorkDateTime);
 
-  String getEndWorkDateTime() {
-    if (endWorkDateTime == null) {
-      return 'select date timer';
-    } else {
-      return DateFormat('yyyy-MM-dd – kk:mm').format(endWorkDateTime);
-    }
-  }
+  String getEndWorkDateTime() => DateFormat('yyyy-MM-dd – kk:mm').format(endWorkDateTime);
 
   @override
   Widget build(BuildContext context) {
@@ -232,7 +220,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                AuthTextField(
+                AppTextField(
                     hintText: 'Название',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
@@ -367,7 +355,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                AuthTextField(
+                AppTextField(
                     hintText: 'Компания исполнитель',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
@@ -386,7 +374,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                AuthTextField(
+                AppTextField(
                     hintText: 'Ответственный мастер',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
@@ -404,7 +392,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                AuthTextField(
+                AppTextField(
                     hintText: 'Представитель',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
@@ -522,7 +510,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                AuthTextField(
+                AppTextField(
                     hintText: 'Уровень оснащения',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
@@ -541,7 +529,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                AuthTextField(
+                AppTextField(
                     hintText: 'Уровень песонала',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,

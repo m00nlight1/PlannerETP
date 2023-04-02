@@ -2,8 +2,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:planner_etp/app/presentation/components/AuthTextField.dart';
-import 'package:planner_etp/app/presentation/components/AuthButton.dart';
+import 'package:planner_etp/app/presentation/components/app_text_field.dart';
+import 'package:planner_etp/app/presentation/components/app_button.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -55,7 +55,7 @@ class SignInScreen extends StatelessWidget {
                 // const SizedBox(height: 25),
 
                 // email textfield
-                AuthTextField(
+                AppTextField(
                   hintText: 'Email',
                   obscureText: false,
                   prefixIcon: const Icon(Icons.email, color: Colors.grey),
@@ -69,7 +69,7 @@ class SignInScreen extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 // password textfield
-                AuthTextField(
+                AppTextField(
                   hintText: 'Пароль',
                   obscureText: true,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
@@ -98,7 +98,7 @@ class SignInScreen extends StatelessWidget {
                 const SizedBox(height: 25),
 
                 // sign in button
-                AuthButton(
+                AppButton(
                   onTap: () {
                     if (formKey.currentState?.validate() == true) {
                       _onTapToSignInButton(context.read<AuthCubit>());

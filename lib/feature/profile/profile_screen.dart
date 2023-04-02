@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
-import 'package:planner_etp/app/presentation/components/AppSnackBar.dart';
-import 'package:planner_etp/app/presentation/components/AuthTextField.dart';
+import 'package:planner_etp/app/presentation/components/app_snack_bar.dart';
+import 'package:planner_etp/app/presentation/components/app_text_field.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -153,7 +153,7 @@ class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
           child: Center(
             child: Column(
               children: [
-                AuthTextField(
+                AppTextField(
                   hintText: 'Логин',
                   obscureText: false,
                   prefixIcon:
@@ -165,7 +165,7 @@ class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
                           : null,
                 ),
                 const SizedBox(height: 10),
-                AuthTextField(
+                AppTextField(
                   hintText: 'Email',
                   obscureText: false,
                   prefixIcon: const Icon(Icons.email, color: Colors.grey),
@@ -239,7 +239,7 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
           child: Center(
             child: Column(
               children: [
-                AuthTextField(
+                AppTextField(
                   hintText: 'Текущий пароль',
                   obscureText: true,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
@@ -249,7 +249,7 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
                       : null,
                 ),
                 const SizedBox(height: 10),
-                AuthTextField(
+                AppTextField(
                   hintText: 'Новый пароль',
                   obscureText: false,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
@@ -259,7 +259,7 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
                       : null,
                 ),
                 const SizedBox(height: 10),
-                AuthTextField(
+                AppTextField(
                   hintText: 'Повторите пароль',
                   obscureText: true,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
