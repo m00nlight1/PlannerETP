@@ -2,8 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
-import 'package:planner_etp/feature/tasks/presentation/task_item.dart';
-
+import 'package:planner_etp/feature/tasks/presentation/tasks/task_item.dart';
 class TaskList extends StatelessWidget {
   const TaskList({super.key});
 

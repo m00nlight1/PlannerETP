@@ -10,4 +10,6 @@ abstract class TaskRepository {
   Future updateTask(String id, Map args);
 
   Future sentMessage(Map args);
+
+  Future getTaskChat(String id);
 }

@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
+import 'package:planner_etp/feature/tasks/domain/chat/message_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
 
 part 'detail_task_state.dart';
 
 part 'detail_task_cubit.freezed.dart';
+
+part 'detail_task_cubit.g.dart';
 
 class DetailTaskCubit extends Cubit<DetailTaskState> {
   final TaskRepository taskRepository;
@@ -60,6 +63,20 @@ class DetailTaskCubit extends Cubit<DetailTaskState> {
       emit(state.copyWith(
           asyncSnapshot: const AsyncSnapshot.withData(
               ConnectionState.done, "Сообщение отправлено")));
+    }).catchError((error) {
+      addError(error);
+    });
+  }
+
+  Future<void> getTaskChat() async {
+    emit(state.copyWith(asyncSnapshot: const AsyncSnapshot.waiting()));
+    await Future.delayed(const Duration(seconds: 1));
+    await taskRepository.getTaskChat(id).then((value) {
+      final Iterable iterable = value;
+      emit(state.copyWith(
+          messageList: iterable.map((e) => MessageEntity.fromJson(e)).toList(),
+          asyncSnapshot:
+          const AsyncSnapshot.withData(ConnectionState.done, true)));
     }).catchError((error) {
       addError(error);
     });

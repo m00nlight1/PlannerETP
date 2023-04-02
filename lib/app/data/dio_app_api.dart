@@ -156,4 +156,9 @@ class DioAppApi implements AppApi {
       "idTask": args["idTask"],
     });
   }
+
+  @override
+  Future getTaskChat(String id) {
+    return dio.get("/data/messages/$id");
+  }
 }

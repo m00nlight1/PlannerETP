@@ -3,7 +3,7 @@ import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
-import 'package:planner_etp/feature/tasks/presentation/task_screen.dart';
+import 'package:planner_etp/feature/tasks/presentation/tasks/task_screen.dart';
 
 class TaskItem extends StatefulWidget {
   const TaskItem({super.key, required this.taskEntity});

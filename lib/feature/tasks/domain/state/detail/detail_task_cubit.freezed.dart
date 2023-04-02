@@ -14,12 +14,19 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
+DetailTaskState _$DetailTaskStateFromJson(Map<String, dynamic> json) {
+  return _DetailTaskState.fromJson(json);
+}
+
 /// @nodoc
 mixin _$DetailTaskState {
+  @JsonKey(ignore: true)
   AsyncSnapshot<dynamic> get asyncSnapshot =>
       throw _privateConstructorUsedError;
   TaskEntity? get taskEntity => throw _privateConstructorUsedError;
+  List<MessageEntity> get messageList => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $DetailTaskStateCopyWith<DetailTaskState> get copyWith =>
       throw _privateConstructorUsedError;
@@ -31,7 +38,10 @@ abstract class $DetailTaskStateCopyWith<$Res> {
           DetailTaskState value, $Res Function(DetailTaskState) then) =
       _$DetailTaskStateCopyWithImpl<$Res, DetailTaskState>;
   @useResult
-  $Res call({AsyncSnapshot<dynamic> asyncSnapshot, TaskEntity? taskEntity});
+  $Res call(
+      {@JsonKey(ignore: true) AsyncSnapshot<dynamic> asyncSnapshot,
+      TaskEntity? taskEntity,
+      List<MessageEntity> messageList});
 
   $TaskEntityCopyWith<$Res>? get taskEntity;
 }
@@ -51,6 +61,7 @@ class _$DetailTaskStateCopyWithImpl<$Res, $Val extends DetailTaskState>
   $Res call({
     Object? asyncSnapshot = null,
     Object? taskEntity = freezed,
+    Object? messageList = null,
   }) {
     return _then(_value.copyWith(
       asyncSnapshot: null == asyncSnapshot
@@ -61,6 +72,10 @@ class _$DetailTaskStateCopyWithImpl<$Res, $Val extends DetailTaskState>
           ? _value.taskEntity
           : taskEntity // ignore: cast_nullable_to_non_nullable
               as TaskEntity?,
+      messageList: null == messageList
+          ? _value.messageList
+          : messageList // ignore: cast_nullable_to_non_nullable
+              as List<MessageEntity>,
     ) as $Val);
   }
 
@@ -85,7 +100,10 @@ abstract class _$$_DetailTaskStateCopyWith<$Res>
       __$$_DetailTaskStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({AsyncSnapshot<dynamic> asyncSnapshot, TaskEntity? taskEntity});
+  $Res call(
+      {@JsonKey(ignore: true) AsyncSnapshot<dynamic> asyncSnapshot,
+      TaskEntity? taskEntity,
+      List<MessageEntity> messageList});
 
   @override
   $TaskEntityCopyWith<$Res>? get taskEntity;
@@ -104,6 +122,7 @@ class __$$_DetailTaskStateCopyWithImpl<$Res>
   $Res call({
     Object? asyncSnapshot = null,
     Object? taskEntity = freezed,
+    Object? messageList = null,
   }) {
     return _then(_$_DetailTaskState(
       asyncSnapshot: null == asyncSnapshot
@@ -114,25 +133,44 @@ class __$$_DetailTaskStateCopyWithImpl<$Res>
           ? _value.taskEntity
           : taskEntity // ignore: cast_nullable_to_non_nullable
               as TaskEntity?,
+      messageList: null == messageList
+          ? _value._messageList
+          : messageList // ignore: cast_nullable_to_non_nullable
+              as List<MessageEntity>,
     ));
   }
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$_DetailTaskState implements _DetailTaskState {
   const _$_DetailTaskState(
-      {this.asyncSnapshot = const AsyncSnapshot.nothing(), this.taskEntity});
+      {@JsonKey(ignore: true)
+          this.asyncSnapshot = const AsyncSnapshot.nothing(),
+      this.taskEntity,
+      final List<MessageEntity> messageList = const []})
+      : _messageList = messageList;
+
+  factory _$_DetailTaskState.fromJson(Map<String, dynamic> json) =>
+      _$$_DetailTaskStateFromJson(json);
 
   @override
-  @JsonKey()
+  @JsonKey(ignore: true)
   final AsyncSnapshot<dynamic> asyncSnapshot;
   @override
   final TaskEntity? taskEntity;
+  final List<MessageEntity> _messageList;
+  @override
+  @JsonKey()
+  List<MessageEntity> get messageList {
+    if (_messageList is EqualUnmodifiableListView) return _messageList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_messageList);
+  }
 
   @override
   String toString() {
-    return 'DetailTaskState(asyncSnapshot: $asyncSnapshot, taskEntity: $taskEntity)';
+    return 'DetailTaskState(asyncSnapshot: $asyncSnapshot, taskEntity: $taskEntity, messageList: $messageList)';
   }
 
   @override
@@ -143,28 +181,46 @@ class _$_DetailTaskState implements _DetailTaskState {
             (identical(other.asyncSnapshot, asyncSnapshot) ||
                 other.asyncSnapshot == asyncSnapshot) &&
             (identical(other.taskEntity, taskEntity) ||
-                other.taskEntity == taskEntity));
+                other.taskEntity == taskEntity) &&
+            const DeepCollectionEquality()
+                .equals(other._messageList, _messageList));
   }
 
+  @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, asyncSnapshot, taskEntity);
+  int get hashCode => Object.hash(runtimeType, asyncSnapshot, taskEntity,
+      const DeepCollectionEquality().hash(_messageList));
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$_DetailTaskStateCopyWith<_$_DetailTaskState> get copyWith =>
       __$$_DetailTaskStateCopyWithImpl<_$_DetailTaskState>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_DetailTaskStateToJson(
+      this,
+    );
+  }
 }
 
 abstract class _DetailTaskState implements DetailTaskState {
   const factory _DetailTaskState(
-      {final AsyncSnapshot<dynamic> asyncSnapshot,
-      final TaskEntity? taskEntity}) = _$_DetailTaskState;
+      {@JsonKey(ignore: true) final AsyncSnapshot<dynamic> asyncSnapshot,
+      final TaskEntity? taskEntity,
+      final List<MessageEntity> messageList}) = _$_DetailTaskState;
+
+  factory _DetailTaskState.fromJson(Map<String, dynamic> json) =
+      _$_DetailTaskState.fromJson;
 
   @override
+  @JsonKey(ignore: true)
   AsyncSnapshot<dynamic> get asyncSnapshot;
   @override
   TaskEntity? get taskEntity;
+  @override
+  List<MessageEntity> get messageList;
   @override
   @JsonKey(ignore: true)
   _$$_DetailTaskStateCopyWith<_$_DetailTaskState> get copyWith =>

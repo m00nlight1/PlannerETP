@@ -67,4 +67,14 @@ class NetworkTaskRepository implements TaskRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Iterable> getTaskChat(String id) async {
+    try {
+      final response = await appApi.getTaskChat(id);
+      return response.data;
+    } catch (_) {
+      rethrow;
+    }
+  }
 }

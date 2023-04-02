@@ -14,8 +14,8 @@ import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
-import 'package:planner_etp/feature/tasks/presentation/task_chat_screen.dart';
-import 'package:planner_etp/feature/tasks/presentation/update_task_screen.dart';
+import 'package:planner_etp/feature/tasks/presentation/chats/task_chat_screen.dart';
+import 'package:planner_etp/feature/tasks/presentation/tasks/update_task_screen.dart';
 
 class TaskScreen extends StatelessWidget {
   const TaskScreen({super.key, required this.id, required this.taskEntity});
@@ -69,7 +69,7 @@ class _DetailTaskView extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const TaskChatScreen())),
+                MaterialPageRoute(builder: (context) => TaskChatScreen(taskEntity: taskEntity, id: id))),
             icon: const Icon(Icons.message_rounded),
           ),
           IconButton(
