@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -9,11 +11,11 @@ part 'detail_task_state.dart';
 part 'detail_task_cubit.freezed.dart';
 
 class DetailTaskCubit extends Cubit<DetailTaskState> {
-  DetailTaskCubit(this.taskRepository, this.id)
-      : super(const DetailTaskState());
-
   final TaskRepository taskRepository;
   final String id;
+
+  DetailTaskCubit(this.taskRepository, this.id)
+      : super(const DetailTaskState());
 
   Future<void> fetchTask() async {
     emit(state.copyWith(asyncSnapshot: const AsyncSnapshot.waiting()));

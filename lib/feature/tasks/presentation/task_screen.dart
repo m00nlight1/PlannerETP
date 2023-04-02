@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/components/card/gf_card.dart';
@@ -6,6 +8,7 @@ import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
 import 'package:planner_etp/app/presentation/components/AppSnackBar.dart';
+import 'package:planner_etp/app/presentation/components/bar_action_button.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
@@ -445,9 +448,111 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
               Text(
                   "Автор: ${taskEntity.user?.username} (${taskEntity.user?.email})",
                   style: theme.textTheme.bodyMedium),
+              //sent message action bar
+              _ActionBar(taskEntity: taskEntity),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ActionBar extends StatefulWidget {
+  final TaskEntity taskEntity;
+  // final void Function(String) onTextChanged;
+
+  const _ActionBar({Key? key, required this.taskEntity}) : super(key: key);
+
+  @override
+  __ActionBarState createState() => __ActionBarState(taskEntity);
+}
+
+class __ActionBarState extends State<_ActionBar> {
+  final TaskEntity taskEntity;
+  final TextEditingController messageController =
+  TextEditingController();
+
+  __ActionBarState(this.taskEntity);
+
+  Future<void> _sendMessage() async {
+    if (messageController.text.isNotEmpty) {
+      context.read<DetailTaskCubit>().sentMessage({
+        "content": messageController.text,
+        "idTask": taskEntity.id,
+      });
+      messageController.clear();
+      FocusScope.of(context).unfocus();
+    }
+  }
+
+  // void _onTextChange() {
+  //   widget.onTextChanged(messageController.text);
+  // }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   messageController.addListener(_onTextChange);
+  // }
+
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   messageController.removeListener(_onTextChange);
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      bottom: true,
+      top: false,
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                right: BorderSide(
+                  width: 2,
+                  color: Theme.of(context).dividerColor,
+                ),
+              ),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Icon(
+                Icons.camera_alt
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: TextField(
+              controller: messageController,
+              onChanged: (value) {
+                messageController.text = value;
+              },
+              style: const TextStyle(fontSize: 14),
+              decoration: const InputDecoration(
+                hintText: 'Введите сообщение...',
+                border: InputBorder.none,
+              ),
+              onSubmitted: (_) => _sendMessage(),
+            ),),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 12,
+              right: 24.0,
+            ),
+            child: BarActionButton(
+              color: Colors.blue,
+              icon: Icons.send_rounded,
+              onPressed: _sendMessage,
+            ),
+          ),
+        ],
       ),
     );
   }
