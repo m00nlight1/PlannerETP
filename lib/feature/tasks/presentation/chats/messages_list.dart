@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jiffy/jiffy.dart';
@@ -18,13 +17,12 @@ class MessagesList extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
             child: ListView.separated(
-              reverse: true,
+              reverse: false,
               itemCount: state.messageList.length + 1,
               separatorBuilder: (context, index) {
-                if (index == state.messageList.length - 1) {
+                if (index == state.messageList.length + 1) {
                   return SizedBox(
                     child: _DateLable(dateTime: state.messageList[index].sentTo)
-                    // Text(state.messageList[index].sentTo.toString()),
                   );
                 }
                 if (state.messageList.length == 1) {
@@ -32,11 +30,11 @@ class MessagesList extends StatelessWidget {
                 } else if (index >= state.messageList.length - 1) {
                   return const SizedBox.shrink();
                 } else if (index <= state.messageList.length) {
-                  final message = state.messageList[index];
-                  final nextMessage = state.messageList[index + 1];
+                  final message = state.messageList[index + 1];
+                  final nextMessage = state.messageList[index];
                   if (!Jiffy(message.sentTo.toLocal()).isSame(nextMessage.sentTo.toLocal(), Units.DAY)) {
                     return _DateLable(
-                      dateTime: message.sentTo
+                      dateTime: message.sentTo.toLocal()
                     );
                   } else {
                     return const SizedBox.shrink();
@@ -58,8 +56,21 @@ class MessagesList extends StatelessWidget {
         if (state.asyncSnapshot.connectionState == ConnectionState.waiting) {
           return const AppLoader();
         }
-        return const SizedBox(
-          child: Text("Сообщений нет"),
+        return SizedBox(
+          child: Container(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
+              child: Text(
+                "Сообщений нет",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ),
+          ),
         );
       },
     );
@@ -83,26 +94,26 @@ class __DateLableState extends State<_DateLable> {
 
   @override
   void initState() {
-    final createdAt = Jiffy(widget.dateTime);
+    final sentTo = Jiffy(widget.dateTime);
     final now = DateTime.now();
 
-    if (Jiffy(createdAt).isSame(now, Units.DAY)) {
+    if (Jiffy(sentTo).isSame(now, Units.DAY)) {
       dayInfo = 'Сегодня';
-    } else if (Jiffy(createdAt)
+    } else if (Jiffy(sentTo)
         .isSame(now.subtract(const Duration(days: 1)), Units.DAY)) {
       dayInfo = 'Вчера';
-    } else if (Jiffy(createdAt).isAfter(
+    } else if (Jiffy(sentTo).isAfter(
       now.subtract(const Duration(days: 7)),
       Units.DAY,
     )) {
-      dayInfo = createdAt.EEEE;
-    } else if (Jiffy(createdAt).isAfter(
+      dayInfo = sentTo.EEEE;
+    } else if (Jiffy(sentTo).isAfter(
       Jiffy(now).subtract(years: 1),
       Units.DAY,
     )) {
-      dayInfo = createdAt.MMMd;
+      dayInfo = sentTo.MMMd;
     } else {
-      dayInfo = createdAt.MMMd;
+      dayInfo = sentTo.MMMd;
     }
 
     super.initState();

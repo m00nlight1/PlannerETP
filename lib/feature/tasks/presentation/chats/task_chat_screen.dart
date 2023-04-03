@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planner_etp/app/di/init_di.dart';
+import 'package:planner_etp/app/presentation/components/message_action_bar.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
@@ -34,7 +35,12 @@ class _TaskChatScreenView extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Комментарии"),
       ),
-      body: const MessagesList(),
+      body: Column(
+        children: [
+          const Expanded(child: MessagesList()),
+          ActionBar(taskEntity: taskEntity),
+        ],
+      ),
     );
   }
 }

@@ -8,7 +8,7 @@ import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
 import 'package:planner_etp/app/presentation/components/app_snack_bar.dart';
-import 'package:planner_etp/app/presentation/components/bar_action_button.dart';
+import 'package:planner_etp/app/presentation/components/message_action_bar.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
@@ -112,7 +112,7 @@ class _DetailTaskView extends StatelessWidget {
                   child: _DetailTaskItem(taskEntity: state.taskEntity!),
                 ),
                 //sent message action bar
-                _ActionBar(taskEntity: taskEntity),
+                ActionBar(taskEntity: taskEntity),
               ],
             );
           }
@@ -463,87 +463,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _ActionBar extends StatefulWidget {
-  final TaskEntity taskEntity;
-
-  const _ActionBar({Key? key, required this.taskEntity}) : super(key: key);
-
-  @override
-  __ActionBarState createState() => __ActionBarState(taskEntity);
-}
-
-class __ActionBarState extends State<_ActionBar> {
-  final TaskEntity taskEntity;
-  final TextEditingController messageController = TextEditingController();
-
-  __ActionBarState(this.taskEntity);
-
-  Future<void> _sendMessage() async {
-    if (messageController.text.isNotEmpty) {
-      context.read<DetailTaskCubit>().sentMessage({
-        "content": messageController.text,
-        "idTask": taskEntity.id,
-      });
-      messageController.clear();
-      FocusScope.of(context).unfocus();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: true,
-      top: false,
-      child: Row(
-        children: [
-          // Container(
-          //   decoration: BoxDecoration(
-          //     border: Border(
-          //       right: BorderSide(
-          //         width: 2,
-          //         color: Theme.of(context).dividerColor,
-          //       ),
-          //     ),
-          //   ),
-          //   child: const Padding(
-          //     padding: EdgeInsets.symmetric(horizontal: 16.0),
-          //     // child: Icon(
-          //     //   Icons.add
-          //     // ),
-          //   ),
-          // ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16.0, top: 15.0),
-              child: TextField(
-                controller: messageController,
-                style: const TextStyle(fontSize: 16),
-                decoration: InputDecoration(
-                  hintText: 'Введите сообщение...',
-                  filled: true,
-                  fillColor: Colors.grey.shade200,
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.circular(50)),
-                ),
-                onSubmitted: (_) => _sendMessage(),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 12, right: 24.0, top: 15.0),
-            child: BarActionButton(
-              color: const Color(0xFF0d74ba),
-              icon: Icons.send_rounded,
-              onPressed: _sendMessage,
-            ),
-          ),
-        ],
       ),
     );
   }
