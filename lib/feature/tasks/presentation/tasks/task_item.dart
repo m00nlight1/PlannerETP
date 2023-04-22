@@ -11,20 +11,17 @@ class TaskItem extends StatefulWidget {
   final TaskEntity taskEntity;
 
   @override
-  State<StatefulWidget> createState() => _TaskItemState(taskEntity);
+  State<StatefulWidget> createState() => _TaskItemState();
 }
 
 class _TaskItemState extends State<TaskItem> {
-  final TaskEntity taskEntity;
   final Storage storage = Storage();
   Future<String>? imgDownload;
 
-  _TaskItemState(this.taskEntity);
-
   @override
   void initState() {
-    if (taskEntity.imageUrl != null){
-      imgDownload = storage.downloadImage(taskEntity.imageUrl ?? "");
+    if (widget.taskEntity.imageUrl != null){
+      imgDownload = storage.downloadImage(widget.taskEntity.imageUrl ?? "");
     }
     super.initState();
   }
@@ -36,12 +33,12 @@ class _TaskItemState extends State<TaskItem> {
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => TaskScreen(
-                id: taskEntity.id.toString(), taskEntity: taskEntity)));
+                id: widget.taskEntity.id.toString(), taskEntity: widget.taskEntity)));
       },
       child: GFCard(
         boxFit: BoxFit.cover,
         title: GFListTile(
-          title: Text(taskEntity.title, style: theme.textTheme.headlineMedium),
+          title: Text(widget.taskEntity.title, style: theme.textTheme.headlineMedium),
         ),
         content: FutureBuilder(
           future: imgDownload,
@@ -55,13 +52,13 @@ class _TaskItemState extends State<TaskItem> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                          "Создано ${taskEntity.user?.username ?? ""} \n(${taskEntity.user?.email ?? ""})"),
+                          "Создано ${widget.taskEntity.user?.username ?? ""} \n(${widget.taskEntity.user?.email ?? ""})"),
                       Text(
-                          "от ${taskEntity.createdAt.toString().split(" ")[0]}"),
+                          "от ${widget.taskEntity.createdAt.toString().split(" ")[0]}"),
                     ],
                   ),
                   const SizedBox(height: 10),
-                  Text(taskEntity.content ?? "",
+                  Text(widget.taskEntity.content ?? "",
                       style: theme.textTheme.headlineSmall),
                   const SizedBox(height: 5),
                   Image.network(
@@ -79,13 +76,13 @@ class _TaskItemState extends State<TaskItem> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                          "Создано ${taskEntity.user?.username ?? ""} \n(${taskEntity.user?.email ?? ""})"),
+                          "Создано ${widget.taskEntity.user?.username ?? ""} \n(${widget.taskEntity.user?.email ?? ""})"),
                       Text(
-                          "от ${taskEntity.createdAt.toString().split(" ")[0]}"),
+                          "от ${widget.taskEntity.createdAt.toString().split(" ")[0]}"),
                     ],
                   ),
                   const SizedBox(height: 10),
-                  Text(taskEntity.content ?? "",
+                  Text(widget.taskEntity.content ?? "",
                       style: theme.textTheme.headlineSmall),
                   const SizedBox(height: 5),
                 ],
