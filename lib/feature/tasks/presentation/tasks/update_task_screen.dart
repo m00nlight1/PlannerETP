@@ -199,7 +199,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 context.read<DetailTaskCubit>().fetchTask();
                 context.read<TaskCubit>().fetchTasks();
                 Navigator.of(context).pop();
-                // Navigator.of(context).pop();
+                Navigator.of(context).pop();
               });
             },
             icon: const Icon(Icons.done),
