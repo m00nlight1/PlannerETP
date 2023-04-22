@@ -15,6 +15,7 @@ import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
 import 'package:planner_etp/feature/tasks/presentation/chats/task_chat_screen.dart';
+import 'package:planner_etp/feature/tasks/presentation/tasks/task_pdf_preview.dart';
 import 'package:planner_etp/feature/tasks/presentation/tasks/update_task_screen.dart';
 
 class TaskScreen extends StatelessWidget {
@@ -67,6 +68,11 @@ class _DetailTaskView extends StatelessWidget {
               ),
             )),
         actions: [
+          IconButton(
+            onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => TaskPdfPreview(taskEntity: taskEntity, id: id))),
+            icon: const Icon(Icons.picture_as_pdf),
+          ),
           IconButton(
             onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => TaskChatScreen(taskEntity: taskEntity, id: id))),

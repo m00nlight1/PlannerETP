@@ -60,6 +60,8 @@ dependencies:
   getwidget: ^3.0.1
   jiffy: ^5.0.0
   get: ^4.6.5
+  pdf: ^3.10.1
+  printing: ^5.10.3
 
 dependency_overrides:
   firebase_core_platform_interface: 4.5.1
