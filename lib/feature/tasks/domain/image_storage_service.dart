@@ -2,11 +2,16 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
+import 'package:printing/printing.dart';
 
 class Storage {
+  String? logo;
+  Future<String>? imgDownload;
+
   final FirebaseStorage storage = FirebaseStorage.instance;
 
   final _chars =
@@ -33,74 +38,161 @@ class Storage {
   Future<Uint8List> generatePdf(TaskEntity taskEntity) async {
     final pdf = Document();
 
+    final font = await PdfGoogleFonts.robotoCondensedRegular();
+    final boldFont = await PdfGoogleFonts.robotoCondensedBold();
+
+    logo = await rootBundle.loadString('assets/svg/etp-logo.svg');
+    imgDownload = downloadImage(taskEntity.imageUrl ?? "");
+
     pdf.addPage(MultiPage(
       build: (context) => [
-        buildHeader(taskEntity),
-        SizedBox(height: 3 * PdfPageFormat.cm),
-        buildTitle(taskEntity),
-        buildInvoice(taskEntity),
-        // Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // logo
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgImage(svg: logo!, height: 80,
+                  width: 80,),
+                SizedBox(width: 20),
+                Text(
+                  'ЭКСПЕРТ\nТЕХНОЛОГИЯ\nПРОЕКТ',
+                    style: TextStyle(font: boldFont, color: PdfColor.fromHex('0d74ba'))
+                ),
+              ],
+            ),
+            //qr
+            Container(
+              height: 50,
+              width: 50,
+              child: BarcodeWidget(
+                barcode: Barcode.qrCode(),
+                data: taskEntity.title,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 1 * PdfPageFormat.cm),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            //Создано пользователем
+            Row(
+              children: [
+                Text('Создано пользователем:',
+                    style: TextStyle(font: boldFont)),
+                SizedBox(width: 10),
+                Text(
+                    '${taskEntity.user?.username ?? ""} (${taskEntity.user?.email})',
+                    style: TextStyle(font: font)),
+              ],
+            ),
+            //от
+            Row(
+              children: [
+                Text('от ', style: TextStyle(font: boldFont)),
+                SizedBox(width: 10),
+                Text(
+                    '${taskEntity.createdAt.toString().split(" ")[0]} ${taskEntity.createdAt.hour}:${taskEntity.createdAt.minute}',
+                    style: TextStyle(font: font)),
+              ],
+            ),
+          ],
+        ),
+        Divider(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //Категория
+                Row(
+                  children: [
+                    Text('Форма:', style: TextStyle(font: boldFont)),
+                    SizedBox(width: 10),
+                    Text(taskEntity.category?.name ?? "",
+                        style: TextStyle(font: font)),
+                  ],
+                ),
+                //Название
+                Row(
+                  children: [
+                    Text('Заголовок:', style: TextStyle(font: boldFont)),
+                    SizedBox(width: 10),
+                    Text(taskEntity.title, style: TextStyle(font: font)),
+                  ],
+                ),
+                SizedBox(height: 0.5 * PdfPageFormat.cm),
+                //Компания исполнитель
+                Row(
+                  children: [
+                    Text('Компания исполнитель:', style: TextStyle(font: boldFont)),
+                    SizedBox(width: 10),
+                    Text(taskEntity.contractorCompany ?? "",
+                        style: TextStyle(font: font)),
+                  ],
+                ),
+                //Ответственный мастер
+                Row(
+                  children: [
+                    Text('Ответственный мастер:', style: TextStyle(font: boldFont)),
+                    SizedBox(width: 10),
+                    Text(taskEntity.responsibleMaster ?? "", style: TextStyle(font: font)),
+                  ],
+                ),
+                //Представитель
+                Row(
+                  children: [
+                    Text('Представитель:', style: TextStyle(font: boldFont)),
+                    SizedBox(width: 10),
+                    Text(taskEntity.representative ?? "", style: TextStyle(font: font)),
+                  ],
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //Начало работ
+                Row(
+                  children: [
+                    Text('Начало работ:', style: TextStyle(font: boldFont)),
+                    SizedBox(width: 10),
+                    Text(taskEntity.startOfWork.toString().split(".")[0],
+                        style: TextStyle(font: font)),
+                  ],
+                ),
+                //Окончание работ
+                Row(
+                  children: [
+                    Text('Окончание работ:', style: TextStyle(font: boldFont)),
+                    SizedBox(width: 10),
+                    Text(taskEntity.endOfWork.toString().split(".")[0],
+                        style: TextStyle(font: font)),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+        Divider(),
+        Column(
+          children: [
+            Text('Изображение', style: TextStyle(font: boldFont)),
+            // Container(
+            //   child: PdfImage()
+            // ),
+          ],
+        ),
         // buildTotal(invoice),
       ],
       // footer: (context) => buildFooter(invoice),
     ));
 
-    // pdf.addPage(
-    //   Page(build: (context) {
-    //     return Column(
-    //       children: [],
-    //     );
-    //   }),
-    // );
-
     return pdf.save();
   }
-
-  static Widget buildHeader(TaskEntity taskEntity) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      SizedBox(height: 1 * PdfPageFormat.cm),
-      Row(
-        children: [
-          Container(
-            height: 50,
-            width: 50,
-            child: BarcodeWidget(
-              barcode: Barcode.qrCode(),
-              data: taskEntity.title,
-            ),
-          ),
-        ],
-      ),
-      SizedBox(height: 1 * PdfPageFormat.cm),
-      // Row(
-      //   crossAxisAlignment: CrossAxisAlignment.end,
-      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //   children: [
-      //     buildCustomerAddress(invoice.customer),
-      //     buildInvoiceInfo(invoice.info),
-      //   ],
-      // ),
-    ],
-  );
-
-  static Widget buildTitle(TaskEntity taskEntity) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'INVOICE',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-      SizedBox(height: 0.8 * PdfPageFormat.cm),
-      Text(taskEntity.title),
-      SizedBox(height: 0.8 * PdfPageFormat.cm),
-    ],
-  );
-
-  static Widget buildInvoice(TaskEntity taskEntity) => Row(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text('Начало работ: ${taskEntity.startOfWork.toString()}'),
-    ],
-  );
 }

@@ -14,7 +14,7 @@ class TaskPdfPreview extends StatelessWidget {
     final Storage storage = Storage();
     return Scaffold(
       appBar: AppBar(
-        title: Text('PDF Preview'),
+        title: Text('${taskEntity.title}.pdf'),
       ),
       body: PdfPreview(
         build: (context) => storage.generatePdf(taskEntity),
