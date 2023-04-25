@@ -1,20 +1,44 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
+import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
+import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
+import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
 
-class AddCategoryTaskScreen extends StatefulWidget {
-  const AddCategoryTaskScreen({super.key});
+class UpdateObjectLogScreen extends StatelessWidget {
+  const UpdateObjectLogScreen({Key? key, required this.id, required this.taskEntity})
+      : super(key: key);
+
+  final String id;
+  final TaskEntity taskEntity;
 
   @override
-  State<StatefulWidget> createState() => _AddCategoryTaskScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => DetailTaskCubit(locator.get<TaskRepository>(), id),
+      child: _UpdateTaskView(taskEntity: taskEntity),
+    );
+  }
 }
 
-class _AddCategoryTaskScreenState extends State<AddCategoryTaskScreen> {
+class _UpdateTaskView extends StatefulWidget {
+  final TaskEntity taskEntity;
+
+  const _UpdateTaskView({required this.taskEntity});
+
+  @override
+  State<StatefulWidget> createState() => _UpdateTaskViewState(taskEntity);
+}
+
+class _UpdateTaskViewState extends State<_UpdateTaskView> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   DateTime startWorkDateTime = DateTime.now();
@@ -24,17 +48,21 @@ class _AddCategoryTaskScreenState extends State<AddCategoryTaskScreen> {
   bool showStartWorkDateTime = false;
   bool showEndWorkDateTime = false;
 
-  final titleController = TextEditingController();
-  final companyController = TextEditingController();
-  final masterController = TextEditingController();
-  final representativeController = TextEditingController();
-  final equipmentLevelController = TextEditingController();
-  final staffLevelController = TextEditingController();
-  final resultsOfTheWorkController = TextEditingController();
-  final commentsController = TextEditingController();
+  TextEditingController? titleController;
+  TextEditingController? companyController;
+  TextEditingController? masterController;
+  TextEditingController? representativeController;
+  TextEditingController? equipmentLevelController;
+  TextEditingController? staffLevelController;
+  TextEditingController? resultsOfTheWorkController;
+  TextEditingController? commentsController;
   final GlobalKey<FormState> formKey = GlobalKey();
 
+  final TaskEntity taskEntity;
   final Storage storage = Storage();
+  Future<String>? imgDownload;
+
+  _UpdateTaskViewState(this.taskEntity);
 
   File? imageFile;
   String? fileName;
@@ -50,6 +78,27 @@ class _AddCategoryTaskScreenState extends State<AddCategoryTaskScreen> {
         imageFile = File(pickedFile.path);
       });
     }
+  }
+
+  @override
+  void initState() {
+    if (taskEntity.imageUrl != null) {
+      imgDownload = storage.downloadImage(taskEntity.imageUrl ?? "");
+    }
+    titleController = TextEditingController(text: taskEntity.title);
+    companyController =
+        TextEditingController(text: taskEntity.contractorCompany);
+    masterController =
+        TextEditingController(text: taskEntity.responsibleMaster);
+    representativeController =
+        TextEditingController(text: taskEntity.representative);
+    equipmentLevelController =
+        TextEditingController(text: taskEntity.equipmentLevel);
+    staffLevelController = TextEditingController(text: taskEntity.staffLevel);
+    resultsOfTheWorkController =
+        TextEditingController(text: taskEntity.resultsOfTheWork);
+    commentsController = TextEditingController(text: taskEntity.content);
+    super.initState();
   }
 
   // Select for Date
@@ -116,18 +165,16 @@ class _AddCategoryTaskScreenState extends State<AddCategoryTaskScreen> {
     });
   }
 
-  String getStartWorkDateTime() =>
-      DateFormat('yyyy-MM-dd kk:mm').format(startWorkDateTime);
+  String getStartWorkDateTime() => DateFormat('yyyy-MM-dd kk:mm').format(startWorkDateTime);
 
-  String getEndWorkDateTime() =>
-      DateFormat('yyyy-MM-dd – kk:mm').format(endWorkDateTime);
+  String getEndWorkDateTime() => DateFormat('yyyy-MM-dd – kk:mm').format(endWorkDateTime);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Создать задачу"),
+        title: const Text("Редактировать задачу"),
         actions: [
           IconButton(
             onPressed: () {
@@ -135,21 +182,29 @@ class _AddCategoryTaskScreenState extends State<AddCategoryTaskScreen> {
                 fileName = storage.getRandomString(7);
                 storage.uploadImage(imageFile!.path, fileName!);
               }
-              context.read<TaskCubit>().createTask({
-                "title": titleController.text,
-                "content": commentsController.text,
+              context.read<DetailTaskCubit>().updateTask({
+                "title": titleController?.text,
+                "content": commentsController?.text,
                 "startOfWork": startWorkDateTime.toString(),
                 "endOfWork": endWorkDateTime.toString(),
                 "imageUrl": fileName,
-                "contractorCompany": companyController.text,
-                "responsibleMaster": masterController.text,
-                "representative": representativeController.text,
-                "equipmentLevel": equipmentLevelController.text,
-                "staffLevel": staffLevelController.text,
-                "resultsOfTheWork": resultsOfTheWorkController.text,
-                "idCategory": 1
+                "contractorCompany": companyController?.text,
+                "responsibleMaster": masterController?.text,
+                "representative": representativeController?.text,
+                "equipmentLevel": equipmentLevelController?.text,
+                "staffLevel": staffLevelController?.text,
+                "resultsOfTheWork": resultsOfTheWorkController?.text,
+                "expenses": null,
+                "idCategory": 1,
+                "idStatus": null,
+                "idIndustry": null,
+                "idTaskType": null
+              }).then((_) {
+                context.read<DetailTaskCubit>().fetchTask();
+                context.read<TaskCubit>().fetchTasks();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
               });
-              Navigator.pop(context);
             },
             icon: const Icon(Icons.done),
           ),
@@ -162,12 +217,19 @@ class _AddCategoryTaskScreenState extends State<AddCategoryTaskScreen> {
             child: Column(
               children: [
                 //title
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Название", style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AppTextField(
                     hintText: 'Название',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: titleController,
+                    controller: titleController!,
                     validator: (title) =>
                         title != null ? 'Введите название' : null),
                 const SizedBox(height: 10),
@@ -194,7 +256,12 @@ class _AddCategoryTaskScreenState extends State<AddCategoryTaskScreen> {
                                   showStartWorkDateTime
                                       ? const Icon(Icons.date_range_outlined,
                                           color: Color(0xFF0d74ba))
-                                      : const SizedBox(),
+                                      : Flexible(
+                                          child: Text(
+                                              taskEntity.startOfWork
+                                                  .toString()
+                                                  .split(".")[0],
+                                              textAlign: TextAlign.center)),
                                   const SizedBox(width: 5),
                                   showStartWorkDateTime
                                       ? Flexible(
@@ -214,7 +281,7 @@ class _AddCategoryTaskScreenState extends State<AddCategoryTaskScreen> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 5.0),
                                   child: Text(
-                                    'Установить\nдату и время',
+                                    'Изменить\nдату и время',
                                     style: theme.textTheme.labelMedium,
                                     textAlign: TextAlign.center,
                                   ),
@@ -244,7 +311,12 @@ class _AddCategoryTaskScreenState extends State<AddCategoryTaskScreen> {
                                   showEndWorkDateTime
                                       ? const Icon(Icons.date_range_outlined,
                                           color: Color(0xFF0d74ba))
-                                      : const SizedBox(),
+                                      : Flexible(
+                                          child: Text(
+                                              taskEntity.endOfWork
+                                                  .toString()
+                                                  .split(".")[0],
+                                              textAlign: TextAlign.center)),
                                   const SizedBox(width: 5),
                                   showEndWorkDateTime
                                       ? Flexible(
@@ -264,7 +336,7 @@ class _AddCategoryTaskScreenState extends State<AddCategoryTaskScreen> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 5.0),
                                   child: Text(
-                                    'Установить\nдату и время',
+                                    'Изменить\nдату и время',
                                     style: theme.textTheme.labelMedium,
                                     textAlign: TextAlign.center,
                                   ),
@@ -279,34 +351,57 @@ class _AddCategoryTaskScreenState extends State<AddCategoryTaskScreen> {
                 ),
                 const SizedBox(height: 10),
                 //contractor company
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Компания исполнитель",
+                        style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AppTextField(
                     hintText: 'Компания исполнитель',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: companyController,
+                    controller: companyController!,
                     validator: (company) => company != null
                         ? 'Укажите компанию исполнителя'
                         : null),
                 const SizedBox(height: 10),
                 //responsible master
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Ответственный мастер",
+                        style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AppTextField(
                     hintText: 'Ответственный мастер',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: masterController,
+                    controller: masterController!,
                     validator: (master) => master != null
                         ? 'Укажите ответственного мастера'
                         : null),
                 const SizedBox(height: 10),
                 //representative
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Представитель", style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AppTextField(
                     hintText: 'Представитель',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: representativeController,
+                    controller: representativeController!,
                     validator: (representative) => representative != null
                         ? 'Укажите представителя'
                         : null),
@@ -314,7 +409,7 @@ class _AddCategoryTaskScreenState extends State<AddCategoryTaskScreen> {
                 //images
                 Card(
                   color: Colors.grey.shade200,
-                  child: imageFile == null
+                  child: taskEntity.imageUrl == null && imageFile == null
                       ? SizedBox(
                           width: 342,
                           height: 100,
@@ -325,6 +420,7 @@ class _AddCategoryTaskScreenState extends State<AddCategoryTaskScreen> {
                               children: [
                                 Text('Фото',
                                     style: theme.textTheme.headlineSmall),
+                                const SizedBox(height: 10),
                                 MaterialButton(
                                   onPressed: () {
                                     _getImgFromGallery();
@@ -342,60 +438,107 @@ class _AddCategoryTaskScreenState extends State<AddCategoryTaskScreen> {
                             ),
                           ),
                         )
-                      : SizedBox(
-                          width: 342,
-                          height: 320,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Фото',
-                                    style: theme.textTheme.headlineSmall),
-                                const SizedBox(height: 10),
-                                Image.file(
-                                  imageFile!,
-                                  fit: BoxFit.cover,
-                                ),
-                                const SizedBox(height: 10),
-                                MaterialButton(
-                                  onPressed: () {
-                                    _getImgFromGallery();
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 75.0),
-                                    child: Text(
-                                      'Выбрать другой медиафайл',
-                                      style: theme.textTheme.labelMedium,
-                                      textAlign: TextAlign.center,
+                      : GFCard(
+                          boxFit: BoxFit.cover,
+                          title: GFListTile(
+                            title: Text('Фото',
+                                style: theme.textTheme.headlineSmall),
+                          ),
+                          content: SizedBox(
+                            child: imageFile == null
+                                ? FutureBuilder(
+                                    future: imgDownload,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<String> snapshot) {
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.done &&
+                                          snapshot.hasData) {
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            imageFile == null
+                                                ? Image.network(
+                                                    snapshot.data ?? "",
+                                                    height: 150,
+                                                    fit: BoxFit.fill,
+                                                  )
+                                                : Image.file(
+                                                    imageFile!,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                          ],
+                                        );
+                                      } else {
+                                        return const SizedBox();
+                                      }
+                                    },
+                                  )
+                                : SizedBox(
+                                    width: 342,
+                                    height: 220,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Image.file(
+                                            imageFile!,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
+                          ),
+                          buttonBar: GFButtonBar(
+                            children: <Widget>[
+                              GFButton(
+                                onPressed: () {
+                                  _getImgFromGallery();
+                                },
+                                text: 'Выбрать другой медиафайл',
+                              ),
+                            ],
                           ),
                         ),
                 ),
                 const SizedBox(height: 10),
                 //equipment level
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Уровень оснащения",
+                        style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AppTextField(
                     hintText: 'Уровень оснащения',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: equipmentLevelController,
+                    controller: equipmentLevelController!,
                     validator: (equipmentLevel) => equipmentLevel != null
                         ? 'Укажите уровень оснащения'
                         : null),
                 const SizedBox(height: 10),
                 //staff level
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Уровень песонала",
+                        style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AppTextField(
                     hintText: 'Уровень песонала',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: staffLevelController,
+                    controller: staffLevelController!,
                     validator: (staffLevel) => staffLevel != null
                         ? 'Укажите уровень персонала'
                         : null),

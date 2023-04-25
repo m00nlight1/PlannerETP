@@ -48,12 +48,6 @@ class SignInScreen extends StatelessWidget {
 
                 const SizedBox(height: 50),
 
-                // welcome back, you've been missed!
-                // Text('Welcome, back you\'ve been missed!',
-                //     style: theme.textTheme.bodyMedium),
-
-                // const SizedBox(height: 25),
-
                 // email textfield
                 AppTextField(
                   hintText: 'Email',
@@ -82,18 +76,18 @@ class SignInScreen extends StatelessWidget {
                 const SizedBox(height: 10),
 
                 // forgot password?
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Забыли пароль?',
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.end,
+                //     children: [
+                //       Text(
+                //         'Забыли пароль?',
+                //         style: theme.textTheme.bodyMedium,
+                //       ),
+                //     ],
+                //   ),
+                // ),
 
                 const SizedBox(height: 25),
 

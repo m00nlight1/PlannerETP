@@ -16,7 +16,7 @@ import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
 import 'package:planner_etp/feature/tasks/presentation/chats/task_chat_screen.dart';
 import 'package:planner_etp/feature/tasks/presentation/tasks/task_pdf_preview.dart';
-import 'package:planner_etp/feature/tasks/presentation/tasks/update_task_screen.dart';
+import 'package:planner_etp/feature/tasks/presentation/tasks/category_object_log/update_object_log_screen.dart';
 
 class TaskScreen extends StatelessWidget {
   const TaskScreen({super.key, required this.id, required this.taskEntity});
@@ -82,7 +82,7 @@ class _DetailTaskView extends StatelessWidget {
           IconButton(
             onPressed: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) =>
-                    UpdateTaskScreen(id: id, taskEntity: taskEntity))),
+                    UpdateObjectLogScreen(id: id, taskEntity: taskEntity))),
             icon: const Icon(Icons.edit),
           ),
           IconButton(

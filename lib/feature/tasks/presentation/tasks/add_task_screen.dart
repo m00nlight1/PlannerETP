@@ -8,38 +8,35 @@ class AddTaskScreen extends StatefulWidget {
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
-  final List<String> _categories = ['Журнал объекта',
-    'Предписание авторского надзора',
-    'Задача'];
-  String? _selectedCategory;
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Категория"),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: 50,
-          width: MediaQuery.of(context).size.width,
-          margin: const EdgeInsets.all(20),
-          child: DropdownButton<String>(
-            value: _selectedCategory,
-            onChanged: (value) {
-              setState(() {
-                _selectedCategory = value;
-              });
-            },
-            isExpanded: true,
-            items: _categories.map((e) => DropdownMenuItem(
-              value: e,
-                child: Container(
-                  child: Text(e),
-                ),
-            )).toList(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Divider(),
+          MaterialButton(
+            onPressed: () => Navigator.of(context).pushNamed('/object-log'),
+            child: Text('Журнал объекта', style: theme.textTheme.headlineSmall),
           ),
-        ),
+          const Divider(),
+          MaterialButton(
+            onPressed: () =>
+                Navigator.of(context).pushNamed('/supervision-order'),
+            child: Text('Предписание авторского надзора',
+                style: theme.textTheme.headlineSmall),
+          ),
+          const Divider(),
+          MaterialButton(
+            onPressed: () => Navigator.of(context).pushNamed('/simple-task'),
+            child: Text('Задача', style: theme.textTheme.headlineSmall),
+          ),
+          const Divider(),
+        ],
       ),
     );
   }
