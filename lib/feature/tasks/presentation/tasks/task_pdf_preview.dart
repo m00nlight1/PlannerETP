@@ -4,9 +4,8 @@ import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:printing/printing.dart';
 
 class TaskPdfPreview extends StatelessWidget {
-  const TaskPdfPreview({super.key, required this.id, required this.taskEntity});
+  const TaskPdfPreview({super.key, required this.taskEntity});
 
-  final String id;
   final TaskEntity taskEntity;
 
   @override
@@ -21,5 +20,4 @@ class TaskPdfPreview extends StatelessWidget {
       ),
     );
   }
-
 }

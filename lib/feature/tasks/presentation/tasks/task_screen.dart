@@ -69,13 +69,14 @@ class _DetailTaskView extends StatelessWidget {
             )),
         actions: [
           IconButton(
-            onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => TaskPdfPreview(taskEntity: taskEntity, id: id))),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => TaskPdfPreview(taskEntity: taskEntity))),
             icon: const Icon(Icons.picture_as_pdf),
           ),
           IconButton(
-            onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => TaskChatScreen(taskEntity: taskEntity, id: id))),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    TaskChatScreen(taskEntity: taskEntity, id: id))),
             icon: const Icon(Icons.message_rounded),
           ),
           IconButton(
@@ -268,7 +269,8 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Компания исполнитель',
                             style: theme.textTheme.headlineSmall),
-                        Text(widget.taskEntity.contractorCompany ?? "Не указано",
+                        Text(
+                            widget.taskEntity.contractorCompany ?? "Не указано",
                             style: theme.textTheme.bodyMedium),
                       ],
                     ),
@@ -289,7 +291,8 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Ответственный мастер',
                             style: theme.textTheme.headlineSmall),
-                        Text(widget.taskEntity.responsibleMaster ?? "Не указано",
+                        Text(
+                            widget.taskEntity.responsibleMaster ?? "Не указано",
                             style: theme.textTheme.bodyMedium),
                       ],
                     ),
@@ -424,7 +427,8 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                             style: theme.textTheme.headlineSmall),
                         Flexible(
                           child: Text(
-                              widget.taskEntity.resultsOfTheWork ?? "Не указано",
+                              widget.taskEntity.resultsOfTheWork ??
+                                  "Не указано",
                               style: theme.textTheme.bodyMedium),
                         ),
                       ],
@@ -457,7 +461,8 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
               ),
               const SizedBox(height: 10),
               //created at date and author
-              Text("Создано ${widget.taskEntity.createdAt.toString().split(" ")[0]}",
+              Text(
+                  "Создано ${widget.taskEntity.createdAt.toString().split(" ")[0]}",
                   style: theme.textTheme.bodyMedium),
               const SizedBox(height: 10),
               Text(

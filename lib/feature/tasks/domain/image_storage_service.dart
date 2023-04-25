@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
@@ -53,13 +52,15 @@ class Storage {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgImage(svg: logo!, height: 80,
-                  width: 80,),
-                SizedBox(width: 20),
-                Text(
-                  'ЭКСПЕРТ\nТЕХНОЛОГИЯ\nПРОЕКТ',
-                    style: TextStyle(font: boldFont, color: PdfColor.fromHex('0d74ba'))
+                SvgImage(
+                  svg: logo!,
+                  height: 80,
+                  width: 80,
                 ),
+                SizedBox(width: 20),
+                Text('ЭКСПЕРТ\nТЕХНОЛОГИЯ\nПРОЕКТ',
+                    style: TextStyle(
+                        font: boldFont, color: PdfColor.fromHex('0d74ba'))),
               ],
             ),
             //qr
@@ -130,7 +131,8 @@ class Storage {
                 //Компания исполнитель
                 Row(
                   children: [
-                    Text('Компания исполнитель:', style: TextStyle(font: boldFont)),
+                    Text('Компания исполнитель:',
+                        style: TextStyle(font: boldFont)),
                     SizedBox(width: 10),
                     Text(taskEntity.contractorCompany ?? "",
                         style: TextStyle(font: font)),
@@ -139,9 +141,11 @@ class Storage {
                 //Ответственный мастер
                 Row(
                   children: [
-                    Text('Ответственный мастер:', style: TextStyle(font: boldFont)),
+                    Text('Ответственный мастер:',
+                        style: TextStyle(font: boldFont)),
                     SizedBox(width: 10),
-                    Text(taskEntity.responsibleMaster ?? "", style: TextStyle(font: font)),
+                    Text(taskEntity.responsibleMaster ?? "",
+                        style: TextStyle(font: font)),
                   ],
                 ),
                 //Представитель
@@ -149,7 +153,8 @@ class Storage {
                   children: [
                     Text('Представитель:', style: TextStyle(font: boldFont)),
                     SizedBox(width: 10),
-                    Text(taskEntity.representative ?? "", style: TextStyle(font: font)),
+                    Text(taskEntity.representative ?? "",
+                        style: TextStyle(font: font)),
                   ],
                 ),
               ],
@@ -181,16 +186,14 @@ class Storage {
         ),
         Divider(),
         Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Изображение', style: TextStyle(font: boldFont)),
-            // Container(
-            //   child: PdfImage()
-            // ),
+            Text('Описание:', style: TextStyle(font: boldFont)),
+            SizedBox(height: 10),
+            Text(taskEntity.content ?? "", style: TextStyle(font: font)),
           ],
         ),
-        // buildTotal(invoice),
       ],
-      // footer: (context) => buildFooter(invoice),
     ));
 
     return pdf.save();
