@@ -117,7 +117,11 @@ class DioAppApi implements AppApi {
       "equipmentLevel": args["equipmentLevel"],
       "staffLevel": args["staffLevel"],
       "resultsOfTheWork": args["resultsOfTheWork"],
+      "expenses": args["expenses"],
       "idCategory": args["idCategory"],
+      "idStatus": args["idStatus"],
+      "idIndustry": args["idIndustry"],
+      "idTaskType": args["idTaskType"],
     });
   }
 
@@ -145,7 +149,11 @@ class DioAppApi implements AppApi {
       "equipmentLevel": args["equipmentLevel"],
       "staffLevel": args["staffLevel"],
       "resultsOfTheWork": args["resultsOfTheWork"],
+      "expenses": args["expenses"],
       "idCategory": args["idCategory"],
+      "idStatus": args["idStatus"],
+      "idIndustry": args["idIndustry"],
+      "idTaskType": args["idTaskType"],
     });
   }
 

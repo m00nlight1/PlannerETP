@@ -33,8 +33,15 @@ mixin _$TaskEntity {
   String? get equipmentLevel => throw _privateConstructorUsedError;
   String? get staffLevel => throw _privateConstructorUsedError;
   String? get resultsOfTheWork => throw _privateConstructorUsedError;
+  String? get expenses => throw _privateConstructorUsedError;
   int? get idCategory => throw _privateConstructorUsedError;
+  int? get idStatus => throw _privateConstructorUsedError;
+  int? get idIndustry => throw _privateConstructorUsedError;
+  int? get idTaskType => throw _privateConstructorUsedError;
   CategoryEntity? get category => throw _privateConstructorUsedError;
+  StatusEntity? get status => throw _privateConstructorUsedError;
+  IndustryEntity? get industry => throw _privateConstructorUsedError;
+  TaskTypeEntity? get taskType => throw _privateConstructorUsedError;
   UserEntity? get user => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -63,11 +70,21 @@ abstract class $TaskEntityCopyWith<$Res> {
       String? equipmentLevel,
       String? staffLevel,
       String? resultsOfTheWork,
+      String? expenses,
       int? idCategory,
+      int? idStatus,
+      int? idIndustry,
+      int? idTaskType,
       CategoryEntity? category,
+      StatusEntity? status,
+      IndustryEntity? industry,
+      TaskTypeEntity? taskType,
       UserEntity? user});
 
   $CategoryEntityCopyWith<$Res>? get category;
+  $StatusEntityCopyWith<$Res>? get status;
+  $IndustryEntityCopyWith<$Res>? get industry;
+  $TaskTypeEntityCopyWith<$Res>? get taskType;
   $UserEntityCopyWith<$Res>? get user;
 }
 
@@ -97,8 +114,15 @@ class _$TaskEntityCopyWithImpl<$Res, $Val extends TaskEntity>
     Object? equipmentLevel = freezed,
     Object? staffLevel = freezed,
     Object? resultsOfTheWork = freezed,
+    Object? expenses = freezed,
     Object? idCategory = freezed,
+    Object? idStatus = freezed,
+    Object? idIndustry = freezed,
+    Object? idTaskType = freezed,
     Object? category = freezed,
+    Object? status = freezed,
+    Object? industry = freezed,
+    Object? taskType = freezed,
     Object? user = freezed,
   }) {
     return _then(_value.copyWith(
@@ -154,14 +178,42 @@ class _$TaskEntityCopyWithImpl<$Res, $Val extends TaskEntity>
           ? _value.resultsOfTheWork
           : resultsOfTheWork // ignore: cast_nullable_to_non_nullable
               as String?,
+      expenses: freezed == expenses
+          ? _value.expenses
+          : expenses // ignore: cast_nullable_to_non_nullable
+              as String?,
       idCategory: freezed == idCategory
           ? _value.idCategory
           : idCategory // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idStatus: freezed == idStatus
+          ? _value.idStatus
+          : idStatus // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idIndustry: freezed == idIndustry
+          ? _value.idIndustry
+          : idIndustry // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idTaskType: freezed == idTaskType
+          ? _value.idTaskType
+          : idTaskType // ignore: cast_nullable_to_non_nullable
               as int?,
       category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as CategoryEntity?,
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as StatusEntity?,
+      industry: freezed == industry
+          ? _value.industry
+          : industry // ignore: cast_nullable_to_non_nullable
+              as IndustryEntity?,
+      taskType: freezed == taskType
+          ? _value.taskType
+          : taskType // ignore: cast_nullable_to_non_nullable
+              as TaskTypeEntity?,
       user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
@@ -178,6 +230,42 @@ class _$TaskEntityCopyWithImpl<$Res, $Val extends TaskEntity>
 
     return $CategoryEntityCopyWith<$Res>(_value.category!, (value) {
       return _then(_value.copyWith(category: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $StatusEntityCopyWith<$Res>? get status {
+    if (_value.status == null) {
+      return null;
+    }
+
+    return $StatusEntityCopyWith<$Res>(_value.status!, (value) {
+      return _then(_value.copyWith(status: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $IndustryEntityCopyWith<$Res>? get industry {
+    if (_value.industry == null) {
+      return null;
+    }
+
+    return $IndustryEntityCopyWith<$Res>(_value.industry!, (value) {
+      return _then(_value.copyWith(industry: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $TaskTypeEntityCopyWith<$Res>? get taskType {
+    if (_value.taskType == null) {
+      return null;
+    }
+
+    return $TaskTypeEntityCopyWith<$Res>(_value.taskType!, (value) {
+      return _then(_value.copyWith(taskType: value) as $Val);
     });
   }
 
@@ -216,12 +304,25 @@ abstract class _$$_TaskEntityCopyWith<$Res>
       String? equipmentLevel,
       String? staffLevel,
       String? resultsOfTheWork,
+      String? expenses,
       int? idCategory,
+      int? idStatus,
+      int? idIndustry,
+      int? idTaskType,
       CategoryEntity? category,
+      StatusEntity? status,
+      IndustryEntity? industry,
+      TaskTypeEntity? taskType,
       UserEntity? user});
 
   @override
   $CategoryEntityCopyWith<$Res>? get category;
+  @override
+  $StatusEntityCopyWith<$Res>? get status;
+  @override
+  $IndustryEntityCopyWith<$Res>? get industry;
+  @override
+  $TaskTypeEntityCopyWith<$Res>? get taskType;
   @override
   $UserEntityCopyWith<$Res>? get user;
 }
@@ -250,8 +351,15 @@ class __$$_TaskEntityCopyWithImpl<$Res>
     Object? equipmentLevel = freezed,
     Object? staffLevel = freezed,
     Object? resultsOfTheWork = freezed,
+    Object? expenses = freezed,
     Object? idCategory = freezed,
+    Object? idStatus = freezed,
+    Object? idIndustry = freezed,
+    Object? idTaskType = freezed,
     Object? category = freezed,
+    Object? status = freezed,
+    Object? industry = freezed,
+    Object? taskType = freezed,
     Object? user = freezed,
   }) {
     return _then(_$_TaskEntity(
@@ -307,14 +415,42 @@ class __$$_TaskEntityCopyWithImpl<$Res>
           ? _value.resultsOfTheWork
           : resultsOfTheWork // ignore: cast_nullable_to_non_nullable
               as String?,
+      expenses: freezed == expenses
+          ? _value.expenses
+          : expenses // ignore: cast_nullable_to_non_nullable
+              as String?,
       idCategory: freezed == idCategory
           ? _value.idCategory
           : idCategory // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idStatus: freezed == idStatus
+          ? _value.idStatus
+          : idStatus // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idIndustry: freezed == idIndustry
+          ? _value.idIndustry
+          : idIndustry // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idTaskType: freezed == idTaskType
+          ? _value.idTaskType
+          : idTaskType // ignore: cast_nullable_to_non_nullable
               as int?,
       category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as CategoryEntity?,
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as StatusEntity?,
+      industry: freezed == industry
+          ? _value.industry
+          : industry // ignore: cast_nullable_to_non_nullable
+              as IndustryEntity?,
+      taskType: freezed == taskType
+          ? _value.taskType
+          : taskType // ignore: cast_nullable_to_non_nullable
+              as TaskTypeEntity?,
       user: freezed == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
@@ -340,8 +476,15 @@ class _$_TaskEntity extends _TaskEntity {
       this.equipmentLevel,
       this.staffLevel,
       this.resultsOfTheWork,
+      this.expenses,
       this.idCategory,
+      this.idStatus,
+      this.idIndustry,
+      this.idTaskType,
       this.category,
+      this.status,
+      this.industry,
+      this.taskType,
       this.user})
       : super._();
 
@@ -375,15 +518,29 @@ class _$_TaskEntity extends _TaskEntity {
   @override
   final String? resultsOfTheWork;
   @override
+  final String? expenses;
+  @override
   final int? idCategory;
   @override
+  final int? idStatus;
+  @override
+  final int? idIndustry;
+  @override
+  final int? idTaskType;
+  @override
   final CategoryEntity? category;
+  @override
+  final StatusEntity? status;
+  @override
+  final IndustryEntity? industry;
+  @override
+  final TaskTypeEntity? taskType;
   @override
   final UserEntity? user;
 
   @override
   String toString() {
-    return 'TaskEntity(id: $id, title: $title, content: $content, createdAt: $createdAt, startOfWork: $startOfWork, endOfWork: $endOfWork, imageUrl: $imageUrl, contractorCompany: $contractorCompany, responsibleMaster: $responsibleMaster, representative: $representative, equipmentLevel: $equipmentLevel, staffLevel: $staffLevel, resultsOfTheWork: $resultsOfTheWork, idCategory: $idCategory, category: $category, user: $user)';
+    return 'TaskEntity(id: $id, title: $title, content: $content, createdAt: $createdAt, startOfWork: $startOfWork, endOfWork: $endOfWork, imageUrl: $imageUrl, contractorCompany: $contractorCompany, responsibleMaster: $responsibleMaster, representative: $representative, equipmentLevel: $equipmentLevel, staffLevel: $staffLevel, resultsOfTheWork: $resultsOfTheWork, expenses: $expenses, idCategory: $idCategory, idStatus: $idStatus, idIndustry: $idIndustry, idTaskType: $idTaskType, category: $category, status: $status, industry: $industry, taskType: $taskType, user: $user)';
   }
 
   @override
@@ -414,33 +571,54 @@ class _$_TaskEntity extends _TaskEntity {
                 other.staffLevel == staffLevel) &&
             (identical(other.resultsOfTheWork, resultsOfTheWork) ||
                 other.resultsOfTheWork == resultsOfTheWork) &&
+            (identical(other.expenses, expenses) ||
+                other.expenses == expenses) &&
             (identical(other.idCategory, idCategory) ||
                 other.idCategory == idCategory) &&
+            (identical(other.idStatus, idStatus) ||
+                other.idStatus == idStatus) &&
+            (identical(other.idIndustry, idIndustry) ||
+                other.idIndustry == idIndustry) &&
+            (identical(other.idTaskType, idTaskType) ||
+                other.idTaskType == idTaskType) &&
             (identical(other.category, category) ||
                 other.category == category) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.industry, industry) ||
+                other.industry == industry) &&
+            (identical(other.taskType, taskType) ||
+                other.taskType == taskType) &&
             (identical(other.user, user) || other.user == user));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      title,
-      content,
-      createdAt,
-      startOfWork,
-      endOfWork,
-      imageUrl,
-      contractorCompany,
-      responsibleMaster,
-      representative,
-      equipmentLevel,
-      staffLevel,
-      resultsOfTheWork,
-      idCategory,
-      category,
-      user);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        title,
+        content,
+        createdAt,
+        startOfWork,
+        endOfWork,
+        imageUrl,
+        contractorCompany,
+        responsibleMaster,
+        representative,
+        equipmentLevel,
+        staffLevel,
+        resultsOfTheWork,
+        expenses,
+        idCategory,
+        idStatus,
+        idIndustry,
+        idTaskType,
+        category,
+        status,
+        industry,
+        taskType,
+        user
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -471,8 +649,15 @@ abstract class _TaskEntity extends TaskEntity {
       final String? equipmentLevel,
       final String? staffLevel,
       final String? resultsOfTheWork,
+      final String? expenses,
       final int? idCategory,
+      final int? idStatus,
+      final int? idIndustry,
+      final int? idTaskType,
       final CategoryEntity? category,
+      final StatusEntity? status,
+      final IndustryEntity? industry,
+      final TaskTypeEntity? taskType,
       final UserEntity? user}) = _$_TaskEntity;
   const _TaskEntity._() : super._();
 
@@ -506,9 +691,23 @@ abstract class _TaskEntity extends TaskEntity {
   @override
   String? get resultsOfTheWork;
   @override
+  String? get expenses;
+  @override
   int? get idCategory;
   @override
+  int? get idStatus;
+  @override
+  int? get idIndustry;
+  @override
+  int? get idTaskType;
+  @override
   CategoryEntity? get category;
+  @override
+  StatusEntity? get status;
+  @override
+  IndustryEntity? get industry;
+  @override
+  TaskTypeEntity? get taskType;
   @override
   UserEntity? get user;
   @override
