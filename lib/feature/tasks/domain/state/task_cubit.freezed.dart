@@ -24,6 +24,7 @@ mixin _$TaskState {
   AsyncSnapshot<dynamic>? get asyncSnapshot =>
       throw _privateConstructorUsedError;
   List<TaskEntity> get taskList => throw _privateConstructorUsedError;
+  List<StatusEntity> get statusList => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -38,7 +39,8 @@ abstract class $TaskStateCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(ignore: true) AsyncSnapshot<dynamic>? asyncSnapshot,
-      List<TaskEntity> taskList});
+      List<TaskEntity> taskList,
+      List<StatusEntity> statusList});
 }
 
 /// @nodoc
@@ -56,6 +58,7 @@ class _$TaskStateCopyWithImpl<$Res, $Val extends TaskState>
   $Res call({
     Object? asyncSnapshot = freezed,
     Object? taskList = null,
+    Object? statusList = null,
   }) {
     return _then(_value.copyWith(
       asyncSnapshot: freezed == asyncSnapshot
@@ -66,6 +69,10 @@ class _$TaskStateCopyWithImpl<$Res, $Val extends TaskState>
           ? _value.taskList
           : taskList // ignore: cast_nullable_to_non_nullable
               as List<TaskEntity>,
+      statusList: null == statusList
+          ? _value.statusList
+          : statusList // ignore: cast_nullable_to_non_nullable
+              as List<StatusEntity>,
     ) as $Val);
   }
 }
@@ -79,7 +86,8 @@ abstract class _$$_TaskStateCopyWith<$Res> implements $TaskStateCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(ignore: true) AsyncSnapshot<dynamic>? asyncSnapshot,
-      List<TaskEntity> taskList});
+      List<TaskEntity> taskList,
+      List<StatusEntity> statusList});
 }
 
 /// @nodoc
@@ -95,6 +103,7 @@ class __$$_TaskStateCopyWithImpl<$Res>
   $Res call({
     Object? asyncSnapshot = freezed,
     Object? taskList = null,
+    Object? statusList = null,
   }) {
     return _then(_$_TaskState(
       asyncSnapshot: freezed == asyncSnapshot
@@ -105,6 +114,10 @@ class __$$_TaskStateCopyWithImpl<$Res>
           ? _value._taskList
           : taskList // ignore: cast_nullable_to_non_nullable
               as List<TaskEntity>,
+      statusList: null == statusList
+          ? _value._statusList
+          : statusList // ignore: cast_nullable_to_non_nullable
+              as List<StatusEntity>,
     ));
   }
 }
@@ -114,8 +127,10 @@ class __$$_TaskStateCopyWithImpl<$Res>
 class _$_TaskState implements _TaskState {
   const _$_TaskState(
       {@JsonKey(ignore: true) this.asyncSnapshot,
-      final List<TaskEntity> taskList = const []})
-      : _taskList = taskList;
+      final List<TaskEntity> taskList = const [],
+      final List<StatusEntity> statusList = const []})
+      : _taskList = taskList,
+        _statusList = statusList;
 
   factory _$_TaskState.fromJson(Map<String, dynamic> json) =>
       _$$_TaskStateFromJson(json);
@@ -132,9 +147,18 @@ class _$_TaskState implements _TaskState {
     return EqualUnmodifiableListView(_taskList);
   }
 
+  final List<StatusEntity> _statusList;
+  @override
+  @JsonKey()
+  List<StatusEntity> get statusList {
+    if (_statusList is EqualUnmodifiableListView) return _statusList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_statusList);
+  }
+
   @override
   String toString() {
-    return 'TaskState(asyncSnapshot: $asyncSnapshot, taskList: $taskList)';
+    return 'TaskState(asyncSnapshot: $asyncSnapshot, taskList: $taskList, statusList: $statusList)';
   }
 
   @override
@@ -144,13 +168,18 @@ class _$_TaskState implements _TaskState {
             other is _$_TaskState &&
             (identical(other.asyncSnapshot, asyncSnapshot) ||
                 other.asyncSnapshot == asyncSnapshot) &&
-            const DeepCollectionEquality().equals(other._taskList, _taskList));
+            const DeepCollectionEquality().equals(other._taskList, _taskList) &&
+            const DeepCollectionEquality()
+                .equals(other._statusList, _statusList));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, asyncSnapshot,
-      const DeepCollectionEquality().hash(_taskList));
+  int get hashCode => Object.hash(
+      runtimeType,
+      asyncSnapshot,
+      const DeepCollectionEquality().hash(_taskList),
+      const DeepCollectionEquality().hash(_statusList));
 
   @JsonKey(ignore: true)
   @override
@@ -169,7 +198,8 @@ class _$_TaskState implements _TaskState {
 abstract class _TaskState implements TaskState {
   const factory _TaskState(
       {@JsonKey(ignore: true) final AsyncSnapshot<dynamic>? asyncSnapshot,
-      final List<TaskEntity> taskList}) = _$_TaskState;
+      final List<TaskEntity> taskList,
+      final List<StatusEntity> statusList}) = _$_TaskState;
 
   factory _TaskState.fromJson(Map<String, dynamic> json) =
       _$_TaskState.fromJson;
@@ -179,6 +209,8 @@ abstract class _TaskState implements TaskState {
   AsyncSnapshot<dynamic>? get asyncSnapshot;
   @override
   List<TaskEntity> get taskList;
+  @override
+  List<StatusEntity> get statusList;
   @override
   @JsonKey(ignore: true)
   _$$_TaskStateCopyWith<_$_TaskState> get copyWith =>

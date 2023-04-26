@@ -77,4 +77,14 @@ class NetworkTaskRepository implements TaskRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Iterable> fetchStatuses() async {
+    try {
+      final response = await appApi.fetchStatuses();
+      return response.data;
+    } catch (error) {
+      rethrow;
+    }
+  }
 }

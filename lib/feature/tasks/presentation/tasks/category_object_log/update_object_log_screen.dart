@@ -59,7 +59,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
   final GlobalKey<FormState> formKey = GlobalKey();
 
   final TaskEntity taskEntity;
-  final Storage storage = Storage();
+  final ImgStorage storage = ImgStorage();
   Future<String>? imgDownload;
 
   _UpdateTaskViewState(this.taskEntity);
@@ -108,6 +108,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
       initialDate: selectedDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
+      selectableDayPredicate: _decideWhichDayToEnable,
     );
     if (selected != null && selected != selectedDate) {
       setState(() {
@@ -117,8 +118,15 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
     return selectedDate;
   }
 
+  bool _decideWhichDayToEnable(DateTime day) {
+    if ((day.isAfter(DateTime.now().subtract(const Duration(days: 1))))) {
+      return true;
+    }
+    return false;
+  }
+
   // Select for Time
-  Future<TimeOfDay> _selectTime(BuildContext context) async {
+  Future<TimeOfDay> _selectTime() async {
     final selected = await showTimePicker(
       context: context,
       initialTime: selectedTime,
@@ -133,10 +141,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
 
   Future _selectStartWorkDateTime(BuildContext context) async {
     final date = await _selectDate(context);
-    if (date == null) return;
-    final time = await _selectTime(context);
+    final time = await _selectTime();
 
-    if (time == null) return;
     setState(() {
       startWorkDateTime = DateTime(
         date.year,
@@ -150,10 +156,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
 
   Future _selectEndWorkDateTime(BuildContext context) async {
     final date = await _selectDate(context);
-    if (date == null) return;
-    final time = await _selectTime(context);
+    final time = await _selectTime();
 
-    if (time == null) return;
     setState(() {
       endWorkDateTime = DateTime(
         date.year,

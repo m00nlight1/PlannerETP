@@ -142,7 +142,7 @@ class _DetailTaskItem extends StatefulWidget {
 }
 
 class _DetailTaskItemState extends State<_DetailTaskItem> {
-  final Storage storage = Storage();
+  final ImgStorage storage = ImgStorage();
   Future<String>? imgDownload;
 
   @override

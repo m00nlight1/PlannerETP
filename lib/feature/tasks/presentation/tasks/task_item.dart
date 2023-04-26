@@ -15,7 +15,7 @@ class TaskItem extends StatefulWidget {
 }
 
 class _TaskItemState extends State<TaskItem> {
-  final Storage storage = Storage();
+  final ImgStorage storage = ImgStorage();
   Future<String>? imgDownload;
 
   @override

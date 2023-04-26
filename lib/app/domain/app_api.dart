@@ -34,4 +34,6 @@ abstract class AppApi {
   Future<dynamic> sentMessage(Map args);
 
   Future<dynamic> getTaskChat(String id);
+
+  Future<dynamic> fetchStatuses();
 }

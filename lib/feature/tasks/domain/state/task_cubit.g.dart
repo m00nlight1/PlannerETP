@@ -11,9 +11,14 @@ _$_TaskState _$$_TaskStateFromJson(Map<String, dynamic> json) => _$_TaskState(
               ?.map((e) => TaskEntity.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      statusList: (json['statusList'] as List<dynamic>?)
+              ?.map((e) => StatusEntity.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$_TaskStateToJson(_$_TaskState instance) =>
     <String, dynamic>{
       'taskList': instance.taskList,
+      'statusList': instance.statusList,
     };

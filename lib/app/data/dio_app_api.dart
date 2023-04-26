@@ -169,4 +169,9 @@ class DioAppApi implements AppApi {
   Future getTaskChat(String id) {
     return dio.get("/data/messages/$id");
   }
+
+  @override
+  Future fetchStatuses() {
+    return dio.get("/data/status");
+  }
 }

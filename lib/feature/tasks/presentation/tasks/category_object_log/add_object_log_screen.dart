@@ -34,7 +34,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
   final commentsController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
 
-  final Storage storage = Storage();
+  final ImgStorage storage = ImgStorage();
 
   File? imageFile;
   String? fileName;
@@ -59,6 +59,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
       initialDate: selectedDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
+      selectableDayPredicate: _decideWhichDayToEnable,
     );
     if (selected != null && selected != selectedDate) {
       setState(() {
@@ -68,8 +69,15 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
     return selectedDate;
   }
 
+  bool _decideWhichDayToEnable(DateTime day) {
+    if ((day.isAfter(DateTime.now().subtract(const Duration(days: 1))))) {
+      return true;
+    }
+    return false;
+  }
+
   // Select for Time
-  Future<TimeOfDay> _selectTime(BuildContext context) async {
+  Future<TimeOfDay> _selectTime() async {
     final selected = await showTimePicker(
       context: context,
       initialTime: selectedTime,
@@ -84,10 +92,8 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
 
   Future _selectStartWorkDateTime(BuildContext context) async {
     final date = await _selectDate(context);
-    if (date == null) return;
-    final time = await _selectTime(context);
+    final time = await _selectTime();
 
-    if (time == null) return;
     setState(() {
       startWorkDateTime = DateTime(
         date.year,
@@ -101,10 +107,8 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
 
   Future _selectEndWorkDateTime(BuildContext context) async {
     final date = await _selectDate(context);
-    if (date == null) return;
-    final time = await _selectTime(context);
+    final time = await _selectTime();
 
-    if (time == null) return;
     setState(() {
       endWorkDateTime = DateTime(
         date.year,
@@ -127,7 +131,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Создать задачу"),
+        title: const Text("Создать журнал"),
         actions: [
           IconButton(
             onPressed: () {

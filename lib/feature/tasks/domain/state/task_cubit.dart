@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
+import 'package:planner_etp/feature/tasks/domain/status/status_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
 
@@ -22,7 +23,10 @@ class TaskCubit extends HydratedCubit<TaskState> {
       : super(const TaskState(asyncSnapshot: AsyncSnapshot.nothing())) {
     authSub = authCubit.stream.listen((event) {
       event.mapOrNull(
-        authorized: (value) => fetchTasks(),
+        authorized: (value) {
+          fetchTasks();
+          // fetchStatuses();
+        },
         notAuthorized: (value) => logOut(),
       );
     });
@@ -45,6 +49,20 @@ class TaskCubit extends HydratedCubit<TaskState> {
   Future<void> createTask(Map args) async {
     await taskRepository.createTask(args).then((value) {
       fetchTasks();
+    }).catchError((error) {
+      addError(error);
+    });
+  }
+
+  Future<void> fetchStatuses() async {
+    emit(state.copyWith(asyncSnapshot: const AsyncSnapshot.waiting()));
+    await Future.delayed(const Duration(seconds: 1));
+    await taskRepository.fetchStatuses().then((value) {
+      final Iterable iterable = value;
+      emit(state.copyWith(
+          statusList: iterable.map((e) => StatusEntity.fromJson(e)).toList(),
+          asyncSnapshot:
+          const AsyncSnapshot.withData(ConnectionState.done, true)));
     }).catchError((error) {
       addError(error);
     });

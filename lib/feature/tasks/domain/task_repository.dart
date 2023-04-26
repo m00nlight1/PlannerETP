@@ -12,4 +12,6 @@ abstract class TaskRepository {
   Future sentMessage(Map args);
 
   Future getTaskChat(String id);
+
+  Future fetchStatuses();
 }
