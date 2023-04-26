@@ -312,28 +312,46 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                 ),
                 const SizedBox(height: 10),
                 //status
-                BlocConsumer<TaskCubit, TaskState>(
-                    builder: (context, state) {
-                      if (state.statusList.isNotEmpty) {
-                        return DropdownButton<int>(
-                            value: selectedItemId,
-                            items: state.statusList.map((e) {
-                              return DropdownMenuItem(
-                                value: e.id,
-                                child: Row(children: <Widget>[
-                                  Text(e.name.toString())
-                                ]),
-                              );
-                            }).toList(),
-                            onChanged: (int? newValue) {
-                              setState(() {
-                                selectedItemId = newValue;
-                              });
-                            });
-                      }
-                      return const SizedBox.shrink();
-                    },
-                    listener: (context, state) {}),
+                Card(
+                  color: Colors.grey.shade200,
+                  child: SizedBox(
+                    width: 342,
+                    height: 100,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Статус',
+                              style: theme.textTheme.headlineSmall),
+                          BlocConsumer<TaskCubit, TaskState>(
+                              builder: (context, state) {
+                                if (state.statusList.isNotEmpty) {
+                                  return DropdownButton<int>(
+                                    isExpanded: true,
+                                      value: selectedItemId,
+                                      items: state.statusList.map((e) {
+                                        return DropdownMenuItem(
+                                          value: e.id,
+                                          child: Row(children: <Widget>[
+                                            Text(e.name.toString())
+                                          ]),
+                                        );
+                                      }).toList(),
+                                      onChanged: (int? newValue) {
+                                        setState(() {
+                                          selectedItemId = newValue;
+                                        });
+                                      });
+                                }
+                                return const SizedBox.shrink();
+                              },
+                              listener: (context, state) {}),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
