@@ -32,6 +32,10 @@ final lightTheme = ThemeData(
       fontSize: 13,
       fontWeight: FontWeight.bold,
     ),
+    displayMedium: const TextStyle(
+      color: Colors.white,
+      fontSize: 13,
+    ),
     bodyLarge: const TextStyle(
       color: Colors.white,
       fontSize: 35,

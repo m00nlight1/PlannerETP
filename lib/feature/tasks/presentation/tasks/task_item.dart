@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/card/gf_card.dart';
-import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/presentation/tasks/task_screen.dart';
@@ -20,7 +19,7 @@ class _TaskItemState extends State<TaskItem> {
 
   @override
   void initState() {
-    if (widget.taskEntity.imageUrl != null){
+    if (widget.taskEntity.imageUrl != null) {
       imgDownload = storage.downloadImage(widget.taskEntity.imageUrl ?? "");
     }
     super.initState();
@@ -33,13 +32,11 @@ class _TaskItemState extends State<TaskItem> {
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => TaskScreen(
-                id: widget.taskEntity.id.toString(), taskEntity: widget.taskEntity)));
+                id: widget.taskEntity.id.toString(),
+                taskEntity: widget.taskEntity)));
       },
       child: GFCard(
         boxFit: BoxFit.cover,
-        title: GFListTile(
-          title: Text(widget.taskEntity.title, style: theme.textTheme.headlineMedium),
-        ),
         content: FutureBuilder(
           future: imgDownload,
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -56,6 +53,25 @@ class _TaskItemState extends State<TaskItem> {
                       Text(
                           "от ${widget.taskEntity.createdAt.toString().split(" ")[0]}"),
                     ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(widget.taskEntity.title,
+                      style: theme.textTheme.headlineMedium),
+                  const SizedBox(height: 10),
+                  Container(
+                    color: Colors.transparent,
+                    height: 30,
+                    width: 100,
+                    child: widget.taskEntity.status == null
+                        ? const SizedBox()
+                        : CustomPaint(
+                            painter: CurvePainter(),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 22, top: 6),
+                              child: Text(widget.taskEntity.status?.name ?? "",
+                                  style: theme.textTheme.displayMedium),
+                            ),
+                          ),
                   ),
                   const SizedBox(height: 10),
                   Text(widget.taskEntity.content ?? "",
@@ -82,6 +98,22 @@ class _TaskItemState extends State<TaskItem> {
                     ],
                   ),
                   const SizedBox(height: 10),
+                  Text(widget.taskEntity.title,
+                      style: theme.textTheme.headlineMedium),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    child: widget.taskEntity.status == null
+                        ? const SizedBox()
+                        : CustomPaint(
+                            painter: CurvePainter(),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 22, top: 6),
+                              child: Text(widget.taskEntity.status?.name ?? "",
+                                  style: theme.textTheme.displayMedium),
+                            ),
+                          ),
+                  ),
+                  const SizedBox(height: 15),
                   Text(widget.taskEntity.content ?? "",
                       style: theme.textTheme.headlineSmall),
                   const SizedBox(height: 5),
@@ -92,5 +124,26 @@ class _TaskItemState extends State<TaskItem> {
         ),
       ),
     );
+  }
+}
+
+class CurvePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint();
+    paint.color = const Color(0xFF0d74ba);
+    paint.style = PaintingStyle.fill;
+
+    var path = Path()
+      ..addRRect(RRect.fromRectAndRadius(
+          const Rect.fromLTWH(0, 0, 100, 30), const Radius.circular(15)))
+      ..close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
   }
 }
