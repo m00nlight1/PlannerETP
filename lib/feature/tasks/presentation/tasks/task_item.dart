@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/card/gf_card.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
+import 'package:planner_etp/feature/tasks/domain/painter_service.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
-import 'package:planner_etp/feature/tasks/presentation/tasks/task_screen.dart';
+import 'package:planner_etp/feature/tasks/presentation/tasks/category_object_log/detail_object_log_screen.dart';
+import 'package:planner_etp/feature/tasks/presentation/tasks/category_simple_task/detail_simple_task_screen.dart';
 
 class TaskItem extends StatefulWidget {
   const TaskItem({super.key, required this.taskEntity});
@@ -30,10 +32,17 @@ class _TaskItemState extends State<TaskItem> {
     final theme = Theme.of(context);
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => TaskScreen(
-                id: widget.taskEntity.id.toString(),
-                taskEntity: widget.taskEntity)));
+        if (widget.taskEntity.category?.id == 1) {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+              DetailObjectLogScreen(id: widget.taskEntity.id.toString(),
+                  taskEntity: widget.taskEntity)
+          ));
+        } if (widget.taskEntity.category?.id == 3) {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+              DetailSimpleTaskScreen(id: widget.taskEntity.id.toString(),
+                  taskEntity: widget.taskEntity)
+          ));
+        }
       },
       child: GFCard(
         boxFit: BoxFit.cover,
@@ -79,8 +88,9 @@ class _TaskItemState extends State<TaskItem> {
                   const SizedBox(height: 5),
                   Image.network(
                     snapshot.data ?? "",
-                    height: 150,
-                    fit: BoxFit.fill,
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    width: MediaQuery.of(context).size.width,
+                    fit: BoxFit.cover,
                   ),
                 ],
               );
@@ -124,26 +134,5 @@ class _TaskItemState extends State<TaskItem> {
         ),
       ),
     );
-  }
-}
-
-class CurvePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    var paint = Paint();
-    paint.color = const Color(0xFF0d74ba);
-    paint.style = PaintingStyle.fill;
-
-    var path = Path()
-      ..addRRect(RRect.fromRectAndRadius(
-          const Rect.fromLTWH(0, 0, 100, 30), const Radius.circular(15)))
-      ..close();
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
   }
 }

@@ -1,9 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:getwidget/components/card/gf_card.dart';
-import 'package:getwidget/components/list_tile/gf_list_tile.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
@@ -15,14 +12,15 @@ import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
 import 'package:planner_etp/feature/tasks/presentation/chats/task_chat_screen.dart';
+import 'package:planner_etp/feature/tasks/presentation/tasks/category_simple_task/update_simple_task_screen.dart';
 import 'package:planner_etp/feature/tasks/presentation/tasks/task_pdf_preview.dart';
-import 'package:planner_etp/feature/tasks/presentation/tasks/category_object_log/update_object_log_screen.dart';
 
-class TaskScreen extends StatelessWidget {
-  const TaskScreen({super.key, required this.id, required this.taskEntity});
-
+class DetailSimpleTaskScreen extends StatelessWidget {
   final String id;
   final TaskEntity taskEntity;
+
+  const DetailSimpleTaskScreen(
+      {super.key, required this.id, required this.taskEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +80,7 @@ class _DetailTaskView extends StatelessWidget {
           IconButton(
             onPressed: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) =>
-                    UpdateObjectLogScreen(id: id, taskEntity: taskEntity))),
+                    UpdateSimpleTaskScreen(id: id, taskEntity: taskEntity))),
             icon: const Icon(Icons.edit),
           ),
           IconButton(
@@ -185,78 +183,29 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 ),
               ),
               const SizedBox(height: 10),
-              //start and end datetime
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //start of work
-                  Card(
-                    color: Colors.grey.shade200,
-                    child: SizedBox(
-                      width: 180,
-                      height: 100,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Начало работ',
-                                style: theme.textTheme.headlineSmall),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                const Icon(Icons.date_range_outlined,
-                                    color: Color(0xFF0d74ba)),
-                                Flexible(
-                                    child: Text(
-                                        widget.taskEntity.startOfWork
-                                            .toString()
-                                            .split(".")[0],
-                                        textAlign: TextAlign.center)),
-                                const SizedBox(width: 5),
-                              ],
-                            ),
-                          ],
+              //comments
+              Card(
+                color: Colors.grey.shade200,
+                child: SizedBox(
+                  width: 370,
+                  height: 120,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Описание', style: theme.textTheme.headlineSmall),
+                        Flexible(
+                          child: Text(widget.taskEntity.content ?? "Не указано",
+                              style: theme.textTheme.bodyMedium),
                         ),
-                      ),
+                      ],
                     ),
                   ),
-                  //end of work
-                  Card(
-                    color: Colors.grey.shade200,
-                    child: SizedBox(
-                      width: 180,
-                      height: 100,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Окончание работ',
-                                style: theme.textTheme.headlineSmall),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                const Icon(Icons.date_range_outlined,
-                                    color: Color(0xFF0d74ba)),
-                                Flexible(
-                                    child: Text(
-                                        widget.taskEntity.endOfWork
-                                            .toString()
-                                            .split(".")[0],
-                                        textAlign: TextAlign.center)),
-                                const SizedBox(width: 5),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
               const SizedBox(height: 10),
-              //contractor company
+              //run to
               Card(
                 color: Colors.grey.shade200,
                 child: SizedBox(
@@ -267,11 +216,23 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Компания исполнитель',
+                        Text('Выполнить до',
                             style: theme.textTheme.headlineSmall),
-                        Text(
-                            widget.taskEntity.contractorCompany ?? "Не указано",
-                            style: theme.textTheme.bodyMedium),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            const Icon(Icons.date_range_outlined,
+                                color: Color(0xFF0d74ba)),
+                            const SizedBox(width: 10),
+                            Flexible(
+                              child: Text(
+                                widget.taskEntity.endOfWork
+                                    .toString()
+                                    .split(".")[0],
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -289,32 +250,19 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Ответственный мастер',
+                        Text('Ответственное лицо',
                             style: theme.textTheme.headlineSmall),
-                        Text(
-                            widget.taskEntity.responsibleMaster ?? "Не указано",
-                            style: theme.textTheme.bodyMedium),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              //representative
-              Card(
-                color: Colors.grey.shade200,
-                child: SizedBox(
-                  width: 370,
-                  height: 90,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Представитель',
-                            style: theme.textTheme.headlineSmall),
-                        Text(widget.taskEntity.representative ?? "Не указано",
-                            style: theme.textTheme.bodyMedium),
+                        Row(
+                          children: [
+                            const Icon(Icons.perm_identity,
+                                color: Color(0xFF0d74ba)),
+                            const SizedBox(width: 10),
+                            Text(
+                                widget.taskEntity.responsibleMaster ??
+                                    "Не указано",
+                                style: theme.textTheme.bodyMedium),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -323,6 +271,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
               const SizedBox(height: 10),
               //image
               Card(
+                margin: const EdgeInsets.only(left: 12, right: 12),
                 color: Colors.grey.shade200,
                 child: widget.taskEntity.imageUrl == null
                     ? SizedBox(
@@ -341,6 +290,8 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       )
                     : GFCard(
                         boxFit: BoxFit.cover,
+                        color: Colors.grey.shade200,
+                        margin: EdgeInsets.zero,
                         title: GFListTile(
                           title: Text('Фото',
                               style: theme.textTheme.headlineSmall),
@@ -357,8 +308,10 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                                 children: [
                                   Image.network(
                                     snapshot.data ?? "",
-                                    height: 150,
-                                    fit: BoxFit.fill,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.2,
+                                    width: MediaQuery.of(context).size.width,
+                                    fit: BoxFit.cover,
                                   ),
                                 ],
                               );
@@ -370,28 +323,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       ),
               ),
               const SizedBox(height: 10),
-              //equipment level
-              Card(
-                color: Colors.grey.shade200,
-                child: SizedBox(
-                  width: 368,
-                  height: 90,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Уровень оснащения',
-                            style: theme.textTheme.headlineSmall),
-                        Text(widget.taskEntity.equipmentLevel ?? "Не указано",
-                            style: theme.textTheme.bodyMedium),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              //staff level
+              //status
               Card(
                 color: Colors.grey.shade200,
                 child: SizedBox(
@@ -402,58 +334,9 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Уровень песонала',
-                            style: theme.textTheme.headlineSmall),
-                        Text(widget.taskEntity.staffLevel ?? "Не указано",
+                        Text('Статус', style: theme.textTheme.headlineSmall),
+                        Text(widget.taskEntity.status?.name ?? "Не указано",
                             style: theme.textTheme.bodyMedium),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              //resultsOfTheWork
-              Card(
-                color: Colors.grey.shade200,
-                child: SizedBox(
-                  width: 370,
-                  height: 120,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Результаты работы',
-                            style: theme.textTheme.headlineSmall),
-                        Flexible(
-                          child: Text(
-                              widget.taskEntity.resultsOfTheWork ??
-                                  "Не указано",
-                              style: theme.textTheme.bodyMedium),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              //comments
-              Card(
-                color: Colors.grey.shade200,
-                child: SizedBox(
-                  width: 370,
-                  height: 120,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Комментарии',
-                            style: theme.textTheme.headlineSmall),
-                        Flexible(
-                          child: Text(widget.taskEntity.content ?? "Не указано",
-                              style: theme.textTheme.bodyMedium),
-                        ),
                       ],
                     ),
                   ),

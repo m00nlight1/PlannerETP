@@ -2,20 +2,44 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
+import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
+import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
+import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
 
-class AddSimpleTaskScreen extends StatefulWidget {
-  const AddSimpleTaskScreen({super.key});
+class UpdateSimpleTaskScreen extends StatelessWidget {
+  const UpdateSimpleTaskScreen(
+      {Key? key, required this.id, required this.taskEntity})
+      : super(key: key);
+
+  final String id;
+  final TaskEntity taskEntity;
 
   @override
-  State<StatefulWidget> createState() => _AddSimpleTaskScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => DetailTaskCubit(locator.get<TaskRepository>(), id),
+      child: _UpdateTaskView(taskEntity: taskEntity),
+    );
+  }
 }
 
-class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
+class _UpdateTaskView extends StatefulWidget {
+  final TaskEntity taskEntity;
+
+  const _UpdateTaskView({required this.taskEntity});
+
+  @override
+  State<StatefulWidget> createState() => _UpdateTaskViewState();
+}
+
+class _UpdateTaskViewState extends State<_UpdateTaskView> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   DateTime endWorkDateTime = DateTime.now();
@@ -23,12 +47,13 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
   bool showTime = false;
   bool showEndWorkDateTime = false;
 
-  final titleController = TextEditingController();
-  final masterController = TextEditingController();
-  final commentsController = TextEditingController();
+  TextEditingController? titleController;
+  TextEditingController? masterController;
+  TextEditingController? commentsController;
   final GlobalKey<FormState> formKey = GlobalKey();
 
   final ImgStorage storage = ImgStorage();
+  Future<String>? imgDownload;
 
   File? imageFile;
   String? fileName;
@@ -46,6 +71,21 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
         imageFile = File(pickedFile.path);
       });
     }
+  }
+
+  @override
+  void initState() {
+    if (widget.taskEntity.imageUrl != null) {
+      imgDownload = storage.downloadImage(widget.taskEntity.imageUrl ?? "");
+    }
+    if (widget.taskEntity.status != null) {
+      selectedItemId = widget.taskEntity.status?.id;
+    }
+    titleController = TextEditingController(text: widget.taskEntity.title);
+    masterController =
+        TextEditingController(text: widget.taskEntity.responsibleMaster);
+    commentsController = TextEditingController(text: widget.taskEntity.content);
+    super.initState();
   }
 
   // Select for Date
@@ -109,7 +149,7 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Создать задачу"),
+        title: const Text("Редактировать задачу"),
         actions: [
           IconButton(
             onPressed: () {
@@ -117,14 +157,14 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                 fileName = storage.getRandomString(7);
                 storage.uploadImage(imageFile!.path, fileName!);
               }
-              context.read<TaskCubit>().createTask({
-                "title": titleController.text,
-                "content": commentsController.text,
+              context.read<DetailTaskCubit>().updateTask({
+                "title": titleController?.text,
+                "content": commentsController?.text,
                 "startOfWork": selectedDate.toString(),
                 "endOfWork": endWorkDateTime.toString(),
                 "imageUrl": fileName,
                 "contractorCompany": null,
-                "responsibleMaster": masterController.text,
+                "responsibleMaster": masterController?.text,
                 "representative": null,
                 "equipmentLevel": null,
                 "staffLevel": null,
@@ -134,9 +174,12 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                 "idStatus": selectedItemId,
                 "idIndustry": null,
                 "idTaskType": null
+              }).then((_) {
+                context.read<DetailTaskCubit>().fetchTask();
+                context.read<TaskCubit>().fetchTasks();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
               });
-              Navigator.pop(context);
-              Navigator.pop(context);
             },
             icon: const Icon(Icons.done),
           ),
@@ -149,12 +192,19 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
             child: Column(
               children: [
                 //title
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Название", style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AppTextField(
                     hintText: 'Название',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: titleController,
+                    controller: titleController!,
                     validator: (title) =>
                         title != null ? 'Введите название' : null),
                 const SizedBox(height: 10),
@@ -181,6 +231,7 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 10),
                 //run to
                 Card(
                   color: Colors.grey.shade200,
@@ -200,7 +251,11 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                               showEndWorkDateTime
                                   ? const Icon(Icons.date_range_outlined,
                                       color: Color(0xFF0d74ba))
-                                  : const SizedBox(),
+                                  : Flexible(
+                                      child: Text(widget.taskEntity.endOfWork
+                                          .toString()
+                                          .split(".")[0]),
+                                    ),
                               const SizedBox(width: 5),
                               showEndWorkDateTime
                                   ? Flexible(
@@ -221,8 +276,9 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                                   const EdgeInsets.symmetric(horizontal: 5.0),
                               child: Center(
                                 child: Text(
-                                  'Установить дату и время',
+                                  'Изменить дату и время',
                                   style: theme.textTheme.labelMedium,
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),
@@ -234,20 +290,28 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                 ),
                 const SizedBox(height: 10),
                 //responsible master
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Ответственное лицо",
+                        style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AppTextField(
                     hintText: 'Ответственное лицо',
                     obscureText: false,
-                    prefixIcon: const Icon(Icons.perm_identity,
+                    prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: masterController,
-                    validator: (master) => master != null
-                        ? 'Укажите ответственного мастера'
-                        : null),
+                    controller: masterController!,
+                    validator: (master) =>
+                        master != null ? 'Укажите ответственное лицо' : null),
                 const SizedBox(height: 10),
                 //images
                 Card(
+                  margin: const EdgeInsets.only(left: 25, right: 25),
                   color: Colors.grey.shade200,
-                  child: imageFile == null
+                  child: widget.taskEntity.imageUrl == null && imageFile == null
                       ? SizedBox(
                           width: 342,
                           height: 100,
@@ -258,6 +322,7 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                               children: [
                                 Text('Фото',
                                     style: theme.textTheme.headlineSmall),
+                                const SizedBox(height: 10),
                                 MaterialButton(
                                   onPressed: () {
                                     _getImgFromGallery();
@@ -275,38 +340,95 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                             ),
                           ),
                         )
-                      : SizedBox(
-                          width: 342,
-                          height: 320,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Фото',
-                                    style: theme.textTheme.headlineSmall),
-                                const SizedBox(height: 10),
-                                Image.file(
-                                  imageFile!,
-                                  fit: BoxFit.cover,
-                                ),
-                                const SizedBox(height: 10),
-                                MaterialButton(
-                                  onPressed: () {
-                                    _getImgFromGallery();
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 75.0),
-                                    child: Text(
-                                      'Выбрать другой медиафайл',
-                                      style: theme.textTheme.labelMedium,
-                                      textAlign: TextAlign.center,
+                      : GFCard(
+                          boxFit: BoxFit.cover,
+                          color: Colors.grey.shade200,
+                          margin: EdgeInsets.zero,
+                          title: GFListTile(
+                            title: Text('Фото',
+                                style: theme.textTheme.headlineSmall),
+                          ),
+                          content: SizedBox(
+                            child: imageFile == null
+                                ? FutureBuilder(
+                                    future: imgDownload,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<String> snapshot) {
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.done &&
+                                          snapshot.hasData) {
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            imageFile == null
+                                                ? Image.network(
+                                                    snapshot.data ?? "",
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.2,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Image.file(
+                                                    imageFile!,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.2,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                          ],
+                                        );
+                                      } else {
+                                        return const SizedBox();
+                                      }
+                                    },
+                                  )
+                                : SizedBox(
+                                    width: 342,
+                                    height: 220,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Image.file(
+                                            imageFile!,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.2,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
+                          ),
+                          buttonBar: GFButtonBar(
+                            children: <Widget>[
+                              GFButton(
+                                onPressed: () {
+                                  _getImgFromGallery();
+                                },
+                                text: 'Выбрать другой медиафайл',
+                              ),
+                            ],
                           ),
                         ),
                 ),
@@ -328,7 +450,7 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                               builder: (context, state) {
                                 if (state.statusList.isNotEmpty) {
                                   return DropdownButton<int>(
-                                    isExpanded: true,
+                                      isExpanded: true,
                                       value: selectedItemId,
                                       items: state.statusList.map((e) {
                                         return DropdownMenuItem(

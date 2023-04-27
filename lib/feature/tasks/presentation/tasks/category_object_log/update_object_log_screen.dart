@@ -14,7 +14,8 @@ import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
 
 class UpdateObjectLogScreen extends StatelessWidget {
-  const UpdateObjectLogScreen({Key? key, required this.id, required this.taskEntity})
+  const UpdateObjectLogScreen(
+      {Key? key, required this.id, required this.taskEntity})
       : super(key: key);
 
   final String id;
@@ -35,7 +36,7 @@ class _UpdateTaskView extends StatefulWidget {
   const _UpdateTaskView({required this.taskEntity});
 
   @override
-  State<StatefulWidget> createState() => _UpdateTaskViewState(taskEntity);
+  State<StatefulWidget> createState() => _UpdateTaskViewState();
 }
 
 class _UpdateTaskViewState extends State<_UpdateTaskView> {
@@ -58,11 +59,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
   TextEditingController? commentsController;
   final GlobalKey<FormState> formKey = GlobalKey();
 
-  final TaskEntity taskEntity;
   final ImgStorage storage = ImgStorage();
   Future<String>? imgDownload;
-
-  _UpdateTaskViewState(this.taskEntity);
 
   File? imageFile;
   String? fileName;
@@ -82,22 +80,22 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
 
   @override
   void initState() {
-    if (taskEntity.imageUrl != null) {
-      imgDownload = storage.downloadImage(taskEntity.imageUrl ?? "");
+    if (widget.taskEntity.imageUrl != null) {
+      imgDownload = storage.downloadImage(widget.taskEntity.imageUrl ?? "");
     }
-    titleController = TextEditingController(text: taskEntity.title);
+    titleController = TextEditingController(text: widget.taskEntity.title);
     companyController =
-        TextEditingController(text: taskEntity.contractorCompany);
+        TextEditingController(text: widget.taskEntity.contractorCompany);
     masterController =
-        TextEditingController(text: taskEntity.responsibleMaster);
+        TextEditingController(text: widget.taskEntity.responsibleMaster);
     representativeController =
-        TextEditingController(text: taskEntity.representative);
+        TextEditingController(text: widget.taskEntity.representative);
     equipmentLevelController =
-        TextEditingController(text: taskEntity.equipmentLevel);
-    staffLevelController = TextEditingController(text: taskEntity.staffLevel);
+        TextEditingController(text: widget.taskEntity.equipmentLevel);
+    staffLevelController = TextEditingController(text: widget.taskEntity.staffLevel);
     resultsOfTheWorkController =
-        TextEditingController(text: taskEntity.resultsOfTheWork);
-    commentsController = TextEditingController(text: taskEntity.content);
+        TextEditingController(text: widget.taskEntity.resultsOfTheWork);
+    commentsController = TextEditingController(text: widget.taskEntity.content);
     super.initState();
   }
 
@@ -169,16 +167,18 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
     });
   }
 
-  String getStartWorkDateTime() => DateFormat('yyyy-MM-dd kk:mm').format(startWorkDateTime);
+  String getStartWorkDateTime() =>
+      DateFormat('yyyy-MM-dd kk:mm').format(startWorkDateTime);
 
-  String getEndWorkDateTime() => DateFormat('yyyy-MM-dd – kk:mm').format(endWorkDateTime);
+  String getEndWorkDateTime() =>
+      DateFormat('yyyy-MM-dd – kk:mm').format(endWorkDateTime);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Редактировать задачу"),
+        title: const Text("Редактировать журнал"),
         actions: [
           IconButton(
             onPressed: () {
@@ -262,7 +262,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                           color: Color(0xFF0d74ba))
                                       : Flexible(
                                           child: Text(
-                                              taskEntity.startOfWork
+                                              widget.taskEntity.startOfWork
                                                   .toString()
                                                   .split(".")[0],
                                               textAlign: TextAlign.center)),
@@ -317,7 +317,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                           color: Color(0xFF0d74ba))
                                       : Flexible(
                                           child: Text(
-                                              taskEntity.endOfWork
+                                              widget.taskEntity.endOfWork
                                                   .toString()
                                                   .split(".")[0],
                                               textAlign: TextAlign.center)),
@@ -412,10 +412,11 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 const SizedBox(height: 10),
                 //images
                 Card(
+                  margin: const EdgeInsets.only(left: 25, right: 25),
                   color: Colors.grey.shade200,
-                  child: taskEntity.imageUrl == null && imageFile == null
+                  child: widget.taskEntity.imageUrl == null && imageFile == null
                       ? SizedBox(
-                          width: 342,
+                          width: 365,
                           height: 100,
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -444,6 +445,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                         )
                       : GFCard(
                           boxFit: BoxFit.cover,
+                          color: Colors.grey.shade200,
+                          margin: EdgeInsets.zero,
                           title: GFListTile(
                             title: Text('Фото',
                                 style: theme.textTheme.headlineSmall),
@@ -464,11 +467,28 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                             imageFile == null
                                                 ? Image.network(
                                                     snapshot.data ?? "",
-                                                    height: 150,
-                                                    fit: BoxFit.fill,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.2,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    fit: BoxFit.cover,
                                                   )
                                                 : Image.file(
                                                     imageFile!,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.2,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
                                                     fit: BoxFit.cover,
                                                   ),
                                           ],
@@ -489,6 +509,13 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                         children: [
                                           Image.file(
                                             imageFile!,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.2,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
                                             fit: BoxFit.cover,
                                           ),
                                         ],
