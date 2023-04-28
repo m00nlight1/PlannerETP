@@ -9,6 +9,7 @@ import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
 import 'package:planner_etp/app/presentation/components/app_snack_bar.dart';
 import 'package:planner_etp/app/presentation/components/message_action_bar.dart';
+import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
@@ -80,21 +81,50 @@ class _DetailTaskView extends StatelessWidget {
                     TaskChatScreen(taskEntity: taskEntity, id: id))),
             icon: const Icon(Icons.message_rounded),
           ),
-          IconButton(
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    UpdateObjectLogScreen(id: id, taskEntity: taskEntity))),
-            icon: const Icon(Icons.edit),
-          ),
-          IconButton(
-            onPressed: () {
-              context.read<DetailTaskCubit>().deleteTask().then((_) {
-                context.read<TaskCubit>().fetchTasks();
-                Navigator.of(context).pop();
-              });
-            },
-            icon: const Icon(Icons.delete),
-          ),
+          BlocConsumer<AuthCubit, AuthState>(builder: (context, state) {
+            final userEntity = state.whenOrNull(
+              authorized: (userEntity) => userEntity,
+            );
+            if (userEntity?.userState?.connectionState ==
+                ConnectionState.waiting) {
+              return const AppLoader();
+            }
+            if (taskEntity.user?.id == userEntity?.id) {
+              return Row(
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            UpdateObjectLogScreen(id: id, taskEntity: taskEntity))),
+                    icon: const Icon(Icons.edit),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      context.read<DetailTaskCubit>().deleteTask().then((_) {
+                        context.read<TaskCubit>().fetchTasks();
+                        Navigator.of(context).pop();
+                      });
+                    },
+                    icon: const Icon(Icons.delete),
+                  ),
+                ],
+              );
+            }
+            return const SizedBox();
+          }, listener: (context, state) {
+            state.whenOrNull(
+              authorized: (userEntity) {
+                if (userEntity.userState?.hasData == true) {
+                  AppSnackBar.showSnackBarWithMessage(
+                      context, userEntity.userState?.data);
+                }
+                if (userEntity.userState?.hasError == true) {
+                  AppSnackBar.showSnackBarWithError(context,
+                      ErrorEntity.fromException(userEntity.userState?.error));
+                }
+              },
+            );
+          }),
         ],
       ),
       body: BlocConsumer<DetailTaskCubit, DetailTaskState>(
