@@ -5,6 +5,7 @@ import 'package:planner_etp/feature/tasks/domain/painter_service.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/presentation/tasks/category_object_log/detail_object_log_screen.dart';
 import 'package:planner_etp/feature/tasks/presentation/tasks/category_simple_task/detail_simple_task_screen.dart';
+import 'package:planner_etp/feature/tasks/presentation/tasks/category_supervision_order/detail_supervision_order_screen.dart';
 
 class TaskItem extends StatefulWidget {
   const TaskItem({super.key, required this.taskEntity});
@@ -40,6 +41,11 @@ class _TaskItemState extends State<TaskItem> {
         } if (widget.taskEntity.category?.id == 3) {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
               DetailSimpleTaskScreen(id: widget.taskEntity.id.toString(),
+                  taskEntity: widget.taskEntity)
+          ));
+        } if (widget.taskEntity.category?.id == 2) {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+              DetailSupervisionOrderScreen(id: widget.taskEntity.id.toString(),
                   taskEntity: widget.taskEntity)
           ));
         }

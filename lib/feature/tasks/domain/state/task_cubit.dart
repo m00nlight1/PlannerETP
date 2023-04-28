@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
+import 'package:planner_etp/feature/tasks/domain/industry/industry_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/status/status_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
+import 'package:planner_etp/feature/tasks/domain/tasktype/task_type_entity.dart';
 
 part 'task_state.dart';
 
@@ -25,7 +27,9 @@ class TaskCubit extends HydratedCubit<TaskState> {
       event.mapOrNull(
         authorized: (value) {
           fetchTasks();
-          // fetchStatuses();
+          fetchStatuses();
+          fetchTaskTypes();
+          fetchIndustries();
         },
         notAuthorized: (value) => logOut(),
       );
@@ -61,6 +65,34 @@ class TaskCubit extends HydratedCubit<TaskState> {
       final Iterable iterable = value;
       emit(state.copyWith(
           statusList: iterable.map((e) => StatusEntity.fromJson(e)).toList(),
+          asyncSnapshot:
+          const AsyncSnapshot.withData(ConnectionState.done, true)));
+    }).catchError((error) {
+      addError(error);
+    });
+  }
+
+  Future<void> fetchTaskTypes() async {
+    emit(state.copyWith(asyncSnapshot: const AsyncSnapshot.waiting()));
+    await Future.delayed(const Duration(seconds: 1));
+    await taskRepository.fetchTaskTypes().then((value) {
+      final Iterable iterable = value;
+      emit(state.copyWith(
+          taskTypeList: iterable.map((e) => TaskTypeEntity.fromJson(e)).toList(),
+          asyncSnapshot:
+          const AsyncSnapshot.withData(ConnectionState.done, true)));
+    }).catchError((error) {
+      addError(error);
+    });
+  }
+
+  Future<void> fetchIndustries() async {
+    emit(state.copyWith(asyncSnapshot: const AsyncSnapshot.waiting()));
+    await Future.delayed(const Duration(seconds: 1));
+    await taskRepository.fetchIndustries().then((value) {
+      final Iterable iterable = value;
+      emit(state.copyWith(
+          industryList: iterable.map((e) => IndustryEntity.fromJson(e)).toList(),
           asyncSnapshot:
           const AsyncSnapshot.withData(ConnectionState.done, true)));
     }).catchError((error) {

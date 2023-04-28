@@ -174,4 +174,14 @@ class DioAppApi implements AppApi {
   Future fetchStatuses() {
     return dio.get("/data/status");
   }
+
+  @override
+  Future fetchIndustries() {
+    return dio.get("/data/industry");
+  }
+
+  @override
+  Future fetchTaskTypes() {
+    return dio.get("/data/tasktype");
+  }
 }

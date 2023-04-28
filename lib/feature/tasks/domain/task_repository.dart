@@ -14,4 +14,8 @@ abstract class TaskRepository {
   Future getTaskChat(String id);
 
   Future fetchStatuses();
+
+  Future fetchTaskTypes();
+
+  Future fetchIndustries();
 }

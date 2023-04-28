@@ -1,22 +1,44 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
+import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
+import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
+import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
 
-class AddSupervisionOrderScreen extends StatefulWidget {
-  const AddSupervisionOrderScreen({super.key});
+class UpdateSupervisionOrderScreen extends StatelessWidget {
+  final String id;
+  final TaskEntity taskEntity;
+
+  const UpdateSupervisionOrderScreen(
+      {super.key, required this.id, required this.taskEntity});
 
   @override
-  State<StatefulWidget> createState() => _AddSupervisionOrderScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => DetailTaskCubit(locator.get<TaskRepository>(), id),
+      child: _UpdateTaskView(taskEntity: taskEntity),
+    );
+  }
 }
 
-class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
+class _UpdateTaskView extends StatefulWidget {
+  final TaskEntity taskEntity;
+
+  const _UpdateTaskView({required this.taskEntity});
+
+  @override
+  State<StatefulWidget> createState() => _UpdateTaskViewState();
+}
+
+class _UpdateTaskViewState extends State<_UpdateTaskView> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   DateTime endWorkDateTime = DateTime.now();
@@ -24,13 +46,14 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
   bool showTime = false;
   bool showEndWorkDateTime = false;
 
-  final titleController = TextEditingController();
-  final masterController = TextEditingController();
-  final commentsController = TextEditingController();
-  final expansesController = TextEditingController();
+  TextEditingController? titleController;
+  TextEditingController? masterController;
+  TextEditingController? commentsController;
+  TextEditingController? expensesController;
   final GlobalKey<FormState> formKey = GlobalKey();
 
   final ImgStorage storage = ImgStorage();
+  Future<String>? imgDownload;
 
   File? imageFile;
   String? fileName;
@@ -50,6 +73,29 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
         imageFile = File(pickedFile.path);
       });
     }
+  }
+
+  @override
+  void initState() {
+    if (widget.taskEntity.imageUrl != null) {
+      imgDownload = storage.downloadImage(widget.taskEntity.imageUrl ?? "");
+    }
+    if (widget.taskEntity.status != null) {
+      selectedItemId = widget.taskEntity.status?.id;
+    }
+    if (widget.taskEntity.taskType != null) {
+      selectedTypeId = widget.taskEntity.taskType?.id;
+    }
+    if (widget.taskEntity.industry != null) {
+      selectedIndustryId = widget.taskEntity.industry?.id;
+    }
+    titleController = TextEditingController(text: widget.taskEntity.title);
+    masterController =
+        TextEditingController(text: widget.taskEntity.responsibleMaster);
+    commentsController = TextEditingController(text: widget.taskEntity.content);
+    expensesController =
+        TextEditingController(text: widget.taskEntity.expenses);
+    super.initState();
   }
 
   // Select for Date
@@ -113,7 +159,7 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Создать предписание"),
+        title: const Text("Редактировать предписание"),
         actions: [
           IconButton(
             onPressed: () {
@@ -121,26 +167,29 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                 fileName = storage.getRandomString(7);
                 storage.uploadImage(imageFile!.path, fileName!);
               }
-              context.read<TaskCubit>().createTask({
-                "title": titleController.text,
-                "content": commentsController.text,
+              context.read<DetailTaskCubit>().updateTask({
+                "title": titleController?.text,
+                "content": commentsController?.text,
                 "startOfWork": selectedDate.toString(),
                 "endOfWork": endWorkDateTime.toString(),
                 "imageUrl": fileName,
                 "contractorCompany": null,
-                "responsibleMaster": masterController.text,
+                "responsibleMaster": masterController?.text,
                 "representative": null,
                 "equipmentLevel": null,
                 "staffLevel": null,
                 "resultsOfTheWork": null,
-                "expenses": expansesController.text,
+                "expenses": expensesController?.text,
                 "idCategory": 2,
                 "idStatus": selectedItemId,
                 "idIndustry": selectedIndustryId,
                 "idTaskType": selectedTypeId
+              }).then((_) {
+                context.read<DetailTaskCubit>().fetchTask();
+                context.read<TaskCubit>().fetchTasks();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
               });
-              Navigator.pop(context);
-              Navigator.pop(context);
             },
             icon: const Icon(Icons.done),
           ),
@@ -153,12 +202,19 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
             child: Column(
               children: [
                 //title
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Название", style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AppTextField(
                     hintText: 'Название',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: titleController,
+                    controller: titleController!,
                     validator: (title) =>
                         title != null ? 'Введите название' : null),
                 const SizedBox(height: 10),
@@ -202,7 +258,6 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
                 //industry
                 Card(
                   color: Colors.grey.shade200,
@@ -243,14 +298,21 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
                 //responsible master
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Ответственное лицо",
+                        style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
                 AppTextField(
                     hintText: 'Ответственное лицо',
                     obscureText: false,
-                    prefixIcon: const Icon(Icons.perm_identity,
+                    prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
-                    controller: masterController,
+                    controller: masterController!,
                     validator: (master) =>
                         master != null ? 'Укажите ответственное лицо' : null),
                 const SizedBox(height: 10),
@@ -273,7 +335,11 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                               showEndWorkDateTime
                                   ? const Icon(Icons.date_range_outlined,
                                       color: Color(0xFF0d74ba))
-                                  : const SizedBox(),
+                                  : Flexible(
+                                      child: Text(widget.taskEntity.endOfWork
+                                          .toString()
+                                          .split(".")[0]),
+                                    ),
                               const SizedBox(width: 5),
                               showEndWorkDateTime
                                   ? Flexible(
@@ -294,8 +360,9 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                                   const EdgeInsets.symmetric(horizontal: 5.0),
                               child: Center(
                                 child: Text(
-                                  'Установить дату и время',
+                                  'Изменить дату и время',
                                   style: theme.textTheme.labelMedium,
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ),
@@ -329,10 +396,12 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                     ),
                   ),
                 ),
-                //image
+                const SizedBox(height: 10),
+                //images
                 Card(
+                  margin: const EdgeInsets.only(left: 25, right: 25),
                   color: Colors.grey.shade200,
-                  child: imageFile == null
+                  child: widget.taskEntity.imageUrl == null && imageFile == null
                       ? SizedBox(
                           width: 342,
                           height: 100,
@@ -343,6 +412,7 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                               children: [
                                 Text('Фото',
                                     style: theme.textTheme.headlineSmall),
+                                const SizedBox(height: 10),
                                 MaterialButton(
                                   onPressed: () {
                                     _getImgFromGallery();
@@ -360,63 +430,97 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                             ),
                           ),
                         )
-                      : SizedBox(
-                          width: 342,
-                          height: 320,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Фото',
-                                    style: theme.textTheme.headlineSmall),
-                                const SizedBox(height: 10),
-                                Image.file(
-                                  imageFile!,
-                                  fit: BoxFit.cover,
-                                ),
-                                const SizedBox(height: 10),
-                                MaterialButton(
-                                  onPressed: () {
-                                    _getImgFromGallery();
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 75.0),
-                                    child: Text(
-                                      'Выбрать другой медиафайл',
-                                      style: theme.textTheme.labelMedium,
-                                      textAlign: TextAlign.center,
+                      : GFCard(
+                          boxFit: BoxFit.cover,
+                          color: Colors.grey.shade200,
+                          margin: EdgeInsets.zero,
+                          title: GFListTile(
+                            title: Text('Фото',
+                                style: theme.textTheme.headlineSmall),
+                          ),
+                          content: SizedBox(
+                            child: imageFile == null
+                                ? FutureBuilder(
+                                    future: imgDownload,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<String> snapshot) {
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.done &&
+                                          snapshot.hasData) {
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            imageFile == null
+                                                ? Image.network(
+                                                    snapshot.data ?? "",
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.2,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Image.file(
+                                                    imageFile!,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.2,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                          ],
+                                        );
+                                      } else {
+                                        return const SizedBox();
+                                      }
+                                    },
+                                  )
+                                : SizedBox(
+                                    width: 342,
+                                    height: 220,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Image.file(
+                                            imageFile!,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.2,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
+                          ),
+                          buttonBar: GFButtonBar(
+                            children: <Widget>[
+                              GFButton(
+                                onPressed: () {
+                                  _getImgFromGallery();
+                                },
+                                text: 'Выбрать другой медиафайл',
+                              ),
+                            ],
                           ),
                         ),
-                ),
-                const SizedBox(height: 10),
-                //expanses
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade400),
-                        ),
-                        fillColor: Colors.grey.shade200,
-                        filled: true,
-                        prefixIcon: const Icon(Icons.monetization_on_outlined,
-                            color: Color(0xFF0d74ba)),
-                        hintText: 'Расходы',
-                        hintStyle: TextStyle(color: Colors.grey[500])),
-                    controller: expansesController,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    keyboardType: TextInputType.number,
-                  ),
                 ),
                 const SizedBox(height: 10),
                 //status
