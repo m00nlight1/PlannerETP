@@ -11,14 +11,10 @@ class MessageItem extends StatefulWidget {
   const MessageItem({super.key, required this.messageEntity});
 
   @override
-  State<StatefulWidget> createState() => _MessageItemState(messageEntity);
+  State<StatefulWidget> createState() => _MessageItemState();
 }
 
 class _MessageItemState extends State<MessageItem> {
-  final MessageEntity messageEntity;
-
-  _MessageItemState(this.messageEntity);
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubit, AuthState>(
@@ -29,10 +25,10 @@ class _MessageItemState extends State<MessageItem> {
         if (userEntity?.userState?.connectionState == ConnectionState.waiting) {
           return const AppLoader();
         }
-        if (messageEntity.user?.id == userEntity?.id) {
-          return _MessageOwnTile(message: messageEntity);
+        if (widget.messageEntity.user?.id == userEntity?.id) {
+          return _MessageOwnTile(message: widget.messageEntity);
         } else {
-          return _MessageTile(message: messageEntity);
+          return _MessageTile(message: widget.messageEntity);
         }
         // return Align(
         //   alignment: messageEntity.user?.id == userEntity?.id
@@ -90,7 +86,7 @@ class _MessageTile extends StatelessWidget {
                   children: [
                     Text("${message.user?.username}"),
                     const SizedBox(height: 7),
-                    Text(message.content, style: TextStyle(color: Colors.black),),
+                    Text(message.content, style: const TextStyle(color: Colors.black),),
                   ],
                 ),
                 // child: Text(message.content ?? ''),

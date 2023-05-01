@@ -20,8 +20,22 @@ class ImgStorage {
     }
   }
 
+  Future<void> uploadImageFromMessage(String filePath, String fileName) async {
+    File file = File(filePath);
+    try {
+      await storage.ref('message/$fileName').putFile(file);
+    } on FirebaseException catch (error) {
+      print(error);
+    }
+  }
+
   Future<String> downloadImage(String fileName) async {
     String downloadUrl = await storage.ref('task/$fileName').getDownloadURL();
+    return downloadUrl;
+  }
+
+  Future<String> downloadImageFromMessage(String fileName) async {
+    String downloadUrl = await storage.ref('message/$fileName').getDownloadURL();
     return downloadUrl;
   }
 
