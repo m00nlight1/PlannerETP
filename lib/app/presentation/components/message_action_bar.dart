@@ -21,8 +21,8 @@ class ActionBarState extends State<ActionBar> {
   final ImagePicker _picker = ImagePicker();
   final ImgStorage storage = ImgStorage();
   File? imageFile;
-  final TextEditingController messageController = TextEditingController();
-  final TextEditingController imageNameController = TextEditingController();
+  final messageController = TextEditingController();
+  final imageNameController = TextEditingController();
 
   Future<void> _sendMessage() async {
     if (messageController.text.isNotEmpty) {

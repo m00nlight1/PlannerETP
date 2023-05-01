@@ -26,17 +26,18 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
   final titleController = TextEditingController();
   final masterController = TextEditingController();
   final commentsController = TextEditingController();
+  final imageNameController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
 
   final ImgStorage storage = ImgStorage();
+  final ImagePicker _picker = ImagePicker();
 
   File? imageFile;
-  String? fileName;
 
   int? selectedItemId;
 
   void _getImgFromGallery() async {
-    PickedFile? pickedFile = await ImagePicker().getImage(
+    XFile? pickedFile = await _picker.pickImage(
       source: ImageSource.gallery,
       maxWidth: 320,
       maxHeight: 320,
@@ -44,6 +45,7 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
     if (pickedFile != null) {
       setState(() {
         imageFile = File(pickedFile.path);
+        imageNameController.text = storage.getRandomString(7);
       });
     }
   }
@@ -113,16 +115,15 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              if (imageFile != null) {
-                fileName = storage.getRandomString(7);
-                storage.uploadImage(imageFile!.path, fileName!);
+              if (imageFile != null && imageNameController.text.isNotEmpty) {
+                storage.uploadImage(imageFile!.path, imageNameController.text);
               }
               context.read<TaskCubit>().createTask({
                 "title": titleController.text,
                 "content": commentsController.text,
                 "startOfWork": selectedDate.toString(),
                 "endOfWork": endWorkDateTime.toString(),
-                "imageUrl": fileName,
+                "imageUrl": imageNameController.text,
                 "contractorCompany": null,
                 "responsibleMaster": masterController.text,
                 "representative": null,
@@ -247,7 +248,7 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                 //images
                 Card(
                   color: Colors.grey.shade200,
-                  child: imageFile == null
+                  child: imageNameController.text.isEmpty
                       ? SizedBox(
                           width: 342,
                           height: 100,
@@ -291,19 +292,35 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                                   fit: BoxFit.cover,
                                 ),
                                 const SizedBox(height: 10),
-                                MaterialButton(
-                                  onPressed: () {
-                                    _getImgFromGallery();
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 75.0),
-                                    child: Text(
-                                      'Выбрать другой медиафайл',
-                                      style: theme.textTheme.labelMedium,
-                                      textAlign: TextAlign.center,
+                                Row(
+                                  children: [
+                                    MaterialButton(
+                                      onPressed: () {
+                                        _getImgFromGallery();
+                                      },
+                                      child: Text(
+                                        'Выбрать другой медиафайл',
+                                        style: theme.textTheme.labelMedium,
+                                      ),
                                     ),
-                                  ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          imageNameController.clear();
+                                          imageFile == null;
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        foregroundColor: Colors.red,
+                                        elevation: 0
+                                      ),
+                                      child: const Icon(
+                                        Icons.clear,
+                                        size: 25.0,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
