@@ -59,7 +59,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
   TextEditingController? commentsController;
   final GlobalKey<FormState> formKey = GlobalKey();
 
-  final ImgStorage storage = ImgStorage();
+  final FileImgStorage storage = FileImgStorage();
   Future<String>? imgDownload;
 
   File? imageFile;

@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 
-class ImgStorage {
+class FileImgStorage {
   Future<String>? imgDownload;
 
   final FirebaseStorage storage = FirebaseStorage.instance;
@@ -11,31 +12,39 @@ class ImgStorage {
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   final Random _rand = Random();
 
+  Future<void> uploadFile(Uint8List fileBytes, String fileName) async {
+    try {
+      await storage.ref('task/files/$fileName').putData(fileBytes);
+    } on FirebaseException catch (e) {
+      print("Failed with error '${e.code}': ${e.message}");
+    }
+  }
+
   Future<void> uploadImage(String filePath, String fileName) async {
     File file = File(filePath);
     try {
-      await storage.ref('task/$fileName').putFile(file);
-    } on FirebaseException catch (error) {
-      print(error);
+      await storage.ref('task/img/$fileName').putFile(file);
+    } on FirebaseException catch (e) {
+      print("Failed with error '${e.code}': ${e.message}");
     }
   }
 
   Future<void> uploadImageFromMessage(String filePath, String fileName) async {
     File file = File(filePath);
     try {
-      await storage.ref('message/$fileName').putFile(file);
-    } on FirebaseException catch (error) {
-      print(error);
+      await storage.ref('message/img/$fileName').putFile(file);
+    } on FirebaseException catch (e) {
+      print("Failed with error '${e.code}': ${e.message}");
     }
   }
 
   Future<String> downloadImage(String fileName) async {
-    String downloadUrl = await storage.ref('task/$fileName').getDownloadURL();
+    String downloadUrl = await storage.ref('task/img/$fileName').getDownloadURL();
     return downloadUrl;
   }
 
   Future<String> downloadImageFromMessage(String fileName) async {
-    String downloadUrl = await storage.ref('message/$fileName').getDownloadURL();
+    String downloadUrl = await storage.ref('message/img/$fileName').getDownloadURL();
     return downloadUrl;
   }
 

@@ -19,6 +19,7 @@ _$_TaskEntity _$$_TaskEntityFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['endOfWork'] as String),
       imageUrl: json['imageUrl'] as String?,
+      fileUrl: json['fileUrl'] as String?,
       contractorCompany: json['contractorCompany'] as String?,
       responsibleMaster: json['responsibleMaster'] as String?,
       representative: json['representative'] as String?,
@@ -56,6 +57,7 @@ Map<String, dynamic> _$$_TaskEntityToJson(_$_TaskEntity instance) =>
       'startOfWork': instance.startOfWork?.toIso8601String(),
       'endOfWork': instance.endOfWork?.toIso8601String(),
       'imageUrl': instance.imageUrl,
+      'fileUrl': instance.fileUrl,
       'contractorCompany': instance.contractorCompany,
       'responsibleMaster': instance.responsibleMaster,
       'representative': instance.representative,

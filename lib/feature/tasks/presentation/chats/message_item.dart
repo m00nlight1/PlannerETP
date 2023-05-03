@@ -63,7 +63,7 @@ class _MessageTile extends StatefulWidget {
 }
 
 class _MessageTileState extends State<_MessageTile> {
-  final ImgStorage storage = ImgStorage();
+  final FileImgStorage storage = FileImgStorage();
   Future<String>? imgDownload;
 
   static const _borderRadius = 26.0;
@@ -170,7 +170,7 @@ class _MessageOwnTile extends StatefulWidget {
 }
 
 class _MessageOwnTileState extends State<_MessageOwnTile> {
-  final ImgStorage storage = ImgStorage();
+  final FileImgStorage storage = FileImgStorage();
   Future<String>? imgDownload;
 
   static const _borderRadius = 26.0;
@@ -271,7 +271,7 @@ class _OpenImageDialog extends StatefulWidget {
 }
 
 class _OpenImageDialogState extends State<_OpenImageDialog> {
-  final ImgStorage storage = ImgStorage();
+  final FileImgStorage storage = FileImgStorage();
   Future<String>? imgDownload;
 
   @override

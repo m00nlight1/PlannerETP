@@ -29,7 +29,7 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
   final imageNameController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
 
-  final ImgStorage storage = ImgStorage();
+  final FileImgStorage storage = FileImgStorage();
   final ImagePicker _picker = ImagePicker();
 
   File? imageFile;

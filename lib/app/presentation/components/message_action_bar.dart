@@ -19,7 +19,7 @@ class ActionBar extends StatefulWidget {
 
 class ActionBarState extends State<ActionBar> {
   final ImagePicker _picker = ImagePicker();
-  final ImgStorage storage = ImgStorage();
+  final FileImgStorage storage = FileImgStorage();
   Future<String>? imgDownload;
   File? imageFile;
   final messageController = TextEditingController();

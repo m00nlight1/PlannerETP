@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -33,12 +35,14 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
   final resultsOfTheWorkController = TextEditingController();
   final commentsController = TextEditingController();
   final imageNameController = TextEditingController();
+  final fileNameController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
 
-  final ImgStorage storage = ImgStorage();
+  final FileImgStorage storage = FileImgStorage();
   final ImagePicker _picker = ImagePicker();
 
   File? imageFile;
+  Uint8List? fileBytes;
 
   void _getImgFromGallery() async {
     XFile? pickedFile = await _picker.pickImage(
@@ -50,6 +54,16 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
       setState(() {
         imageFile = File(pickedFile.path);
         imageNameController.text = storage.getRandomString(7);
+      });
+    }
+  }
+
+  void _getFile() async {
+    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles();
+    if (pickedFile != null) {
+      setState(() {
+        fileBytes = pickedFile.files.first.bytes;
+        fileNameController.text = pickedFile.files.first.name;
       });
     }
   }
@@ -140,12 +154,16 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
               if (imageFile != null && imageNameController.text.isNotEmpty) {
                 storage.uploadImage(imageFile!.path, imageNameController.text);
               }
+              if (fileBytes != null && fileNameController.text.isNotEmpty) {
+                storage.uploadFile(fileBytes!, fileNameController.text);
+              }
               context.read<TaskCubit>().createTask({
                 "title": titleController.text,
                 "content": commentsController.text,
                 "startOfWork": startWorkDateTime.toString(),
                 "endOfWork": endWorkDateTime.toString(),
                 "imageUrl": imageNameController.text,
+                "fileUrl": fileNameController.text,
                 "contractorCompany": companyController.text,
                 "responsibleMaster": masterController.text,
                 "representative": representativeController.text,
@@ -326,82 +344,81 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                   color: Colors.grey.shade200,
                   child: imageNameController.text.isEmpty
                       ? SizedBox(
-                    width: 342,
-                    height: 100,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Фото',
-                              style: theme.textTheme.headlineSmall),
-                          MaterialButton(
-                            onPressed: () {
-                              _getImgFromGallery();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 55.0),
-                              child: Text(
-                                'Добавить медиафайл',
-                                style: theme.textTheme.labelMedium,
-                              ),
+                          width: 342,
+                          height: 100,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Фото',
+                                    style: theme.textTheme.headlineSmall),
+                                MaterialButton(
+                                  onPressed: () {
+                                    _getImgFromGallery();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 55.0),
+                                    child: Text(
+                                      'Добавить медиафайл',
+                                      style: theme.textTheme.labelMedium,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  )
+                        )
                       : SizedBox(
-                    width: 342,
-                    height: 320,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Фото',
-                              style: theme.textTheme.headlineSmall),
-                          const SizedBox(height: 10),
-                          Image.file(
-                            imageFile!,
-                            fit: BoxFit.cover,
+                          width: 342,
+                          height: 320,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Фото',
+                                    style: theme.textTheme.headlineSmall),
+                                const SizedBox(height: 10),
+                                Image.file(
+                                  imageFile!,
+                                  fit: BoxFit.cover,
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    MaterialButton(
+                                      onPressed: () {
+                                        _getImgFromGallery();
+                                      },
+                                      child: Text(
+                                        'Выбрать другой медиафайл',
+                                        style: theme.textTheme.labelMedium,
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          imageNameController.clear();
+                                          imageFile == null;
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.transparent,
+                                          foregroundColor: Colors.red,
+                                          elevation: 0),
+                                      child: const Icon(
+                                        Icons.clear,
+                                        size: 25.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              MaterialButton(
-                                onPressed: () {
-                                  _getImgFromGallery();
-                                },
-                                child: Text(
-                                  'Выбрать другой медиафайл',
-                                  style: theme.textTheme.labelMedium,
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    imageNameController.clear();
-                                    imageFile == null;
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.transparent,
-                                    foregroundColor: Colors.red,
-                                    elevation: 0
-                                ),
-                                child: const Icon(
-                                  Icons.clear,
-                                  size: 25.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                        ),
                 ),
                 const SizedBox(height: 10),
                 //equipment level
@@ -472,6 +489,73 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 10),
+                //documents
+                Card(
+                  color: Colors.grey.shade200,
+                  child: fileNameController.text.isEmpty
+                      ? SizedBox(
+                          width: 342,
+                          height: 100,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Документы',
+                                    style: theme.textTheme.headlineSmall),
+                                MaterialButton(
+                                  onPressed: () {
+                                    _getFile();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 55.0),
+                                    child: Text(
+                                      'Добавить документ',
+                                      style: theme.textTheme.labelMedium,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : SizedBox(
+                          width: 342,
+                          height: 100,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Документы',
+                                    style: theme.textTheme.headlineSmall),
+                                const SizedBox(height: 10),
+                                Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                            fileNameController.text.toString()),
+                                        MaterialButton(
+                                          onPressed: () {},
+                                          child: Text('Открыть',
+                                              style: theme
+                                                  .textTheme.headlineSmall),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                ),
+                const SizedBox(height: 10),
               ],
             ),
           ),
