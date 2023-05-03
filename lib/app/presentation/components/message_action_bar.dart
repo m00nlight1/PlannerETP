@@ -35,6 +35,7 @@ class ActionBarState extends State<ActionBar> {
       "idTask": widget.taskEntity.id,
     });
     messageController.clear();
+    imageNameController.clear();
     FocusScope.of(context).unfocus();
     context.read<DetailTaskCubit>().getTaskChat();
   }
@@ -68,7 +69,7 @@ class ActionBarState extends State<ActionBar> {
         children: [
           Container(
             child: imageNameController.text.isEmpty
-                ? const SizedBox()
+                ? const SizedBox.shrink()
                 : Padding(
                     padding: const EdgeInsets.only(top: 10, left: 10),
                     child: Row(

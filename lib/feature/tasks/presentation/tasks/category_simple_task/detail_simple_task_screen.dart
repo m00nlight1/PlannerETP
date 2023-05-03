@@ -282,6 +282,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Ответственное лицо',
                             style: theme.textTheme.headlineSmall),
+                        const SizedBox(height: 10),
                         Row(
                           children: [
                             const Icon(Icons.perm_identity,
