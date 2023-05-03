@@ -19,7 +19,7 @@ class ProfileScreen extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                // Navigator.pop(context);
                 context.read<AuthCubit>().logOut();
               },
               icon: const Icon(Icons.logout)),

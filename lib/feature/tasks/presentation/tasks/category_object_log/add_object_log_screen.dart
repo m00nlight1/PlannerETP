@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
+import 'package:planner_etp/feature/tasks/domain/file_pdf_service.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 
@@ -43,6 +45,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
 
   File? imageFile;
   Uint8List? fileBytes;
+  String? pathPdf;
 
   void _getImgFromGallery() async {
     XFile? pickedFile = await _picker.pickImage(
@@ -63,8 +66,10 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
     if (pickedFile != null) {
       setState(() {
         fileBytes = pickedFile.files.first.bytes;
+        pathPdf = pickedFile.files.first.path;
         fileNameController.text = pickedFile.files.first.name;
       });
+      // await FirebaseStorage.instance.ref('task/files/$fileNameController.text').putData(fileBytes!);
     }
   }
 
@@ -154,9 +159,9 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
               if (imageFile != null && imageNameController.text.isNotEmpty) {
                 storage.uploadImage(imageFile!.path, imageNameController.text);
               }
-              if (fileBytes != null && fileNameController.text.isNotEmpty) {
-                storage.uploadFile(fileBytes!, fileNameController.text);
-              }
+              // if (fileNameController.text.isNotEmpty) {
+              //   storage.uploadFile(fileBytes, fileNameController.text);
+              // }
               context.read<TaskCubit>().createTask({
                 "title": titleController.text,
                 "content": commentsController.text,
@@ -529,7 +534,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Документы',
+                                Text('Документ',
                                     style: theme.textTheme.headlineSmall),
                                 const SizedBox(height: 10),
                                 Column(
@@ -539,9 +544,17 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                            fileNameController.text.toString()),
+                                            fileNameController.text),
                                         MaterialButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            if (pathPdf!.isNotEmpty) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => PDFScreen(path: pathPdf)),
+                                              );
+                                            }
+                                          },
                                           child: Text('Открыть',
                                               style: theme
                                                   .textTheme.headlineSmall),
