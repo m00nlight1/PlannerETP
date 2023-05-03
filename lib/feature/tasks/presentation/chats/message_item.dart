@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:getwidget/components/card/gf_card.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
@@ -8,9 +7,9 @@ import 'package:planner_etp/feature/tasks/domain/chat/message_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 
 class MessageItem extends StatefulWidget {
-  final MessageEntity messageEntity;
-
   const MessageItem({super.key, required this.messageEntity});
+
+  final MessageEntity messageEntity;
 
   @override
   State<StatefulWidget> createState() => _MessageItemState();
@@ -110,38 +109,31 @@ class _MessageTileState extends State<_MessageTile> {
                     ),
                     widget.message.imageUrl == ""
                         ? const SizedBox.shrink()
-                        : GFCard(
-                            boxFit: BoxFit.cover,
-                            color: Colors.grey.shade200,
-                            margin: EdgeInsets.zero,
-                            content: FutureBuilder(
-                              future: imgDownload,
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<String> snapshot) {
-                                if (snapshot.connectionState ==
-                                        ConnectionState.done &&
-                                    snapshot.hasData) {
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      Image.network(
-                                        snapshot.data ?? "",
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.2,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ],
-                                  );
-                                } else {
-                                  return const SizedBox();
-                                }
-                              },
-                            ),
-                          ),
+                        : const SizedBox(height: 5),
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                _OpenImageDialog(widget.message));
+                      },
+                      child: FutureBuilder(
+                        future: imgDownload,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done &&
+                              snapshot.hasData) {
+                            return Image.network(
+                              snapshot.data ?? "",
+                              fit: BoxFit.contain,
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
+                      ),
+                    ),
                   ],
                 ),
                 // child: Text(message.content ?? ''),
@@ -214,8 +206,7 @@ class _MessageOwnTileState extends State<_MessageOwnTile> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
                 child: Column(
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(widget.message.content!,
                         style: const TextStyle(
@@ -224,27 +215,30 @@ class _MessageOwnTileState extends State<_MessageOwnTile> {
                     widget.message.imageUrl == ""
                         ? const SizedBox.shrink()
                         : const SizedBox(height: 5),
-                    FutureBuilder(
-                              future: imgDownload,
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<String> snapshot) {
-                                if (snapshot.connectionState ==
-                                        ConnectionState.done &&
-                                    snapshot.hasData) {
-                                  return Image.network(
-                                    snapshot.data ?? "",
-                                    height:
-                                    MediaQuery.of(context).size.height *
-                                        0.2,
-                                    width:
-                                    MediaQuery.of(context).size.width,
-                                    fit: BoxFit.cover,
-                                  );
-                                } else {
-                                  return const SizedBox.shrink();
-                                }
-                              },
-                            ),
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                _OpenImageDialog(widget.message));
+                      },
+                      child: FutureBuilder(
+                        future: imgDownload,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          if (snapshot.connectionState ==
+                                  ConnectionState.done &&
+                              snapshot.hasData) {
+                            return Image.network(
+                              snapshot.data ?? "",
+                              fit: BoxFit.contain,
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -263,6 +257,50 @@ class _MessageOwnTileState extends State<_MessageOwnTile> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _OpenImageDialog extends StatefulWidget {
+  const _OpenImageDialog(this.messageEntity);
+
+  final MessageEntity messageEntity;
+
+  @override
+  State<StatefulWidget> createState() => _OpenImageDialogState();
+}
+
+class _OpenImageDialogState extends State<_OpenImageDialog> {
+  final ImgStorage storage = ImgStorage();
+  Future<String>? imgDownload;
+
+  @override
+  void initState() {
+    if (widget.messageEntity.imageUrl != null) {
+      imgDownload = storage.downloadImage(widget.messageEntity.imageUrl ?? "");
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      children: [
+        FutureBuilder(
+          future: imgDownload,
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            if (snapshot.connectionState == ConnectionState.done &&
+                snapshot.hasData) {
+              return Image.network(
+                snapshot.data ?? "",
+                fit: BoxFit.fill,
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+        ),
+      ],
     );
   }
 }

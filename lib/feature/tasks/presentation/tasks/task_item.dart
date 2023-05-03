@@ -73,20 +73,15 @@ class _TaskItemState extends State<TaskItem> {
                   Text(widget.taskEntity.title,
                       style: theme.textTheme.headlineMedium),
                   const SizedBox(height: 10),
-                  Container(
-                    color: Colors.transparent,
-                    height: 30,
-                    width: 100,
-                    child: widget.taskEntity.status == null
-                        ? const SizedBox()
-                        : CustomPaint(
-                            painter: CurvePainter(),
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 22, top: 6),
-                              child: Text(widget.taskEntity.status?.name ?? "",
-                                  style: theme.textTheme.displayMedium),
-                            ),
-                          ),
+                  widget.taskEntity.status == null
+                      ? const SizedBox.shrink()
+                      : CustomPaint(
+                    painter: CurvePainter(),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 22, top: 6),
+                      child: Text(widget.taskEntity.status?.name ?? "",
+                          style: theme.textTheme.displayMedium),
+                    ),
                   ),
                   const SizedBox(height: 10),
                   Text(widget.taskEntity.content ?? "",
@@ -117,19 +112,17 @@ class _TaskItemState extends State<TaskItem> {
                   Text(widget.taskEntity.title,
                       style: theme.textTheme.headlineMedium),
                   const SizedBox(height: 10),
-                  SizedBox(
-                    child: widget.taskEntity.status == null
-                        ? const SizedBox()
-                        : CustomPaint(
-                            painter: CurvePainter(),
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 22, top: 6),
-                              child: Text(widget.taskEntity.status?.name ?? "",
-                                  style: theme.textTheme.displayMedium),
-                            ),
-                          ),
+                  widget.taskEntity.status == null
+                      ? const SizedBox.shrink()
+                      : CustomPaint(
+                    painter: CurvePainter(),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 22, top: 6),
+                      child: Text(widget.taskEntity.status?.name ?? "",
+                          style: theme.textTheme.displayMedium),
+                    ),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 10),
                   Text(widget.taskEntity.content ?? "",
                       style: theme.textTheme.headlineSmall),
                   const SizedBox(height: 5),
