@@ -20,20 +20,23 @@ class ActionBar extends StatefulWidget {
 class ActionBarState extends State<ActionBar> {
   final ImagePicker _picker = ImagePicker();
   final ImgStorage storage = ImgStorage();
+  Future<String>? imgDownload;
   File? imageFile;
   final messageController = TextEditingController();
   final imageNameController = TextEditingController();
 
   Future<void> _sendMessage() async {
-    if (messageController.text.isNotEmpty) {
-      context.read<DetailTaskCubit>().sentMessage({
-        "content": messageController.text,
-        "idTask": widget.taskEntity.id,
-      });
-      messageController.clear();
-      FocusScope.of(context).unfocus();
-      context.read<DetailTaskCubit>().getTaskChat();
+    if (imageFile != null && imageNameController.text.isNotEmpty) {
+      storage.uploadImage(imageFile!.path, imageNameController.text);
     }
+    context.read<DetailTaskCubit>().sentMessage({
+      "content": messageController.text,
+      "imageUrl": imageNameController.text,
+      "idTask": widget.taskEntity.id,
+    });
+    messageController.clear();
+    FocusScope.of(context).unfocus();
+    context.read<DetailTaskCubit>().getTaskChat();
   }
 
   // void takeImageFromCamera() async {
@@ -66,23 +69,48 @@ class ActionBarState extends State<ActionBar> {
           Container(
             child: imageNameController.text.isEmpty
                 ? const SizedBox()
-                : Row(
-                    children: [
-                      Text('${imageNameController.text}.jpg'),
-                      RawMaterialButton(
-                        onPressed: () {
-                          setState(() {
-                            imageFile == null;
-                            imageNameController.clear();
-                          });
-                        },
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: const Icon(
-                          Icons.clear,
-                          size: 20.0,
+                : Padding(
+                    padding: const EdgeInsets.only(top: 10, left: 10),
+                    child: Row(
+                      children: [
+                        Column(
+                          children: [
+                            Text('${imageNameController.text}.jpg'),
+                            SizedBox(
+                              width: 100,
+                              height: 100,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Image.file(
+                                  imageFile!,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 70),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                imageFile == null;
+                                imageNameController.clear();
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                                shape: const CircleBorder(),
+                                padding: EdgeInsets.zero,
+                                backgroundColor: Colors.grey.shade300,
+                                foregroundColor: Colors.grey),
+                            child: const Icon(
+                              Icons.clear,
+                              size: 20.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
           ),
           Row(
@@ -143,7 +171,12 @@ class ActionBarState extends State<ActionBar> {
                 child: BarActionButton(
                   color: const Color(0xFF0d74ba),
                   icon: Icons.send_rounded,
-                  onPressed: _sendMessage,
+                  onPressed: () {
+                    if (imageNameController.text.isNotEmpty
+                    || messageController.text.isNotEmpty) {
+                      _sendMessage();
+                    }
+                  }
                 ),
               ),
             ],

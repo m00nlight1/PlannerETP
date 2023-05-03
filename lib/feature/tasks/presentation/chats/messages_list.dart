@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
+import 'package:planner_etp/feature/tasks/domain/chat/message_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/presentation/chats/message_item.dart';
 
@@ -14,24 +15,25 @@ class MessagesList extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         if (state.messageList.isNotEmpty) {
+          final List<MessageEntity> list  = state.messageList.toList();
+          list.sort((a,b) => b.id.compareTo(a.id));
+          list.toList();
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
             child: ListView.separated(
-              reverse: false,
-              itemCount: state.messageList.length + 1,
+              reverse: true,
+              itemCount: list.length + 1,
               separatorBuilder: (context, index) {
-                if (index == state.messageList.length + 1) {
-                  return SizedBox(
-                    child: _DateLable(dateTime: state.messageList[index].sentTo)
-                  );
+                if (index == list.length - 1) {
+                  return _DateLable(dateTime: list[index].sentTo);
                 }
-                if (state.messageList.length == 1) {
+                if (list.length == 1) {
                   return const SizedBox.shrink();
-                } else if (index >= state.messageList.length - 1) {
+                } else if (index >= list.length - 1) {
                   return const SizedBox.shrink();
-                } else if (index <= state.messageList.length) {
-                  final message = state.messageList[index + 1];
-                  final nextMessage = state.messageList[index];
+                } else if (index <= list.length) {
+                  final message = list[index];
+                  final nextMessage = list[index + 1];
                   if (!Jiffy(message.sentTo.toLocal()).isSame(nextMessage.sentTo.toLocal(), Units.DAY)) {
                     return _DateLable(
                       dateTime: message.sentTo.toLocal()
@@ -44,8 +46,8 @@ class MessagesList extends StatelessWidget {
                 }
               },
               itemBuilder: (context, index) {
-                if (index < state.messageList.length) {
-                  return MessageItem(messageEntity: state.messageList[index]);
+                if (index < list.length) {
+                  return MessageItem(messageEntity: list[index]);
                 } else {
                   return const SizedBox.shrink();
                 }

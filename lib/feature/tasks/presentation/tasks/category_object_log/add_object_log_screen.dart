@@ -417,7 +417,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                 const SizedBox(height: 10),
                 //staff level
                 AppTextField(
-                    hintText: 'Уровень песонала',
+                    hintText: 'Уровень персонала',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),

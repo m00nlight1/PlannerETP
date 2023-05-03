@@ -161,6 +161,7 @@ class DioAppApi implements AppApi {
   Future sentMessage(Map args) {
     return dio.post("/data/messages", data:  {
       "content": args["content"],
+      "imageUrl": args["imageUrl"],
       "idTask": args["idTask"],
     });
   }

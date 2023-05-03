@@ -86,7 +86,7 @@ class _MessageTile extends StatelessWidget {
                   children: [
                     Text("${message.user?.username}"),
                     const SizedBox(height: 7),
-                    Text(message.content, style: const TextStyle(color: Colors.black),),
+                    Text(message.content!, style: const TextStyle(color: Colors.black),),
                   ],
                 ),
                 // child: Text(message.content ?? ''),
@@ -142,7 +142,7 @@ class _MessageOwnTile extends StatelessWidget {
               child: Padding(
                 padding:
                 const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
-                child: Text(message.content,
+                child: Text(message.content!,
                     style: const TextStyle(
                       color: Colors.white,
                     )),

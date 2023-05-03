@@ -10,7 +10,8 @@ part 'message_entity.g.dart';
 class MessageEntity with _$MessageEntity {
   const factory MessageEntity({
     required int id,
-    required String content,
+    String? content,
+    String? imageUrl,
     required DateTime sentTo,
     int? idTask,
     UserEntity? user,

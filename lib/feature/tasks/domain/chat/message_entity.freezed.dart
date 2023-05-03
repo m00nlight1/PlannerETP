@@ -21,7 +21,8 @@ MessageEntity _$MessageEntityFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$MessageEntity {
   int get id => throw _privateConstructorUsedError;
-  String get content => throw _privateConstructorUsedError;
+  String? get content => throw _privateConstructorUsedError;
+  String? get imageUrl => throw _privateConstructorUsedError;
   DateTime get sentTo => throw _privateConstructorUsedError;
   int? get idTask => throw _privateConstructorUsedError;
   UserEntity? get user => throw _privateConstructorUsedError;
@@ -41,7 +42,8 @@ abstract class $MessageEntityCopyWith<$Res> {
   @useResult
   $Res call(
       {int id,
-      String content,
+      String? content,
+      String? imageUrl,
       DateTime sentTo,
       int? idTask,
       UserEntity? user,
@@ -65,7 +67,8 @@ class _$MessageEntityCopyWithImpl<$Res, $Val extends MessageEntity>
   @override
   $Res call({
     Object? id = null,
-    Object? content = null,
+    Object? content = freezed,
+    Object? imageUrl = freezed,
     Object? sentTo = null,
     Object? idTask = freezed,
     Object? user = freezed,
@@ -76,10 +79,14 @@ class _$MessageEntityCopyWithImpl<$Res, $Val extends MessageEntity>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      content: null == content
+      content: freezed == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
+      imageUrl: freezed == imageUrl
+          ? _value.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
       sentTo: null == sentTo
           ? _value.sentTo
           : sentTo // ignore: cast_nullable_to_non_nullable
@@ -134,7 +141,8 @@ abstract class _$$_MessageEntityCopyWith<$Res>
   @useResult
   $Res call(
       {int id,
-      String content,
+      String? content,
+      String? imageUrl,
       DateTime sentTo,
       int? idTask,
       UserEntity? user,
@@ -158,7 +166,8 @@ class __$$_MessageEntityCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? content = null,
+    Object? content = freezed,
+    Object? imageUrl = freezed,
     Object? sentTo = null,
     Object? idTask = freezed,
     Object? user = freezed,
@@ -169,10 +178,14 @@ class __$$_MessageEntityCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      content: null == content
+      content: freezed == content
           ? _value.content
           : content // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
+      imageUrl: freezed == imageUrl
+          ? _value.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
       sentTo: null == sentTo
           ? _value.sentTo
           : sentTo // ignore: cast_nullable_to_non_nullable
@@ -198,7 +211,8 @@ class __$$_MessageEntityCopyWithImpl<$Res>
 class _$_MessageEntity implements _MessageEntity {
   const _$_MessageEntity(
       {required this.id,
-      required this.content,
+      this.content,
+      this.imageUrl,
       required this.sentTo,
       this.idTask,
       this.user,
@@ -210,7 +224,9 @@ class _$_MessageEntity implements _MessageEntity {
   @override
   final int id;
   @override
-  final String content;
+  final String? content;
+  @override
+  final String? imageUrl;
   @override
   final DateTime sentTo;
   @override
@@ -222,7 +238,7 @@ class _$_MessageEntity implements _MessageEntity {
 
   @override
   String toString() {
-    return 'MessageEntity(id: $id, content: $content, sentTo: $sentTo, idTask: $idTask, user: $user, task: $task)';
+    return 'MessageEntity(id: $id, content: $content, imageUrl: $imageUrl, sentTo: $sentTo, idTask: $idTask, user: $user, task: $task)';
   }
 
   @override
@@ -232,6 +248,8 @@ class _$_MessageEntity implements _MessageEntity {
             other is _$_MessageEntity &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.content, content) || other.content == content) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl) &&
             (identical(other.sentTo, sentTo) || other.sentTo == sentTo) &&
             (identical(other.idTask, idTask) || other.idTask == idTask) &&
             (identical(other.user, user) || other.user == user) &&
@@ -240,8 +258,8 @@ class _$_MessageEntity implements _MessageEntity {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, content, sentTo, idTask, user, task);
+  int get hashCode => Object.hash(
+      runtimeType, id, content, imageUrl, sentTo, idTask, user, task);
 
   @JsonKey(ignore: true)
   @override
@@ -260,7 +278,8 @@ class _$_MessageEntity implements _MessageEntity {
 abstract class _MessageEntity implements MessageEntity {
   const factory _MessageEntity(
       {required final int id,
-      required final String content,
+      final String? content,
+      final String? imageUrl,
       required final DateTime sentTo,
       final int? idTask,
       final UserEntity? user,
@@ -272,7 +291,9 @@ abstract class _MessageEntity implements MessageEntity {
   @override
   int get id;
   @override
-  String get content;
+  String? get content;
+  @override
+  String? get imageUrl;
   @override
   DateTime get sentTo;
   @override

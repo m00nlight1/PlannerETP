@@ -559,13 +559,13 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 Row(
                   children: [
                     const SizedBox(width: 25),
-                    Text("Уровень песонала",
+                    Text("Уровень персонала",
                         style: theme.textTheme.headlineSmall)
                   ],
                 ),
                 const SizedBox(height: 8),
                 AppTextField(
-                    hintText: 'Уровень песонала',
+                    hintText: 'Уровень персонала',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),

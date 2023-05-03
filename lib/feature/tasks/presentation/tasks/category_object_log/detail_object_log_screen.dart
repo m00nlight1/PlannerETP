@@ -438,7 +438,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Уровень песонала',
+                        Text('Уровень персонала',
                             style: theme.textTheme.headlineSmall),
                         Text(widget.taskEntity.staffLevel ?? "Не указано",
                             style: theme.textTheme.bodyMedium),
