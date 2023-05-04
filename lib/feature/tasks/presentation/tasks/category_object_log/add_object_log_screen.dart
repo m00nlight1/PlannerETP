@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -44,7 +42,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
   final ImagePicker _picker = ImagePicker();
 
   File? imageFile;
-  Uint8List? fileBytes;
+  File? pdfFile;
   String? pathPdf;
 
   void _getImgFromGallery() async {
@@ -61,15 +59,17 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
     }
   }
 
-  void _getFile() async {
-    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles();
+  void _getPdfFile() async {
+    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
     if (pickedFile != null) {
       setState(() {
-        fileBytes = pickedFile.files.first.bytes;
         pathPdf = pickedFile.files.first.path;
+        pdfFile = File(pickedFile.files.first.path!);
         fileNameController.text = pickedFile.files.first.name;
       });
-      // await FirebaseStorage.instance.ref('task/files/$fileNameController.text').putData(fileBytes!);
     }
   }
 
@@ -159,9 +159,9 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
               if (imageFile != null && imageNameController.text.isNotEmpty) {
                 storage.uploadImage(imageFile!.path, imageNameController.text);
               }
-              // if (fileNameController.text.isNotEmpty) {
-              //   storage.uploadFile(fileBytes, fileNameController.text);
-              // }
+              if (fileNameController.text.isNotEmpty) {
+                storage.uploadPdfFile(fileNameController.text, pdfFile!);
+              }
               context.read<TaskCubit>().createTask({
                 "title": titleController.text,
                 "content": commentsController.text,
@@ -511,7 +511,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                                     style: theme.textTheme.headlineSmall),
                                 MaterialButton(
                                   onPressed: () {
-                                    _getFile();
+                                    _getPdfFile();
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -543,15 +543,16 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                            fileNameController.text),
+                                        Text(fileNameController.text),
                                         MaterialButton(
                                           onPressed: () {
                                             if (pathPdf!.isNotEmpty) {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) => PDFScreen(path: pathPdf)),
+                                                    builder: (context) =>
+                                                        PDFScreen(
+                                                            path: pathPdf)),
                                               );
                                             }
                                           },

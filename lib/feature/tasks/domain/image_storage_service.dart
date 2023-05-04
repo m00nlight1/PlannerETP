@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class FileImgStorage {
@@ -12,9 +11,9 @@ class FileImgStorage {
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   final Random _rand = Random();
 
-  Future<void> uploadFile(Uint8List fileBytes, String fileName) async {
+  Future<void> uploadPdfFile(String fileName, File file) async {
     try {
-      await storage.ref('task/files/$fileName').putData(fileBytes);
+      await storage.ref('task/files/$fileName').putFile(file);
     } on FirebaseException catch (e) {
       print("Failed with error '${e.code}': ${e.message}");
     }
@@ -39,12 +38,20 @@ class FileImgStorage {
   }
 
   Future<String> downloadImage(String fileName) async {
-    String downloadUrl = await storage.ref('task/img/$fileName').getDownloadURL();
+    String downloadUrl =
+        await storage.ref('task/img/$fileName').getDownloadURL();
     return downloadUrl;
   }
 
   Future<String> downloadImageFromMessage(String fileName) async {
-    String downloadUrl = await storage.ref('message/img/$fileName').getDownloadURL();
+    String downloadUrl =
+        await storage.ref('message/img/$fileName').getDownloadURL();
+    return downloadUrl;
+  }
+
+  Future<String> downloadPdfFile(String fileName) async {
+    String downloadUrl =
+        await storage.ref('task/files/$fileName').getDownloadURL();
     return downloadUrl;
   }
 
