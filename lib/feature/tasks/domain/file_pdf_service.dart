@@ -6,12 +6,13 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 class PDFScreen extends StatefulWidget {
   final String? path;
 
-  PDFScreen({Key? key, this.path}) : super(key: key);
+  const PDFScreen({Key? key, this.path}) : super(key: key);
 
-  _PDFScreenState createState() => _PDFScreenState();
+  @override
+  PDFScreenState createState() => PDFScreenState();
 }
 
-class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
+class PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
   final Completer<PDFViewController> _controller =
       Completer<PDFViewController>();
   int? pages = 0;
@@ -23,7 +24,7 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Document"),
+        title: const Text("Документ"),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.share),
@@ -44,9 +45,9 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
             fitPolicy: FitPolicy.BOTH,
             preventLinkNavigation: false,
             // if set to true the link is handled in flutter
-            onRender: (_pages) {
+            onRender: (pages) {
               setState(() {
-                pages = _pages;
+                pages = pages;
                 isReady = true;
               });
             },
@@ -92,8 +93,7 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
           if (snapshot.hasData) {
             return FloatingActionButton.extended(
               label: Text("Перейти к ${pages! ~/ 2}",
-                style: const TextStyle(
-                  fontSize: 16)),
+                  style: const TextStyle(fontSize: 16)),
               onPressed: () async {
                 await snapshot.data!.setPage(pages! ~/ 2);
               },

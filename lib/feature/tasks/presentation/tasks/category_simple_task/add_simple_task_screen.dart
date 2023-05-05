@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as fs;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
+import 'package:planner_etp/feature/tasks/domain/file_pdf_service.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 
@@ -27,12 +30,16 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
   final masterController = TextEditingController();
   final commentsController = TextEditingController();
   final imageNameController = TextEditingController();
+  final fileNameController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
 
   final FileImgStorage storage = FileImgStorage();
   final ImagePicker _picker = ImagePicker();
 
   File? imageFile;
+  File? pdfFile;
+  String? pathPdf;
+  fs.SettableMetadata? settableMetadata;
 
   int? selectedItemId;
 
@@ -46,6 +53,21 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
       setState(() {
         imageFile = File(pickedFile.path);
         imageNameController.text = storage.getRandomString(7);
+      });
+    }
+  }
+
+  void _getPdfFile() async {
+    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+      // type: FileType.custom,
+      // allowedExtensions: ['pdf'],
+    );
+    if (pickedFile != null) {
+      setState(() {
+        pathPdf = pickedFile.files.first.path;
+        pdfFile = File(pickedFile.files.first.path!);
+        settableMetadata = fs.SettableMetadata(contentType: pathPdf);
+        fileNameController.text = pickedFile.files.first.name;
       });
     }
   }
@@ -118,12 +140,16 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
               if (imageFile != null && imageNameController.text.isNotEmpty) {
                 storage.uploadImage(imageFile!.path, imageNameController.text);
               }
+              if (fileNameController.text.isNotEmpty) {
+                storage.uploadPdfFile(fileNameController.text, pdfFile!, settableMetadata!);
+              }
               context.read<TaskCubit>().createTask({
                 "title": titleController.text,
                 "content": commentsController.text,
                 "startOfWork": selectedDate.toString(),
                 "endOfWork": endWorkDateTime.toString(),
                 "imageUrl": imageNameController.text,
+                "fileUrl": fileNameController.text,
                 "contractorCompany": null,
                 "responsibleMaster": masterController.text,
                 "representative": null,
@@ -241,9 +267,8 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                     prefixIcon: const Icon(Icons.perm_identity,
                         color: Color(0xFF0d74ba)),
                     controller: masterController,
-                    validator: (master) => master != null
-                        ? 'Укажите ответственное лицо'
-                        : null),
+                    validator: (master) =>
+                        master != null ? 'Укажите ответственное лицо' : null),
                 const SizedBox(height: 10),
                 //images
                 Card(
@@ -311,10 +336,9 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                                         });
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.transparent,
-                                        foregroundColor: Colors.red,
-                                        elevation: 0
-                                      ),
+                                          backgroundColor: Colors.transparent,
+                                          foregroundColor: Colors.red,
+                                          elevation: 0),
                                       child: const Icon(
                                         Icons.clear,
                                         size: 25.0,
@@ -339,13 +363,12 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Статус',
-                              style: theme.textTheme.headlineSmall),
+                          Text('Статус', style: theme.textTheme.headlineSmall),
                           BlocConsumer<TaskCubit, TaskState>(
                               builder: (context, state) {
                                 if (state.statusList.isNotEmpty) {
                                   return DropdownButton<int>(
-                                    isExpanded: true,
+                                      isExpanded: true,
                                       value: selectedItemId,
                                       items: state.statusList.map((e) {
                                         return DropdownMenuItem(
@@ -369,6 +392,82 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 10),
+                //documents
+                Card(
+                  color: Colors.grey.shade200,
+                  child: fileNameController.text.isEmpty
+                      ? SizedBox(
+                          width: 342,
+                          height: 100,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Документы',
+                                    style: theme.textTheme.headlineSmall),
+                                MaterialButton(
+                                  onPressed: () {
+                                    _getPdfFile();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 55.0),
+                                    child: Text(
+                                      'Добавить документ',
+                                      style: theme.textTheme.labelMedium,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : SizedBox(
+                          width: 342,
+                          height: 100,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Документ',
+                                    style: theme.textTheme.headlineSmall),
+                                const SizedBox(height: 10),
+                                Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(fileNameController.text),
+                                        MaterialButton(
+                                          onPressed: () {
+                                            if (pathPdf!.isNotEmpty) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PDFScreen(
+                                                            path: pathPdf)),
+                                              );
+                                            }
+                                          },
+                                          child: Text('Открыть',
+                                              style: theme
+                                                  .textTheme.headlineSmall),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                ),
+                const SizedBox(height: 10),
               ],
             ),
           ),

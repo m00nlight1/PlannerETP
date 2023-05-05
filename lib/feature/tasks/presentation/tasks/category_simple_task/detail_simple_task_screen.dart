@@ -7,6 +7,7 @@ import 'package:planner_etp/app/presentation/app_loader.dart';
 import 'package:planner_etp/app/presentation/components/app_snack_bar.dart';
 import 'package:planner_etp/app/presentation/components/message_action_bar.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
+import 'package:planner_etp/feature/tasks/domain/file_pdf_service.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
@@ -90,9 +91,10 @@ class _DetailTaskView extends StatelessWidget {
               return Row(
                 children: [
                   IconButton(
-                    onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            UpdateSimpleTaskScreen(id: id, taskEntity: taskEntity))),
+                    onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (context) => UpdateSimpleTaskScreen(
+                                id: id, taskEntity: taskEntity))),
                     icon: const Icon(Icons.edit),
                   ),
                   IconButton(
@@ -172,11 +174,18 @@ class _DetailTaskItem extends StatefulWidget {
 class _DetailTaskItemState extends State<_DetailTaskItem> {
   final FileImgStorage storage = FileImgStorage();
   Future<String>? imgDownload;
+  Future<String>? fileDownload;
+  Future<String>? fileMetadataPath;
 
   @override
   void initState() {
     if (widget.taskEntity.imageUrl != null) {
       imgDownload = storage.downloadImage(widget.taskEntity.imageUrl ?? "");
+    }
+    if (widget.taskEntity.fileUrl != null) {
+      fileDownload = storage.downloadPdfFile(widget.taskEntity.fileUrl ?? "");
+      fileMetadataPath =
+          storage.downloadPdfFilePath(widget.taskEntity.fileUrl ?? "");
     }
     super.initState();
   }
@@ -304,7 +313,8 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
               Card(
                 margin: const EdgeInsets.only(left: 12, right: 12),
                 color: Colors.grey.shade200,
-                child: widget.taskEntity.imageUrl == null
+                child: widget.taskEntity.imageUrl == null ||
+                        widget.taskEntity.imageUrl == ""
                     ? SizedBox(
                         width: 365,
                         height: 100,
@@ -323,10 +333,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                         boxFit: BoxFit.cover,
                         color: Colors.grey.shade200,
                         margin: EdgeInsets.zero,
-                        title: GFListTile(
-                          title: Text('Фото',
-                              style: theme.textTheme.headlineSmall),
-                        ),
                         content: FutureBuilder(
                           future: imgDownload,
                           builder: (BuildContext context,
@@ -335,14 +341,85 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                                     ConnectionState.done &&
                                 snapshot.hasData) {
                               return Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Text('Фото',
+                                      style: theme.textTheme.headlineSmall),
                                   Image.network(
                                     snapshot.data ?? "",
                                     height: MediaQuery.of(context).size.height *
                                         0.2,
                                     width: MediaQuery.of(context).size.width,
                                     fit: BoxFit.cover,
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return const SizedBox();
+                            }
+                          },
+                        ),
+                      ),
+              ),
+              const SizedBox(height: 10),
+              //documents
+              Card(
+                margin: const EdgeInsets.only(left: 12, right: 12),
+                color: Colors.grey.shade200,
+                child: widget.taskEntity.fileUrl == null ||
+                        widget.taskEntity.fileUrl == ""
+                    ? SizedBox(
+                        width: 365,
+                        height: 100,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Документы',
+                                  style: theme.textTheme.headlineSmall),
+                            ],
+                          ),
+                        ),
+                      )
+                    : GFCard(
+                        boxFit: BoxFit.cover,
+                        color: Colors.grey.shade200,
+                        margin: EdgeInsets.zero,
+                        content: FutureBuilder(
+                          future: fileMetadataPath,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<String> snapshot) {
+                            if (snapshot.connectionState ==
+                                    ConnectionState.done &&
+                                snapshot.hasData) {
+                              final String path = snapshot.data!;
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Документ',
+                                      style: theme.textTheme.headlineSmall),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(widget.taskEntity.fileUrl ?? ""),
+                                      MaterialButton(
+                                        onPressed: () {
+                                          if (fileDownload != null) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PDFScreen(path: path)),
+                                            );
+                                          }
+                                        },
+                                        child: Text('Просмотр',
+                                            style:
+                                                theme.textTheme.headlineSmall),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               );

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -44,6 +45,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
   File? imageFile;
   File? pdfFile;
   String? pathPdf;
+  SettableMetadata? settableMetadata;
 
   void _getImgFromGallery() async {
     XFile? pickedFile = await _picker.pickImage(
@@ -61,13 +63,14 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
 
   void _getPdfFile() async {
     FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
+      // type: FileType.custom,
+      // allowedExtensions: ['pdf'],
     );
     if (pickedFile != null) {
       setState(() {
         pathPdf = pickedFile.files.first.path;
         pdfFile = File(pickedFile.files.first.path!);
+        settableMetadata = SettableMetadata(contentType: pathPdf);
         fileNameController.text = pickedFile.files.first.name;
       });
     }
@@ -160,7 +163,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                 storage.uploadImage(imageFile!.path, imageNameController.text);
               }
               if (fileNameController.text.isNotEmpty) {
-                storage.uploadPdfFile(fileNameController.text, pdfFile!);
+                storage.uploadPdfFile(fileNameController.text, pdfFile!, settableMetadata!);
               }
               context.read<TaskCubit>().createTask({
                 "title": titleController.text,

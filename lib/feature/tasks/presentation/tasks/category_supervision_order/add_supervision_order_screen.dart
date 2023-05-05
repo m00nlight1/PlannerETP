@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as fs;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
+import 'package:planner_etp/feature/tasks/domain/file_pdf_service.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 
@@ -29,12 +32,16 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
   final commentsController = TextEditingController();
   final expansesController = TextEditingController();
   final imageNameController = TextEditingController();
+  final fileNameController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
 
   final FileImgStorage storage = FileImgStorage();
   final ImagePicker _picker = ImagePicker();
 
   File? imageFile;
+  File? pdfFile;
+  String? pathPdf;
+  fs.SettableMetadata? settableMetadata;
 
   int? selectedItemId;
   int? selectedTypeId;
@@ -50,6 +57,21 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
       setState(() {
         imageFile = File(pickedFile.path);
         imageNameController.text = storage.getRandomString(7);
+      });
+    }
+  }
+
+  void _getPdfFile() async {
+    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+      // type: FileType.custom,
+      // allowedExtensions: ['pdf'],
+    );
+    if (pickedFile != null) {
+      setState(() {
+        pathPdf = pickedFile.files.first.path;
+        pdfFile = File(pickedFile.files.first.path!);
+        settableMetadata = fs.SettableMetadata(contentType: pathPdf);
+        fileNameController.text = pickedFile.files.first.name;
       });
     }
   }
@@ -122,12 +144,16 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
               if (imageFile != null) {
                 storage.uploadImage(imageFile!.path, imageNameController.text);
               }
+              if (fileNameController.text.isNotEmpty) {
+                storage.uploadPdfFile(fileNameController.text, pdfFile!, settableMetadata!);
+              }
               context.read<TaskCubit>().createTask({
                 "title": titleController.text,
                 "content": commentsController.text,
                 "startOfWork": selectedDate.toString(),
                 "endOfWork": endWorkDateTime.toString(),
                 "imageUrl": imageNameController.text,
+                "fileUrl": fileNameController.text,
                 "contractorCompany": null,
                 "responsibleMaster": masterController.text,
                 "representative": null,
@@ -335,82 +361,81 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                   color: Colors.grey.shade200,
                   child: imageNameController.text.isEmpty
                       ? SizedBox(
-                    width: 342,
-                    height: 100,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Фото',
-                              style: theme.textTheme.headlineSmall),
-                          MaterialButton(
-                            onPressed: () {
-                              _getImgFromGallery();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 55.0),
-                              child: Text(
-                                'Добавить медиафайл',
-                                style: theme.textTheme.labelMedium,
-                              ),
+                          width: 342,
+                          height: 100,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Фото',
+                                    style: theme.textTheme.headlineSmall),
+                                MaterialButton(
+                                  onPressed: () {
+                                    _getImgFromGallery();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 55.0),
+                                    child: Text(
+                                      'Добавить медиафайл',
+                                      style: theme.textTheme.labelMedium,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  )
+                        )
                       : SizedBox(
-                    width: 342,
-                    height: 320,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Фото',
-                              style: theme.textTheme.headlineSmall),
-                          const SizedBox(height: 10),
-                          Image.file(
-                            imageFile!,
-                            fit: BoxFit.cover,
+                          width: 342,
+                          height: 320,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Фото',
+                                    style: theme.textTheme.headlineSmall),
+                                const SizedBox(height: 10),
+                                Image.file(
+                                  imageFile!,
+                                  fit: BoxFit.cover,
+                                ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    MaterialButton(
+                                      onPressed: () {
+                                        _getImgFromGallery();
+                                      },
+                                      child: Text(
+                                        'Выбрать другой медиафайл',
+                                        style: theme.textTheme.labelMedium,
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          imageNameController.clear();
+                                          imageFile == null;
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.transparent,
+                                          foregroundColor: Colors.red,
+                                          elevation: 0),
+                                      child: const Icon(
+                                        Icons.clear,
+                                        size: 25.0,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              MaterialButton(
-                                onPressed: () {
-                                  _getImgFromGallery();
-                                },
-                                child: Text(
-                                  'Выбрать другой медиафайл',
-                                  style: theme.textTheme.labelMedium,
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    imageNameController.clear();
-                                    imageFile == null;
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.transparent,
-                                    foregroundColor: Colors.red,
-                                    elevation: 0
-                                ),
-                                child: const Icon(
-                                  Icons.clear,
-                                  size: 25.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                        ),
                 ),
                 const SizedBox(height: 10),
                 //expanses
@@ -476,6 +501,82 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 10),
+                //documents
+                Card(
+                  color: Colors.grey.shade200,
+                  child: fileNameController.text.isEmpty
+                      ? SizedBox(
+                          width: 342,
+                          height: 100,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Документы',
+                                    style: theme.textTheme.headlineSmall),
+                                MaterialButton(
+                                  onPressed: () {
+                                    _getPdfFile();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 55.0),
+                                    child: Text(
+                                      'Добавить документ',
+                                      style: theme.textTheme.labelMedium,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : SizedBox(
+                          width: 342,
+                          height: 100,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Документ',
+                                    style: theme.textTheme.headlineSmall),
+                                const SizedBox(height: 10),
+                                Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(fileNameController.text),
+                                        MaterialButton(
+                                          onPressed: () {
+                                            if (pathPdf!.isNotEmpty) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PDFScreen(
+                                                            path: pathPdf)),
+                                              );
+                                            }
+                                          },
+                                          child: Text('Открыть',
+                                              style: theme
+                                                  .textTheme.headlineSmall),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                ),
+                const SizedBox(height: 10),
               ],
             ),
           ),
