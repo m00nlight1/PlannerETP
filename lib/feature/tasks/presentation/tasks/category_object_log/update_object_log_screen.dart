@@ -298,9 +298,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                           color: Color(0xFF0d74ba))
                                       : Flexible(
                                           child: Text(
-                                              widget.taskEntity.startOfWork
-                                                  .toString()
-                                                  .split(".")[0],
+                                              "${DateFormat.yMMMd("ru").format(widget.taskEntity.startOfWork!)},"
+                                                  "${DateFormat.Hm("ru").format(widget.taskEntity.startOfWork!)}",
                                               textAlign: TextAlign.center)),
                                   const SizedBox(width: 5),
                                   showStartWorkDateTime
@@ -353,9 +352,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                           color: Color(0xFF0d74ba))
                                       : Flexible(
                                           child: Text(
-                                              widget.taskEntity.endOfWork
-                                                  .toString()
-                                                  .split(".")[0],
+                                              "${DateFormat.yMMMd("ru").format(widget.taskEntity.endOfWork!)},"
+                                                  "${DateFormat.Hm("ru").format(widget.taskEntity.endOfWork!)}",
                                               textAlign: TextAlign.center)),
                                   const SizedBox(width: 5),
                                   showEndWorkDateTime

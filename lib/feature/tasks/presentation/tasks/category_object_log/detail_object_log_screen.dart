@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/components/card/gf_card.dart';
+import 'package:intl/intl.dart';
 import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
@@ -247,10 +248,10 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                                 const Icon(Icons.date_range_outlined,
                                     color: Color(0xFF0d74ba)),
                                 Flexible(
-                                    child: Text(
-                                        widget.taskEntity.startOfWork
-                                            .toString()
-                                            .split(".")[0],
+                                    child:
+                                    Text(
+                                        "${DateFormat.yMMMd("ru").format(widget.taskEntity.startOfWork!)},"
+                                            "${DateFormat.Hm("ru").format(widget.taskEntity.startOfWork!)}",
                                         textAlign: TextAlign.center)),
                                 const SizedBox(width: 5),
                               ],
@@ -280,9 +281,8 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                                     color: Color(0xFF0d74ba)),
                                 Flexible(
                                     child: Text(
-                                        widget.taskEntity.endOfWork
-                                            .toString()
-                                            .split(".")[0],
+                                        "${DateFormat.yMMMd("ru").format(widget.taskEntity.endOfWork!)},"
+                                            "${DateFormat.Hm("ru").format(widget.taskEntity.endOfWork!)}",
                                         textAlign: TextAlign.center)),
                                 const SizedBox(width: 5),
                               ],
@@ -574,7 +574,8 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
               const SizedBox(height: 10),
               //created at date and author
               Text(
-                  "Создано ${widget.taskEntity.createdAt.toString().split(" ")[0]}",
+                  "Дата создания: ${DateFormat.yMMMd("ru").format(widget.taskEntity.createdAt)},"
+                      "${DateFormat.Hm("ru").format(widget.taskEntity.createdAt)}",
                   style: theme.textTheme.bodyMedium),
               const SizedBox(height: 10),
               Text(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:intl/intl.dart';
 import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
@@ -313,9 +314,8 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                             const SizedBox(width: 10),
                             Flexible(
                               child: Text(
-                                widget.taskEntity.endOfWork
-                                    .toString()
-                                    .split(".")[0],
+                                "${DateFormat.yMMMd("ru").format(widget.taskEntity.endOfWork!)},"
+                                    "${DateFormat.Hm("ru").format(widget.taskEntity.endOfWork!)}",
                               ),
                             ),
                           ],
@@ -519,7 +519,8 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
               const SizedBox(height: 10),
               //created at date and author
               Text(
-                  "Создано ${widget.taskEntity.createdAt.toString().split(" ")[0]}",
+                  "Дата создания: ${DateFormat.yMMMd("ru").format(widget.taskEntity.createdAt)},"
+                      "${DateFormat.Hm("ru").format(widget.taskEntity.createdAt)}",
                   style: theme.textTheme.bodyMedium),
               const SizedBox(height: 10),
               Text(

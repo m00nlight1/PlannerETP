@@ -287,9 +287,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                   ? const Icon(Icons.date_range_outlined,
                                       color: Color(0xFF0d74ba))
                                   : Flexible(
-                                      child: Text(widget.taskEntity.endOfWork
-                                          .toString()
-                                          .split(".")[0]),
+                                      child: Text("${DateFormat.yMMMd("ru").format(widget.taskEntity.endOfWork!)},"
+                                          "${DateFormat.Hm("ru").format(widget.taskEntity.endOfWork!)}"),
                                     ),
                               const SizedBox(width: 5),
                               showEndWorkDateTime
