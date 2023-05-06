@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/card/gf_card.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/painter_service.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
@@ -31,6 +33,8 @@ class _TaskItemState extends State<TaskItem> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    initializeDateFormatting("ru");
+    String locale = Localizations.localeOf(context).languageCode;
     return GestureDetector(
       onTap: () {
         if (widget.taskEntity.category?.id == 1) {
@@ -65,8 +69,7 @@ class _TaskItemState extends State<TaskItem> {
                     children: [
                       Text(
                           "Создано ${widget.taskEntity.user?.username ?? ""} \n(${widget.taskEntity.user?.email ?? ""})"),
-                      Text(
-                          "от ${widget.taskEntity.createdAt.toString().split(" ")[0]}"),
+                      Text(DateFormat.yMMMd("ru").format(widget.taskEntity.createdAt)),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -104,8 +107,7 @@ class _TaskItemState extends State<TaskItem> {
                     children: [
                       Text(
                           "Создано ${widget.taskEntity.user?.username ?? ""} \n(${widget.taskEntity.user?.email ?? ""})"),
-                      Text(
-                          "от ${widget.taskEntity.createdAt.toString().split(" ")[0]}"),
+                      Text(DateFormat.yMMMd("ru").format(widget.taskEntity.createdAt))
                     ],
                   ),
                   const SizedBox(height: 10),
