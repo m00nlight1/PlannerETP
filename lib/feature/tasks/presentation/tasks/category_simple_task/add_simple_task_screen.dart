@@ -439,24 +439,52 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                                   children: [
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(fileNameController.text),
-                                        MaterialButton(
-                                          onPressed: () {
-                                            if (pathPdf!.isNotEmpty) {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        PDFScreen(
-                                                            path: pathPdf)),
-                                              );
-                                            }
-                                          },
-                                          child: Text('Открыть',
-                                              style: theme
-                                                  .textTheme.headlineSmall),
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.end,
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                if (pathPdf!.isNotEmpty) {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            PDFScreen(
+                                                                path: pathPdf)),
+                                                  );
+                                                }
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                  Colors.transparent,
+                                                  foregroundColor: Colors.grey,
+                                                  elevation: 0),
+                                              child: const Icon(
+                                                Icons.remove_red_eye,
+                                                size: 25.0,
+                                              ),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  fileNameController.clear();
+                                                });
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                  Colors.transparent,
+                                                  foregroundColor: Colors.red,
+                                                  elevation: 0),
+                                              child: const Icon(
+                                                Icons.clear,
+                                                size: 25.0,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),

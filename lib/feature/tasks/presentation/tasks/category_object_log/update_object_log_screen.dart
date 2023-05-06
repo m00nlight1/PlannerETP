@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
@@ -7,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
+import 'package:planner_etp/feature/tasks/domain/file_pdf_service.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
@@ -57,13 +60,19 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
   TextEditingController? staffLevelController;
   TextEditingController? resultsOfTheWorkController;
   TextEditingController? commentsController;
+  TextEditingController? fileNameController;
   final GlobalKey<FormState> formKey = GlobalKey();
 
   final FileImgStorage storage = FileImgStorage();
   Future<String>? imgDownload;
+  Future<String>? fileMetadataPath;
+  Future<String>? fileDownload;
 
   File? imageFile;
   String? fileName;
+  File? pdfFile;
+  String? pathPdf;
+  SettableMetadata? settableMetadata;
 
   void _getImgFromGallery() async {
     PickedFile? pickedFile = await ImagePicker().getImage(
@@ -78,11 +87,33 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
     }
   }
 
+  void _getPdfFile() async {
+    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
+      // type: FileType.custom,
+      // allowedExtensions: ['pdf'],
+    );
+    if (pickedFile != null) {
+      setState(() {
+        pathPdf = pickedFile.files.first.path;
+        pdfFile = File(pickedFile.files.first.path!);
+        settableMetadata = SettableMetadata(contentType: pathPdf);
+        fileNameController!.text = pickedFile.files.first.name;
+      });
+    }
+  }
+
   @override
   void initState() {
     if (widget.taskEntity.imageUrl != null) {
       imgDownload = storage.downloadImage(widget.taskEntity.imageUrl ?? "");
     }
+    if (widget.taskEntity.fileUrl != null) {
+      fileNameController = TextEditingController(text: widget.taskEntity.fileUrl);
+      fileDownload = storage.downloadPdfFile(widget.taskEntity.fileUrl ?? "");
+      fileMetadataPath =
+          storage.downloadPdfFilePath(widget.taskEntity.fileUrl ?? "");
+    }
+    fileNameController = TextEditingController(text: widget.taskEntity.fileUrl);
     titleController = TextEditingController(text: widget.taskEntity.title);
     companyController =
         TextEditingController(text: widget.taskEntity.contractorCompany);
@@ -92,7 +123,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
         TextEditingController(text: widget.taskEntity.representative);
     equipmentLevelController =
         TextEditingController(text: widget.taskEntity.equipmentLevel);
-    staffLevelController = TextEditingController(text: widget.taskEntity.staffLevel);
+    staffLevelController =
+        TextEditingController(text: widget.taskEntity.staffLevel);
     resultsOfTheWorkController =
         TextEditingController(text: widget.taskEntity.resultsOfTheWork);
     commentsController = TextEditingController(text: widget.taskEntity.content);
@@ -186,12 +218,16 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 fileName = storage.getRandomString(7);
                 storage.uploadImage(imageFile!.path, fileName!);
               }
+              if (fileNameController!.text.isNotEmpty) {
+                storage.uploadPdfFile(fileNameController!.text, pdfFile!, settableMetadata!);
+              }
               context.read<DetailTaskCubit>().updateTask({
                 "title": titleController?.text,
                 "content": commentsController?.text,
                 "startOfWork": startWorkDateTime.toString(),
                 "endOfWork": endWorkDateTime.toString(),
                 "imageUrl": fileName,
+                "fileUrl": fileNameController!.text,
                 "contractorCompany": companyController?.text,
                 "responsibleMaster": masterController?.text,
                 "representative": representativeController?.text,
@@ -414,7 +450,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 Card(
                   margin: const EdgeInsets.only(left: 25, right: 25),
                   color: Colors.grey.shade200,
-                  child: widget.taskEntity.imageUrl == null && imageFile == null
+                  child: widget.taskEntity.imageUrl == null ||
+                          widget.taskEntity.imageUrl == "" && imageFile == null
                       ? SizedBox(
                           width: 365,
                           height: 100,
@@ -447,10 +484,6 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                           boxFit: BoxFit.cover,
                           color: Colors.grey.shade200,
                           margin: EdgeInsets.zero,
-                          title: GFListTile(
-                            title: Text('Фото',
-                                style: theme.textTheme.headlineSmall),
-                          ),
                           content: SizedBox(
                             child: imageFile == null
                                 ? FutureBuilder(
@@ -462,8 +495,11 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                           snapshot.hasData) {
                                         return Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.stretch,
+                                              CrossAxisAlignment.start,
                                           children: [
+                                            Text('Фото',
+                                                style: theme
+                                                    .textTheme.headlineSmall),
                                             imageFile == null
                                                 ? Image.network(
                                                     snapshot.data ?? "",
@@ -507,6 +543,9 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
+                                          Text('Фото',
+                                              style: theme
+                                                  .textTheme.headlineSmall),
                                           Image.file(
                                             imageFile!,
                                             height: MediaQuery.of(context)
@@ -620,6 +659,184 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 10),
+                //documents
+                Card(
+                  margin: const EdgeInsets.only(left: 25, right: 25),
+                  color: Colors.grey.shade200,
+                  child: fileNameController!.text.isEmpty
+                      ? SizedBox(
+                    width: 342,
+                    height: 100,
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Документы',
+                              style: theme.textTheme.headlineSmall),
+                          MaterialButton(
+                            onPressed: () {
+                              _getPdfFile();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 55.0),
+                              child: Text(
+                                'Добавить документ',
+                                style: theme.textTheme.labelMedium,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                      : GFCard(
+                          boxFit: BoxFit.cover,
+                          color: Colors.grey.shade200,
+                          margin: EdgeInsets.zero,
+                          content: FutureBuilder(
+                            future: fileMetadataPath,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snapshot) {
+                              if (snapshot.connectionState ==
+                                      ConnectionState.done &&
+                                  snapshot.hasData) {
+                                final String path = snapshot.data!;
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Документ',
+                                        style: theme.textTheme.headlineSmall),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(fileNameController!.text),
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.end,
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                if (fileDownload != null) {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            PDFScreen(path: path)),
+                                                  );
+                                                }
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                  Colors.transparent,
+                                                  foregroundColor: Colors.grey,
+                                                  elevation: 0),
+                                              child: const Icon(
+                                                Icons.remove_red_eye,
+                                                size: 25.0,
+                                              ),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  fileNameController?.clear();
+                                                  fileDownload == null;
+                                                });
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                  Colors.transparent,
+                                                  foregroundColor: Colors.red,
+                                                  elevation: 0),
+                                              child: const Icon(
+                                                Icons.clear,
+                                                size: 25.0,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return SizedBox(
+                                  width: 342,
+                                  height: 100,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Документ',
+                                          style: theme.textTheme.headlineSmall),
+                                      const SizedBox(height: 10),
+                                      Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(fileNameController!.text),
+                                              Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                                children: [
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      if (pathPdf!.isNotEmpty) {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  PDFScreen(
+                                                                      path: pathPdf)),
+                                                        );
+                                                      }
+                                                    },
+                                                    style: ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                        Colors.transparent,
+                                                        foregroundColor: Colors.grey,
+                                                        elevation: 0),
+                                                    child: const Icon(
+                                                      Icons.remove_red_eye,
+                                                      size: 25.0,
+                                                    ),
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        fileNameController?.clear();
+                                                        fileDownload == null;
+                                                      });
+                                                    },
+                                                    style: ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                        Colors.transparent,
+                                                        foregroundColor: Colors.red,
+                                                        elevation: 0),
+                                                    child: const Icon(
+                                                      Icons.clear,
+                                                      size: 25.0,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                ),
+                const SizedBox(height: 10),
               ],
             ),
           ),
