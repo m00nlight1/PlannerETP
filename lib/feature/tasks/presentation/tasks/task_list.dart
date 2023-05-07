@@ -24,6 +24,8 @@ class _TaskListState extends State<TaskList> {
   List<TaskEntity> solvedTasksSearchResult = [];
   List<TaskEntity> closedTasksResult = [];
   List<TaskEntity> closedTasksSearchResult = [];
+  List<TaskEntity> withoutStatusTasksResult = [];
+  List<TaskEntity> withoutStatusTasksSearchResult = [];
 
   final List<String> filteringCategories = [
     // 'Мои задачи',
@@ -60,6 +62,9 @@ class _TaskListState extends State<TaskList> {
           objClosed(closed) => closed.status?.id == 4;
           closedTasksResult = filterTasks.where(objClosed).toList();
           closedTasksSearchResult = filterTasksSearch.where(objClosed).toList();
+          objWithoutStatus(withoutStatus) => withoutStatus.category?.id == 1;
+          withoutStatusTasksResult = filterTasks.where(objWithoutStatus).toList();
+          withoutStatusTasksSearchResult = filterTasksSearch.where(objWithoutStatus).toList();
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -218,6 +223,26 @@ class _TaskListState extends State<TaskList> {
                           ),
                         ],
                       ),
+                      ExpansionTile(
+                        initiallyExpanded: true,
+                        title: Text(
+                            "Без статуса (${withoutStatusTasksSearchResult.length.toString()})"),
+                        children: [
+                          SingleChildScrollView(
+                            child: Expanded(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: withoutStatusTasksSearchResult.length,
+                                itemBuilder: (context, index) {
+                                  return TaskItem(
+                                      taskEntity:
+                                      withoutStatusTasksSearchResult[index]);
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   )
                 else
@@ -293,6 +318,26 @@ class _TaskListState extends State<TaskList> {
                                 itemBuilder: (context, index) {
                                   return TaskItem(
                                       taskEntity: closedTasksResult[index]);
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      ExpansionTile(
+                        initiallyExpanded: true,
+                        title: Text(
+                            "Без статуса (${withoutStatusTasksResult.length.toString()})"),
+                        children: [
+                          SingleChildScrollView(
+                            child: Expanded(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: withoutStatusTasksResult.length,
+                                itemBuilder: (context, index) {
+                                  return TaskItem(
+                                      taskEntity:
+                                      withoutStatusTasksResult[index]);
                                 },
                               ),
                             ),
