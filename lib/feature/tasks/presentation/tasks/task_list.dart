@@ -17,82 +17,130 @@ class _TaskListState extends State<TaskList> {
 
   List<TaskEntity> result = [];
 
+  final List<String> filteringCategories = [
+    // 'Мои задачи',
+    // 'Все',
+    'Журнал объекта',
+    'Задача',
+    'Предписание авторского надзора',
+  ];
+  List<String> selectedCategories = [];
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<TaskCubit, TaskState>(
       listener: (context, state) {},
       builder: (context, state) {
         if (state.taskList.isNotEmpty) {
+          final filterTasks = state.taskList.where((task) {
+              return selectedCategories.isEmpty ||
+                  selectedCategories.contains(task.category?.name);
+          }).toList();
+          final filterTasksSearch = result.where((task) {
+            return selectedCategories.isEmpty ||
+            selectedCategories.contains(task.category?.name);
+          }).toList();
           return Column(
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6),
-                  child: TextFormField(
-                    controller: textSearchEditingController,
-                    decoration: InputDecoration(
-                      hintText: 'Поиск...',
-                      labelText: 'Поиск',
-                      labelStyle: const TextStyle(color: Colors.black38),
-                      prefixIcon: const Icon(
-                        Icons.search,
-                        color: Colors.black38,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: textSearchEditingController,
+                      decoration: InputDecoration(
+                        hintText: 'Поиск...',
+                        labelText: 'Поиск',
+                        labelStyle: const TextStyle(color: Colors.black38),
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Colors.black38,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.black),
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.black38),
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.black),
-                        borderRadius: BorderRadius.circular(25.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(width: 1, color: Colors.black38),
-                        borderRadius: BorderRadius.circular(25.0),
-                      ),
+                      onChanged: (value) {
+                        if (textSearchEditingController.text.isEmpty) {
+                          result = state.taskList;
+                          context.read<TaskCubit>().fetchTasks();
+                        } else {
+                          result = state.taskList
+                              .where((element) => element.title
+                                  .toLowerCase()
+                                  .contains(textSearchEditingController.text
+                                      .toLowerCase()))
+                              .toList();
+                          context.read<TaskCubit>().fetchTasks();
+                        }
+                      },
                     ),
-                    onChanged: (value) {
-                      if (textSearchEditingController.text.isEmpty) {
-                        result = state.taskList;
-                        context.read<TaskCubit>().fetchTasks();
-                      } else {
-                        result = state.taskList
-                            .where((element) => element.title
-                                .toLowerCase()
-                                .contains(textSearchEditingController.text
-                                    .toLowerCase()))
-                            .toList();
-                        context.read<TaskCubit>().fetchTasks();
-                      }
-                    },
+                    Wrap(
+                      spacing: 3,
+                        children: filteringCategories
+                            .map(
+                              (category) => FilterChip(
+                                  selected: selectedCategories.contains(category),
+                                  label: Text(category),
+                                  labelStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600),
+                                  backgroundColor: const Color(0xFF0d74ba),
+                                  selectedColor: Colors.lightGreen,
+                                  checkmarkColor: Colors.white,
+                                  onSelected: (selected) {
+                                    setState(() {
+                                      if (selected) {
+                                        selectedCategories.add(category);
+                                      } else {
+                                        selectedCategories.remove(category);
+                                      }
+                                    });
+                                  }),
+                            )
+                            .toList(),
+                      ),
+                  ],
+                ),
+              ),
+              if (textSearchEditingController.text.isNotEmpty)
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 8),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: filterTasksSearch.length,
+                      itemBuilder: (context, index) {
+                        return TaskItem(taskEntity: filterTasksSearch[index]);
+                      },
+                    ),
+                  ),
+                )
+              else
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 8),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: filterTasks.length,
+                      itemBuilder: (context, index) {
+                        return TaskItem(taskEntity: filterTasks[index]);
+                      },
+                    ),
                   ),
                 ),
-                if (textSearchEditingController.text.isNotEmpty)
-                    Expanded(
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 8),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: result.length,
-                            itemBuilder: (context, index) {
-                              return TaskItem(taskEntity: result[index]);
-                            },
-                          ),
-                        ),
-                    )
-                else
-                    Expanded(
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 8),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: state.taskList.length,
-                            itemBuilder: (context, index) {
-                              return TaskItem(taskEntity: state.taskList[index]);
-                            },
-                          ),
-                        ),
-                    ),
-              ],
+            ],
           );
         }
         if (state.asyncSnapshot?.connectionState == ConnectionState.waiting) {
