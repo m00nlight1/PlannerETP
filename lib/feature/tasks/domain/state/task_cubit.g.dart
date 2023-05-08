@@ -23,6 +23,10 @@ _$_TaskState _$$_TaskStateFromJson(Map<String, dynamic> json) => _$_TaskState(
               ?.map((e) => IndustryEntity.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      docList: (json['docList'] as List<dynamic>?)
+              ?.map((e) => DocumentEntity.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$_TaskStateToJson(_$_TaskState instance) =>
@@ -31,4 +35,5 @@ Map<String, dynamic> _$$_TaskStateToJson(_$_TaskState instance) =>
       'statusList': instance.statusList,
       'taskTypeList': instance.taskTypeList,
       'industryList': instance.industryList,
+      'docList': instance.docList,
     };

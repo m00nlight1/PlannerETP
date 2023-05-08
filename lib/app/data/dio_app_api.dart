@@ -187,4 +187,23 @@ class DioAppApi implements AppApi {
   Future fetchTaskTypes() {
     return dio.get("/data/tasktype");
   }
+
+  @override
+  Future createDocument(Map args) {
+    return dio.post("/data/documents", data:  {
+      "name": args["name"],
+      "filePath": args["filePath"],
+      "idTask": args["idTask"],
+    });
+  }
+
+  @override
+  Future deleteDocument(String id) {
+    return dio.delete("/data/documents/$id");
+  }
+
+  @override
+  Future fetchDocuments() {
+    return dio.get("/data/documents");
+  }
 }

@@ -27,6 +27,7 @@ mixin _$TaskState {
   List<StatusEntity> get statusList => throw _privateConstructorUsedError;
   List<TaskTypeEntity> get taskTypeList => throw _privateConstructorUsedError;
   List<IndustryEntity> get industryList => throw _privateConstructorUsedError;
+  List<DocumentEntity> get docList => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -44,7 +45,8 @@ abstract class $TaskStateCopyWith<$Res> {
       List<TaskEntity> taskList,
       List<StatusEntity> statusList,
       List<TaskTypeEntity> taskTypeList,
-      List<IndustryEntity> industryList});
+      List<IndustryEntity> industryList,
+      List<DocumentEntity> docList});
 }
 
 /// @nodoc
@@ -65,6 +67,7 @@ class _$TaskStateCopyWithImpl<$Res, $Val extends TaskState>
     Object? statusList = null,
     Object? taskTypeList = null,
     Object? industryList = null,
+    Object? docList = null,
   }) {
     return _then(_value.copyWith(
       asyncSnapshot: freezed == asyncSnapshot
@@ -87,6 +90,10 @@ class _$TaskStateCopyWithImpl<$Res, $Val extends TaskState>
           ? _value.industryList
           : industryList // ignore: cast_nullable_to_non_nullable
               as List<IndustryEntity>,
+      docList: null == docList
+          ? _value.docList
+          : docList // ignore: cast_nullable_to_non_nullable
+              as List<DocumentEntity>,
     ) as $Val);
   }
 }
@@ -103,7 +110,8 @@ abstract class _$$_TaskStateCopyWith<$Res> implements $TaskStateCopyWith<$Res> {
       List<TaskEntity> taskList,
       List<StatusEntity> statusList,
       List<TaskTypeEntity> taskTypeList,
-      List<IndustryEntity> industryList});
+      List<IndustryEntity> industryList,
+      List<DocumentEntity> docList});
 }
 
 /// @nodoc
@@ -122,6 +130,7 @@ class __$$_TaskStateCopyWithImpl<$Res>
     Object? statusList = null,
     Object? taskTypeList = null,
     Object? industryList = null,
+    Object? docList = null,
   }) {
     return _then(_$_TaskState(
       asyncSnapshot: freezed == asyncSnapshot
@@ -144,6 +153,10 @@ class __$$_TaskStateCopyWithImpl<$Res>
           ? _value._industryList
           : industryList // ignore: cast_nullable_to_non_nullable
               as List<IndustryEntity>,
+      docList: null == docList
+          ? _value._docList
+          : docList // ignore: cast_nullable_to_non_nullable
+              as List<DocumentEntity>,
     ));
   }
 }
@@ -156,11 +169,13 @@ class _$_TaskState implements _TaskState {
       final List<TaskEntity> taskList = const [],
       final List<StatusEntity> statusList = const [],
       final List<TaskTypeEntity> taskTypeList = const [],
-      final List<IndustryEntity> industryList = const []})
+      final List<IndustryEntity> industryList = const [],
+      final List<DocumentEntity> docList = const []})
       : _taskList = taskList,
         _statusList = statusList,
         _taskTypeList = taskTypeList,
-        _industryList = industryList;
+        _industryList = industryList,
+        _docList = docList;
 
   factory _$_TaskState.fromJson(Map<String, dynamic> json) =>
       _$$_TaskStateFromJson(json);
@@ -204,9 +219,18 @@ class _$_TaskState implements _TaskState {
     return EqualUnmodifiableListView(_industryList);
   }
 
+  final List<DocumentEntity> _docList;
+  @override
+  @JsonKey()
+  List<DocumentEntity> get docList {
+    if (_docList is EqualUnmodifiableListView) return _docList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_docList);
+  }
+
   @override
   String toString() {
-    return 'TaskState(asyncSnapshot: $asyncSnapshot, taskList: $taskList, statusList: $statusList, taskTypeList: $taskTypeList, industryList: $industryList)';
+    return 'TaskState(asyncSnapshot: $asyncSnapshot, taskList: $taskList, statusList: $statusList, taskTypeList: $taskTypeList, industryList: $industryList, docList: $docList)';
   }
 
   @override
@@ -222,7 +246,8 @@ class _$_TaskState implements _TaskState {
             const DeepCollectionEquality()
                 .equals(other._taskTypeList, _taskTypeList) &&
             const DeepCollectionEquality()
-                .equals(other._industryList, _industryList));
+                .equals(other._industryList, _industryList) &&
+            const DeepCollectionEquality().equals(other._docList, _docList));
   }
 
   @JsonKey(ignore: true)
@@ -233,7 +258,8 @@ class _$_TaskState implements _TaskState {
       const DeepCollectionEquality().hash(_taskList),
       const DeepCollectionEquality().hash(_statusList),
       const DeepCollectionEquality().hash(_taskTypeList),
-      const DeepCollectionEquality().hash(_industryList));
+      const DeepCollectionEquality().hash(_industryList),
+      const DeepCollectionEquality().hash(_docList));
 
   @JsonKey(ignore: true)
   @override
@@ -255,7 +281,8 @@ abstract class _TaskState implements TaskState {
       final List<TaskEntity> taskList,
       final List<StatusEntity> statusList,
       final List<TaskTypeEntity> taskTypeList,
-      final List<IndustryEntity> industryList}) = _$_TaskState;
+      final List<IndustryEntity> industryList,
+      final List<DocumentEntity> docList}) = _$_TaskState;
 
   factory _TaskState.fromJson(Map<String, dynamic> json) =
       _$_TaskState.fromJson;
@@ -271,6 +298,8 @@ abstract class _TaskState implements TaskState {
   List<TaskTypeEntity> get taskTypeList;
   @override
   List<IndustryEntity> get industryList;
+  @override
+  List<DocumentEntity> get docList;
   @override
   @JsonKey(ignore: true)
   _$$_TaskStateCopyWith<_$_TaskState> get copyWith =>

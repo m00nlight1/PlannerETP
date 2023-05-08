@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:planner_etp/feature/auth/domain/entities/user_entity/user_entity.dart';
-import 'package:planner_etp/feature/profile/profile_screen.dart';
+import 'package:planner_etp/feature/profile/presentation/profile_screen.dart';
+import 'package:planner_etp/feature/tasks/presentation/documents/all_documents_screen.dart';
 import 'package:planner_etp/feature/tasks/presentation/tasks/all_tasks_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -18,6 +19,7 @@ class _DashboardScreenState extends State<DashboardScreen>{
 
   final tabs = [
     const AllTasksScreen(),
+    const AllDocumentsScreen(),
     const ProfileScreen(),
   ];
 
@@ -58,11 +60,11 @@ class _DashboardScreenState extends State<DashboardScreen>{
                 iconColor: Color(0xff545454),
                 iconActiveColor: Color(0xff0691db),
               ),
-              // GButton(
-              //   icon: Icons.message_rounded,
-              //   iconColor: Color(0xff545454),
-              //   iconActiveColor: Color(0xff0691db),
-              // ),
+              GButton(
+                icon: Icons.folder,
+                iconColor: Color(0xff545454),
+                iconActiveColor: Color(0xff0691db),
+              ),
               GButton(
                 icon: Icons.account_circle,
                 iconColor: Color(0xff545454),

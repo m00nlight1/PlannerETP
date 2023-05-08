@@ -18,4 +18,10 @@ abstract class TaskRepository {
   Future fetchTaskTypes();
 
   Future fetchIndustries();
+
+  Future createDocument(Map args);
+
+  Future deleteDocument(String id);
+
+  Future fetchDocuments();
 }

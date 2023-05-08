@@ -34,7 +34,6 @@ class _TaskItemState extends State<TaskItem> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     initializeDateFormatting("ru");
-    String locale = Localizations.localeOf(context).languageCode;
     return GestureDetector(
       onTap: () {
         if (widget.taskEntity.category?.id == 1) {

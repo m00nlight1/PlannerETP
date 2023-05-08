@@ -40,4 +40,10 @@ abstract class AppApi {
   Future<dynamic> fetchTaskTypes();
 
   Future<dynamic> fetchIndustries();
+
+  Future<dynamic> createDocument(Map args);
+
+  Future<dynamic> deleteDocument(String id);
+
+  Future<dynamic> fetchDocuments();
 }

@@ -107,4 +107,33 @@ class NetworkTaskRepository implements TaskRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<String> createDocument(Map args) async {
+    try {
+      final response = await appApi.createDocument(args);
+      return response.data["message"];
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future deleteDocument(String id) async {
+    try {
+      await appApi.deleteDocument(id);
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Iterable> fetchDocuments() async {
+    try {
+      final response = await appApi.fetchDocuments();
+      return response.data;
+    } catch (error) {
+      rethrow;
+    }
+  }
 }
