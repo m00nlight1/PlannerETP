@@ -23,6 +23,7 @@ mixin _$DocumentEntity {
   int get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get filePath => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
   int? get idTask => throw _privateConstructorUsedError;
   UserEntity? get user => throw _privateConstructorUsedError;
   TaskEntity? get task => throw _privateConstructorUsedError;
@@ -43,6 +44,7 @@ abstract class $DocumentEntityCopyWith<$Res> {
       {int id,
       String name,
       String filePath,
+      DateTime createdAt,
       int? idTask,
       UserEntity? user,
       TaskEntity? task});
@@ -67,6 +69,7 @@ class _$DocumentEntityCopyWithImpl<$Res, $Val extends DocumentEntity>
     Object? id = null,
     Object? name = null,
     Object? filePath = null,
+    Object? createdAt = null,
     Object? idTask = freezed,
     Object? user = freezed,
     Object? task = freezed,
@@ -84,6 +87,10 @@ class _$DocumentEntityCopyWithImpl<$Res, $Val extends DocumentEntity>
           ? _value.filePath
           : filePath // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       idTask: freezed == idTask
           ? _value.idTask
           : idTask // ignore: cast_nullable_to_non_nullable
@@ -136,6 +143,7 @@ abstract class _$$_DocumentEntityCopyWith<$Res>
       {int id,
       String name,
       String filePath,
+      DateTime createdAt,
       int? idTask,
       UserEntity? user,
       TaskEntity? task});
@@ -160,6 +168,7 @@ class __$$_DocumentEntityCopyWithImpl<$Res>
     Object? id = null,
     Object? name = null,
     Object? filePath = null,
+    Object? createdAt = null,
     Object? idTask = freezed,
     Object? user = freezed,
     Object? task = freezed,
@@ -177,6 +186,10 @@ class __$$_DocumentEntityCopyWithImpl<$Res>
           ? _value.filePath
           : filePath // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       idTask: freezed == idTask
           ? _value.idTask
           : idTask // ignore: cast_nullable_to_non_nullable
@@ -200,6 +213,7 @@ class _$_DocumentEntity implements _DocumentEntity {
       {required this.id,
       required this.name,
       required this.filePath,
+      required this.createdAt,
       this.idTask,
       this.user,
       this.task});
@@ -214,6 +228,8 @@ class _$_DocumentEntity implements _DocumentEntity {
   @override
   final String filePath;
   @override
+  final DateTime createdAt;
+  @override
   final int? idTask;
   @override
   final UserEntity? user;
@@ -222,7 +238,7 @@ class _$_DocumentEntity implements _DocumentEntity {
 
   @override
   String toString() {
-    return 'DocumentEntity(id: $id, name: $name, filePath: $filePath, idTask: $idTask, user: $user, task: $task)';
+    return 'DocumentEntity(id: $id, name: $name, filePath: $filePath, createdAt: $createdAt, idTask: $idTask, user: $user, task: $task)';
   }
 
   @override
@@ -234,6 +250,8 @@ class _$_DocumentEntity implements _DocumentEntity {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.filePath, filePath) ||
                 other.filePath == filePath) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
             (identical(other.idTask, idTask) || other.idTask == idTask) &&
             (identical(other.user, user) || other.user == user) &&
             (identical(other.task, task) || other.task == task));
@@ -241,8 +259,8 @@ class _$_DocumentEntity implements _DocumentEntity {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, name, filePath, idTask, user, task);
+  int get hashCode => Object.hash(
+      runtimeType, id, name, filePath, createdAt, idTask, user, task);
 
   @JsonKey(ignore: true)
   @override
@@ -263,6 +281,7 @@ abstract class _DocumentEntity implements DocumentEntity {
       {required final int id,
       required final String name,
       required final String filePath,
+      required final DateTime createdAt,
       final int? idTask,
       final UserEntity? user,
       final TaskEntity? task}) = _$_DocumentEntity;
@@ -276,6 +295,8 @@ abstract class _DocumentEntity implements DocumentEntity {
   String get name;
   @override
   String get filePath;
+  @override
+  DateTime get createdAt;
   @override
   int? get idTask;
   @override

@@ -11,6 +11,7 @@ _$_DocumentEntity _$$_DocumentEntityFromJson(Map<String, dynamic> json) =>
       id: json['id'] as int,
       name: json['name'] as String,
       filePath: json['filePath'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
       idTask: json['idTask'] as int?,
       user: json['user'] == null
           ? null
@@ -25,6 +26,7 @@ Map<String, dynamic> _$$_DocumentEntityToJson(_$_DocumentEntity instance) =>
       'id': instance.id,
       'name': instance.name,
       'filePath': instance.filePath,
+      'createdAt': instance.createdAt.toIso8601String(),
       'idTask': instance.idTask,
       'user': instance.user,
       'task': instance.task,

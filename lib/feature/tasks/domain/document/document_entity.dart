@@ -12,6 +12,7 @@ class DocumentEntity with _$DocumentEntity {
     required int id,
     required String name,
     required String filePath,
+    required DateTime createdAt,
     int? idTask,
     UserEntity? user,
     TaskEntity? task,

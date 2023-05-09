@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
+import 'package:planner_etp/app/presentation/components/search_text_field.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/presentation/tasks/task_item.dart';
@@ -74,41 +75,22 @@ class _TaskListState extends State<TaskList> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextFormField(
-                        controller: textSearchEditingController,
-                        decoration: InputDecoration(
-                          hintText: 'Поиск...',
-                          labelText: 'Поиск',
-                          labelStyle: const TextStyle(color: Colors.black38),
-                          prefixIcon: const Icon(
-                            Icons.search,
-                            color: Colors.black38,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                const BorderSide(width: 1, color: Colors.black),
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                width: 1, color: Colors.black38),
-                            borderRadius: BorderRadius.circular(25.0),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          if (textSearchEditingController.text.isEmpty) {
-                            result = state.taskList;
-                            context.read<TaskCubit>().fetchTasks();
-                          } else {
-                            result = state.taskList
-                                .where((element) => element.title
-                                    .toLowerCase()
-                                    .contains(textSearchEditingController.text
-                                        .toLowerCase()))
-                                .toList();
-                            context.read<TaskCubit>().fetchTasks();
+                      SearchTextField(
+                          controller: textSearchEditingController,
+                          onChange: (value) {
+                            if (textSearchEditingController.text.isEmpty) {
+                              result = state.taskList;
+                              context.read<TaskCubit>().fetchTasks();
+                            } else {
+                              result = state.taskList
+                                  .where((element) => element.title
+                                  .toLowerCase()
+                                  .contains(textSearchEditingController.text
+                                  .toLowerCase()))
+                                  .toList();
+                              context.read<TaskCubit>().fetchTasks();
+                            }
                           }
-                        },
                       ),
                       const SizedBox(height: 10),
                       Wrap(
