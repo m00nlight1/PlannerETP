@@ -7,13 +7,14 @@ import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:printing/printing.dart';
 
 class TaskPdfPreview extends StatelessWidget {
-  const TaskPdfPreview({super.key, required this.taskEntity});
+  TaskPdfPreview({super.key, required this.taskEntity});
 
   final TaskEntity taskEntity;
 
+  final PdfStorage storage = PdfStorage();
+
   @override
   Widget build(BuildContext context) {
-    final PdfStorage storage = PdfStorage();
     var box = Hive.box('pdf');
     var filePath = box.get('path');
     return Scaffold(

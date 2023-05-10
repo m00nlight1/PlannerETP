@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/presentation/documents/documents_list.dart';
 
@@ -19,9 +20,15 @@ class _AllDocumentsScreenState extends State<AllDocumentsScreen> {
   String? pathPdf;
   SettableMetadata? settableMetadata;
 
+  final FileImgStorage storage = FileImgStorage();
+
   final fileNameController = TextEditingController();
 
   Future<void> _createDocument() async {
+    if (fileNameController.text.isNotEmpty) {
+      storage.uploadPdfFile(
+          fileNameController.text, pdfFile!, settableMetadata!);
+    }
     context.read<TaskCubit>().createDocument({
       "name": fileNameController.text,
       "filePath": pathPdf.toString(),
