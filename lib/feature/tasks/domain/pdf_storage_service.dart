@@ -1,4 +1,6 @@
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
@@ -167,6 +169,13 @@ class PdfStorage {
         ),
       ],
     ));
+
+    final String dir = (await getApplicationDocumentsDirectory()).path;
+    final String path = '$dir/${taskEntity.title}.pdf';
+
+    var box = Hive.box('pdf');
+
+    box.put('path', path);
 
     return pdf.save();
   }

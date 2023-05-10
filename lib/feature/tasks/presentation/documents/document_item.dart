@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:planner_etp/feature/tasks/domain/document/document_entity.dart';
 
@@ -16,6 +17,7 @@ class _DocumentItemState extends State<DocumentItem> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    initializeDateFormatting("ru");
     return GestureDetector(
       child: GFCard(
         boxFit: BoxFit.cover,
@@ -28,6 +30,8 @@ class _DocumentItemState extends State<DocumentItem> {
                 Text(widget.documentEntity.name,
                     style: theme.textTheme.headlineSmall),
                 const SizedBox(height: 5),
+                Text(widget.documentEntity.filePath,
+                    style: theme.textTheme.headlineSmall),
                 Row(
                   children: [
                     Text(DateFormat.yMMMd("ru")

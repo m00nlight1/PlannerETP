@@ -193,7 +193,6 @@ class DioAppApi implements AppApi {
     return dio.post("/data/documents", data:  {
       "name": args["name"],
       "filePath": args["filePath"],
-      "createdAt": args["createdAt"],
       "idTask": args["idTask"],
     });
   }
