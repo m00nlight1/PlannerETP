@@ -23,7 +23,7 @@ class TaskPdfPreview extends StatelessWidget {
           IconButton(
             onPressed: () {
               context.read<TaskCubit>().createDocument({
-                "name": taskEntity.title,
+                "name": '${taskEntity.title}.pdf',
                 "filePath": filePath.toString(),
                 "idTask": taskEntity.id,
               }).then((_) {

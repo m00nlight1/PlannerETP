@@ -20,7 +20,6 @@ class _DocumentItemState extends State<DocumentItem> {
     initializeDateFormatting("ru");
     return GestureDetector(
       child: GFCard(
-        boxFit: BoxFit.cover,
         content: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -30,8 +29,6 @@ class _DocumentItemState extends State<DocumentItem> {
                 Text(widget.documentEntity.name,
                     style: theme.textTheme.headlineSmall),
                 const SizedBox(height: 5),
-                Text(widget.documentEntity.filePath,
-                    style: theme.textTheme.headlineSmall),
                 Row(
                   children: [
                     Text(DateFormat.yMMMd("ru")

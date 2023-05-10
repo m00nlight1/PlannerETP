@@ -248,10 +248,9 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                                 const Icon(Icons.date_range_outlined,
                                     color: Color(0xFF0d74ba)),
                                 Flexible(
-                                    child:
-                                    Text(
+                                    child: Text(
                                         "${DateFormat.yMMMd("ru").format(widget.taskEntity.startOfWork!)},"
-                                            "${DateFormat.Hm("ru").format(widget.taskEntity.startOfWork!)}",
+                                        "${DateFormat.Hm("ru").format(widget.taskEntity.startOfWork!)}",
                                         textAlign: TextAlign.center)),
                                 const SizedBox(width: 5),
                               ],
@@ -282,7 +281,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                                 Flexible(
                                     child: Text(
                                         "${DateFormat.yMMMd("ru").format(widget.taskEntity.endOfWork!)},"
-                                            "${DateFormat.Hm("ru").format(widget.taskEntity.endOfWork!)}",
+                                        "${DateFormat.Hm("ru").format(widget.taskEntity.endOfWork!)}",
                                         textAlign: TextAlign.center)),
                                 const SizedBox(width: 5),
                               ],
@@ -575,7 +574,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
               //created at date and author
               Text(
                   "Дата создания: ${DateFormat.yMMMd("ru").format(widget.taskEntity.createdAt)},"
-                      "${DateFormat.Hm("ru").format(widget.taskEntity.createdAt)}",
+                  "${DateFormat.Hm("ru").format(widget.taskEntity.createdAt)}",
                   style: theme.textTheme.bodyMedium),
               const SizedBox(height: 10),
               Text(

@@ -63,9 +63,9 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
 
   void _getPdfFile() async {
     FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
-      // type: FileType.custom,
-      // allowedExtensions: ['pdf'],
-    );
+        // type: FileType.custom,
+        // allowedExtensions: ['pdf'],
+        );
     if (pickedFile != null) {
       setState(() {
         pathPdf = pickedFile.files.first.path;
@@ -163,7 +163,8 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                 storage.uploadImage(imageFile!.path, imageNameController.text);
               }
               if (fileNameController.text.isNotEmpty) {
-                storage.uploadPdfFile(fileNameController.text, pdfFile!, settableMetadata!);
+                storage.uploadPdfFile(
+                    fileNameController.text, pdfFile!, settableMetadata!);
               }
               context.read<TaskCubit>().createTask({
                 "title": titleController.text,
@@ -544,12 +545,12 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                                   children: [
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(fileNameController.text),
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.end,
+                                              MainAxisAlignment.end,
                                           children: [
                                             ElevatedButton(
                                               onPressed: () {
@@ -565,7 +566,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                                               },
                                               style: ElevatedButton.styleFrom(
                                                   backgroundColor:
-                                                  Colors.transparent,
+                                                      Colors.transparent,
                                                   foregroundColor: Colors.grey,
                                                   elevation: 0),
                                               child: const Icon(
@@ -581,7 +582,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                                               },
                                               style: ElevatedButton.styleFrom(
                                                   backgroundColor:
-                                                  Colors.transparent,
+                                                      Colors.transparent,
                                                   foregroundColor: Colors.red,
                                                   elevation: 0),
                                               child: const Icon(
