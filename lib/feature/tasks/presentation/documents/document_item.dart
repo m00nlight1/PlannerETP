@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:planner_etp/feature/tasks/domain/document/document_entity.dart';
@@ -19,33 +18,27 @@ class _DocumentItemState extends State<DocumentItem> {
     final theme = Theme.of(context);
     initializeDateFormatting("ru");
     return GestureDetector(
-      child: GFCard(
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Card(
+          child: ListTile(
+            title: Text(widget.documentEntity.name,
+                style: theme.textTheme.headlineSmall),
+            subtitle: Row(
               children: [
-                Text(widget.documentEntity.name,
-                    style: theme.textTheme.headlineSmall),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    Text(DateFormat.yMMMd("ru")
-                        .format(widget.documentEntity.createdAt)),
-                    const SizedBox(width: 5),
-                    Text(DateFormat.Hm("ru")
-                        .format(widget.documentEntity.createdAt)),
-                  ],
-                ),
+                Text(DateFormat.yMMMd("ru")
+                    .format(widget.documentEntity.createdAt), style: theme.textTheme.bodyMedium),
+                const SizedBox(width: 5),
+                Text(DateFormat.Hm("ru")
+                    .format(widget.documentEntity.createdAt), style: theme.textTheme.bodyMedium),
               ],
             ),
-            const Icon(
+            trailing: const Icon(
               Icons.arrow_forward_ios,
               color: Colors.grey,
               size: 20,
             ),
-          ],
+          ),
         ),
       ),
     );

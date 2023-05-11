@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
+import 'package:planner_etp/app/presentation/components/app_snack_bar.dart';
 import 'package:planner_etp/app/presentation/components/search_text_field.dart';
 import 'package:planner_etp/feature/tasks/domain/document/document_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
@@ -21,7 +24,16 @@ class _DocumentsListState extends State<DocumentsList> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<TaskCubit, TaskState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state.asyncSnapshot!.hasData && state.asyncSnapshot!.data != true) {
+            AppSnackBar.showSnackBarWithMessage(
+                context, state.asyncSnapshot!.data.toString());
+          }
+          if (state.asyncSnapshot!.hasError) {
+            AppSnackBar.showSnackBarWithError(
+                context, ErrorEntity.fromException(state.asyncSnapshot!.error));
+          }
+        },
         builder: (context, state) {
           if (state.docList.isNotEmpty) {
             return Column(
@@ -63,15 +75,33 @@ class _DocumentsListState extends State<DocumentsList> {
                   )
                 else
                   Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: state.docList.length,
-                      itemBuilder: (context, index) {
-                        return DocumentItem(
-                            documentEntity: state.docList[index]);
-                      },
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: state.docList.length,
+                        itemBuilder: (context, index) {
+                          return Slidable(
+                            key: const ValueKey(0),
+                            endActionPane: ActionPane(
+                              motion: const ScrollMotion(),
+                              children: [
+                                SlidableAction(
+                                  onPressed: (context) async {
+                                    final doc = state.docList[index];
+                                    context.read<TaskCubit>().deleteDocument(doc.id.toString()).then((_) {
+                                      context.read<TaskCubit>().fetchDocuments();
+                                    });
+                                  },
+                                  backgroundColor: Colors.red,
+                                  icon: Icons.delete,
+                                ),
+                              ],
+                            ),
+                            child: DocumentItem(
+                                documentEntity: state.docList[index]),
+                          );
+                        },
+                      ),
                     ),
-                  ),
               ],
             );
           }

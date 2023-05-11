@@ -45,18 +45,6 @@ class DetailTaskCubit extends Cubit<DetailTaskState> {
     });
   }
 
-  Future<void> deleteDocument(String docId) async {
-    emit(state.copyWith(asyncSnapshot: const AsyncSnapshot.waiting()));
-    await Future.delayed(const Duration(seconds: 1));
-    await taskRepository.deleteDocument(docId).then((value) {
-      emit(state.copyWith(
-          asyncSnapshot: const AsyncSnapshot.withData(
-              ConnectionState.done, "Документ удалён")));
-    }).catchError((error) {
-      addError(error);
-    });
-  }
-
   Future<void> updateTask(Map args) async {
     emit(state.copyWith(asyncSnapshot: const AsyncSnapshot.waiting()));
     await Future.delayed(const Duration(seconds: 1));

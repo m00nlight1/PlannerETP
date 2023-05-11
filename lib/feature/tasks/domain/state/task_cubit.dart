@@ -77,6 +77,21 @@ class TaskCubit extends HydratedCubit<TaskState> {
   Future<void> createDocument(Map args) async {
     await taskRepository.createDocument(args).then((value) {
       fetchDocuments();
+      emit(state.copyWith(
+        asyncSnapshot: const AsyncSnapshot.withData(ConnectionState.done, "Документ добавлен")));
+    }).catchError((error) {
+      addError(error);
+    });
+  }
+
+  Future<void> deleteDocument(String docId) async {
+    emit(state.copyWith(asyncSnapshot: const AsyncSnapshot.waiting()));
+    await Future.delayed(const Duration(seconds: 1));
+    await taskRepository.deleteDocument(docId).then((value) {
+      fetchDocuments();
+      emit(state.copyWith(
+          asyncSnapshot: const AsyncSnapshot.withData(
+              ConnectionState.done, "Документ удалён")));
     }).catchError((error) {
       addError(error);
     });
@@ -128,6 +143,7 @@ class TaskCubit extends HydratedCubit<TaskState> {
     emit(state.copyWith(
       asyncSnapshot: const AsyncSnapshot.nothing(),
       taskList: [],
+      docList: [],
     ));
   }
 
