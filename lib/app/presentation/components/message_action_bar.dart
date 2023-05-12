@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:planner_etp/app/presentation/components/bar_action_button.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
+import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 
 class ActionBar extends StatefulWidget {
@@ -34,6 +35,7 @@ class ActionBarState extends State<ActionBar> {
       "imageUrl": imageNameController.text,
       "idTask": widget.taskEntity.id,
     });
+    context.read<TaskCubit>().fetchChats();
     messageController.clear();
     imageNameController.clear();
     FocusScope.of(context).unfocus();
@@ -170,15 +172,14 @@ class ActionBarState extends State<ActionBar> {
                 padding:
                     const EdgeInsets.only(left: 12, right: 24.0, top: 15.0),
                 child: BarActionButton(
-                  color: const Color(0xFF0d74ba),
-                  icon: Icons.send_rounded,
-                  onPressed: () {
-                    if (imageNameController.text.isNotEmpty
-                    || messageController.text.isNotEmpty) {
-                      _sendMessage();
-                    }
-                  }
-                ),
+                    color: const Color(0xFF0d74ba),
+                    icon: Icons.send_rounded,
+                    onPressed: () {
+                      if (imageNameController.text.isNotEmpty ||
+                          messageController.text.isNotEmpty) {
+                        _sendMessage();
+                      }
+                    }),
               ),
             ],
           ),

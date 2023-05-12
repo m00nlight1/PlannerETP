@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:planner_etp/feature/auth/domain/entities/user_entity/user_entity.dart';
 import 'package:planner_etp/feature/profile/presentation/profile_screen.dart';
+import 'package:planner_etp/feature/tasks/presentation/chats/all_chats_screen.dart';
 import 'package:planner_etp/feature/tasks/presentation/documents/all_documents_screen.dart';
 import 'package:planner_etp/feature/tasks/presentation/tasks/all_tasks_screen.dart';
 
@@ -20,6 +21,7 @@ class _DashboardScreenState extends State<DashboardScreen>{
   final tabs = [
     const AllTasksScreen(),
     const AllDocumentsScreen(),
+    const AllChatsScreen(),
     const ProfileScreen(),
   ];
 
@@ -45,16 +47,6 @@ class _DashboardScreenState extends State<DashboardScreen>{
               });
             },
             tabs: const [
-              // GButton(
-              //   icon: Icons.insert_drive_file_rounded,
-              //   iconColor: Color(0xff545454),
-              //   iconActiveColor: Color(0xff0691db),
-              // ),
-              // GButton(
-              //   icon: Icons.room,
-              //   iconColor: Color(0xff545454),
-              //   iconActiveColor: Color(0xff0691db),
-              // ),
               GButton(
                 icon: Icons.assignment,
                 iconColor: Color(0xff545454),
@@ -62,6 +54,11 @@ class _DashboardScreenState extends State<DashboardScreen>{
               ),
               GButton(
                 icon: Icons.folder,
+                iconColor: Color(0xff545454),
+                iconActiveColor: Color(0xff0691db),
+              ),
+              GButton(
+                icon: Icons.message,
                 iconColor: Color(0xff545454),
                 iconActiveColor: Color(0xff0691db),
               ),

@@ -206,4 +206,9 @@ class DioAppApi implements AppApi {
   Future fetchDocuments() {
     return dio.get("/data/documents");
   }
+
+  @override
+  Future fetchChats() {
+    return dio.get("/data/messages");
+  }
 }

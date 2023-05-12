@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
+import 'package:planner_etp/feature/tasks/domain/chat/message_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/document/document_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/industry/industry_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/status/status_entity.dart';
@@ -32,6 +33,7 @@ class TaskCubit extends HydratedCubit<TaskState> {
           fetchTaskTypes();
           fetchIndustries();
           fetchDocuments();
+          fetchChats();
         },
         notAuthorized: (value) => logOut(),
       );
@@ -68,7 +70,7 @@ class TaskCubit extends HydratedCubit<TaskState> {
       emit(state.copyWith(
           docList: iterable.map((e) => DocumentEntity.fromJson(e)).toList(),
           asyncSnapshot:
-          const AsyncSnapshot.withData(ConnectionState.done, true)));
+              const AsyncSnapshot.withData(ConnectionState.done, true)));
     }).catchError((error) {
       addError(error);
     });
@@ -78,7 +80,8 @@ class TaskCubit extends HydratedCubit<TaskState> {
     await taskRepository.createDocument(args).then((value) {
       fetchDocuments();
       emit(state.copyWith(
-        asyncSnapshot: const AsyncSnapshot.withData(ConnectionState.done, "Документ добавлен")));
+          asyncSnapshot: const AsyncSnapshot.withData(
+              ConnectionState.done, "Документ добавлен")));
     }).catchError((error) {
       addError(error);
     });
@@ -105,7 +108,7 @@ class TaskCubit extends HydratedCubit<TaskState> {
       emit(state.copyWith(
           statusList: iterable.map((e) => StatusEntity.fromJson(e)).toList(),
           asyncSnapshot:
-          const AsyncSnapshot.withData(ConnectionState.done, true)));
+              const AsyncSnapshot.withData(ConnectionState.done, true)));
     }).catchError((error) {
       addError(error);
     });
@@ -117,9 +120,10 @@ class TaskCubit extends HydratedCubit<TaskState> {
     await taskRepository.fetchTaskTypes().then((value) {
       final Iterable iterable = value;
       emit(state.copyWith(
-          taskTypeList: iterable.map((e) => TaskTypeEntity.fromJson(e)).toList(),
+          taskTypeList:
+              iterable.map((e) => TaskTypeEntity.fromJson(e)).toList(),
           asyncSnapshot:
-          const AsyncSnapshot.withData(ConnectionState.done, true)));
+              const AsyncSnapshot.withData(ConnectionState.done, true)));
     }).catchError((error) {
       addError(error);
     });
@@ -131,9 +135,24 @@ class TaskCubit extends HydratedCubit<TaskState> {
     await taskRepository.fetchIndustries().then((value) {
       final Iterable iterable = value;
       emit(state.copyWith(
-          industryList: iterable.map((e) => IndustryEntity.fromJson(e)).toList(),
+          industryList:
+              iterable.map((e) => IndustryEntity.fromJson(e)).toList(),
           asyncSnapshot:
-          const AsyncSnapshot.withData(ConnectionState.done, true)));
+              const AsyncSnapshot.withData(ConnectionState.done, true)));
+    }).catchError((error) {
+      addError(error);
+    });
+  }
+
+  Future<void> fetchChats() async {
+    emit(state.copyWith(asyncSnapshot: const AsyncSnapshot.waiting()));
+    await Future.delayed(const Duration(seconds: 1));
+    await taskRepository.fetchChats().then((value) {
+      final Iterable iterable = value;
+      emit(state.copyWith(
+          chatsList: iterable.map((e) => MessageEntity.fromJson(e)).toList(),
+          asyncSnapshot:
+              const AsyncSnapshot.withData(ConnectionState.done, true)));
     }).catchError((error) {
       addError(error);
     });

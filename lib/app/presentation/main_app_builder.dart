@@ -36,7 +36,9 @@ class _GlobalProviders extends StatelessWidget {
       BlocProvider(
         create: (context) =>
             TaskCubit(locator.get<TaskRepository>(), locator.get<AuthCubit>())
-              ..fetchTasks(),
+              ..fetchTasks()
+              ..fetchChats()
+              ..fetchDocuments(),
       )
     ], child: child);
   }

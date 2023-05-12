@@ -15,6 +15,8 @@ abstract class TaskRepository {
 
   Future fetchStatuses();
 
+  Future fetchChats();
+
   Future fetchTaskTypes();
 
   Future fetchIndustries();

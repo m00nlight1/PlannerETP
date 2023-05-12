@@ -27,6 +27,10 @@ _$_TaskState _$$_TaskStateFromJson(Map<String, dynamic> json) => _$_TaskState(
               ?.map((e) => DocumentEntity.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      chatsList: (json['chatsList'] as List<dynamic>?)
+              ?.map((e) => MessageEntity.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$_TaskStateToJson(_$_TaskState instance) =>
@@ -36,4 +40,5 @@ Map<String, dynamic> _$$_TaskStateToJson(_$_TaskState instance) =>
       'taskTypeList': instance.taskTypeList,
       'industryList': instance.industryList,
       'docList': instance.docList,
+      'chatsList': instance.chatsList,
     };
