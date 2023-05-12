@@ -335,7 +335,23 @@ class _TaskListState extends State<TaskList> {
         if (state.asyncSnapshot?.connectionState == ConnectionState.waiting) {
           return const AppLoader();
         }
-        return const SizedBox.shrink();
+        return SizedBox(
+          child: Container(
+            alignment: Alignment.center,
+            child: Padding(
+              padding:
+              const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
+              child: Text(
+                "Задач нет",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ),
+          ),
+        );
       },
     );
   }

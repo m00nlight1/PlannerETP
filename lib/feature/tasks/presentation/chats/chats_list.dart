@@ -18,6 +18,11 @@ class _ChatsListState extends State<ChatsList> {
   TextEditingController textSearchEditingController = TextEditingController();
   List<MessageEntity> result = [];
 
+  // final userId = locator
+  //     .get<AuthCubit>()
+  //     .state
+  //     .whenOrNull(authorized: (userEntity) => userEntity.id);
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<TaskCubit, TaskState>(
@@ -88,7 +93,23 @@ class _ChatsListState extends State<ChatsList> {
         if (state.asyncSnapshot?.connectionState == ConnectionState.waiting) {
           return const AppLoader();
         }
-        return const SizedBox.shrink();
+        return SizedBox(
+          child: Container(
+            alignment: Alignment.center,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
+              child: Text(
+                "Список чатов пуст",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ),
+          ),
+        );
       },
     );
   }

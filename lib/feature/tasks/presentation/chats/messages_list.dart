@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
 import 'package:planner_etp/feature/tasks/domain/chat/message_entity.dart';
@@ -11,12 +13,13 @@ class MessagesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting("ru");
     return BlocConsumer<DetailTaskCubit, DetailTaskState>(
       listener: (context, state) {},
       builder: (context, state) {
         if (state.messageList.isNotEmpty) {
-          final List<MessageEntity> list  = state.messageList.toList();
-          list.sort((a,b) => b.id.compareTo(a.id));
+          final List<MessageEntity> list = state.messageList.toList();
+          list.sort((a, b) => b.id.compareTo(a.id));
           list.toList();
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
@@ -34,10 +37,9 @@ class MessagesList extends StatelessWidget {
                 } else if (index <= list.length) {
                   final message = list[index];
                   final nextMessage = list[index + 1];
-                  if (!Jiffy(message.sentTo.toLocal()).isSame(nextMessage.sentTo.toLocal(), Units.DAY)) {
-                    return _DateLable(
-                      dateTime: message.sentTo.toLocal()
-                    );
+                  if (!Jiffy(message.sentTo.toLocal())
+                      .isSame(nextMessage.sentTo.toLocal(), Units.DAY)) {
+                    return _DateLable(dateTime: message.sentTo.toLocal());
                   } else {
                     return const SizedBox.shrink();
                   }
@@ -62,7 +64,8 @@ class MessagesList extends StatelessWidget {
           child: Container(
             alignment: Alignment.center,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
               child: Text(
                 "Сообщений нет",
                 style: TextStyle(
@@ -96,7 +99,7 @@ class __DateLableState extends State<_DateLable> {
 
   @override
   void initState() {
-    final sentTo = Jiffy(widget.dateTime);
+    final sentTo = widget.dateTime;
     final now = DateTime.now();
 
     if (Jiffy(sentTo).isSame(now, Units.DAY)) {
@@ -108,14 +111,14 @@ class __DateLableState extends State<_DateLable> {
       now.subtract(const Duration(days: 7)),
       Units.DAY,
     )) {
-      dayInfo = sentTo.EEEE;
+      dayInfo = DateFormat.EEEE("ru").format(sentTo);
     } else if (Jiffy(sentTo).isAfter(
       Jiffy(now).subtract(years: 1),
       Units.DAY,
     )) {
-      dayInfo = sentTo.MMMd;
+      dayInfo = DateFormat.MMMd("ru").format(sentTo);
     } else {
-      dayInfo = sentTo.MMMd;
+      dayInfo = DateFormat.MMMd("ru").format(sentTo);
     }
 
     super.initState();
