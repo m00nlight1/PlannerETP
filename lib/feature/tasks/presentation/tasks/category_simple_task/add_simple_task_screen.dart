@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
+import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/file_pdf_service.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
@@ -42,6 +44,11 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
   fs.SettableMetadata? settableMetadata;
 
   int? selectedItemId;
+
+  // final userId = locator
+  //     .get<AuthCubit>()
+  //     .state
+  //     .whenOrNull(authorized: (userEntity) => userEntity.id);
 
   void _getImgFromGallery() async {
     XFile? pickedFile = await _picker.pickImage(

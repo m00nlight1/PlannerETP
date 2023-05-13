@@ -18,11 +18,6 @@ class _ChatsListState extends State<ChatsList> {
   TextEditingController textSearchEditingController = TextEditingController();
   List<MessageEntity> result = [];
 
-  // final userId = locator
-  //     .get<AuthCubit>()
-  //     .state
-  //     .whenOrNull(authorized: (userEntity) => userEntity.id);
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<TaskCubit, TaskState>(
