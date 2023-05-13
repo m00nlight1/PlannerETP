@@ -3,6 +3,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:planner_etp/feature/tasks/domain/chat/message_entity.dart';
+import 'package:planner_etp/feature/tasks/presentation/chats/task_chat_screen.dart';
 
 class ChatItem extends StatefulWidget {
   final MessageEntity messageEntity;
@@ -48,7 +49,9 @@ class _ChatItemState extends State<ChatItem> {
     final theme = Theme.of(context);
     initializeDateFormatting("ru");
     return GestureDetector(
-      onTap: () {},
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) =>
+              TaskChatScreen(taskEntity: widget.messageEntity.task!, id: widget.messageEntity.task!.id.toString()))),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: Card(
