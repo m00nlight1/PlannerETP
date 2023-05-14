@@ -10,6 +10,7 @@ class TaskState with _$TaskState {
     @Default([]) List<IndustryEntity> industryList,
     @Default([]) List<DocumentEntity> docList,
     @Default([]) List<MessageEntity> chatsList,
+    @Default([]) List<UserEntity> usersList,
   }) = _TaskState;
 
   factory TaskState.fromJson(Map<String, dynamic> json) =>

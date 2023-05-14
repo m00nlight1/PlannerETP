@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:planner_etp/app/domain/app_notifications.dart';
 import 'package:planner_etp/feature/tasks/presentation/chats/chats_list.dart';
 
 class AllChatsScreen extends StatefulWidget {
@@ -15,11 +14,6 @@ class _AllChatsScreenState extends State<AllChatsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Обсуждения"),
-        actions: [
-          IconButton(onPressed: () {
-            AppNotifications().showNotification(title: "asdda", body: "asdad");
-          }, icon: Icon(Icons.ac_unit))
-        ],
       ),
       body: const ChatsList(),
     );

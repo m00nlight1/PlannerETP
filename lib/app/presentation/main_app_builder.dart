@@ -38,6 +38,7 @@ class _GlobalProviders extends StatelessWidget {
             TaskCubit(locator.get<TaskRepository>(), locator.get<AuthCubit>())
               ..fetchTasks()
               ..fetchChats()
+              ..fetchUsers()
               ..fetchDocuments(),
       )
     ], child: child);

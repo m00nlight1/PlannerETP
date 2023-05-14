@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
+import 'package:planner_etp/feature/auth/domain/entities/user_entity/user_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/chat/message_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/document/document_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/industry/industry_entity.dart';
@@ -34,6 +35,7 @@ class TaskCubit extends HydratedCubit<TaskState> {
           fetchIndustries();
           fetchDocuments();
           fetchChats();
+          fetchUsers();
         },
         notAuthorized: (value) => logOut(),
       );
@@ -153,6 +155,20 @@ class TaskCubit extends HydratedCubit<TaskState> {
           chatsList: iterable.map((e) => MessageEntity.fromJson(e)).toList(),
           asyncSnapshot:
               const AsyncSnapshot.withData(ConnectionState.done, true)));
+    }).catchError((error) {
+      addError(error);
+    });
+  }
+
+  Future<void> fetchUsers() async {
+    emit(state.copyWith(asyncSnapshot: const AsyncSnapshot.waiting()));
+    await Future.delayed(const Duration(seconds: 1));
+    await taskRepository.fetchUsers().then((value) {
+      final Iterable iterable = value;
+      emit(state.copyWith(
+          usersList: iterable.map((e) => UserEntity.fromJson(e)).toList(),
+          asyncSnapshot:
+          const AsyncSnapshot.withData(ConnectionState.done, true)));
     }).catchError((error) {
       addError(error);
     });

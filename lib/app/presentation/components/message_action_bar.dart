@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:planner_etp/app/di/init_di.dart';
+import 'package:planner_etp/app/domain/app_notifications.dart';
 import 'package:planner_etp/app/presentation/components/bar_action_button.dart';
+import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
@@ -26,6 +29,11 @@ class ActionBarState extends State<ActionBar> {
   final messageController = TextEditingController();
   final imageNameController = TextEditingController();
 
+  final userId = locator
+      .get<AuthCubit>()
+      .state
+      .whenOrNull(authorized: (userEntity) => userEntity);
+
   Future<void> _sendMessage() async {
     if (imageFile != null && imageNameController.text.isNotEmpty) {
       storage.uploadImage(imageFile!.path, imageNameController.text);
@@ -34,12 +42,13 @@ class ActionBarState extends State<ActionBar> {
       "content": messageController.text,
       "imageUrl": imageNameController.text,
       "idTask": widget.taskEntity.id,
+    }).then((_) {
+      context.read<TaskCubit>().fetchChats();
+      messageController.clear();
+      imageNameController.clear();
+      FocusScope.of(context).unfocus();
+      context.read<DetailTaskCubit>().getTaskChat();
     });
-    context.read<TaskCubit>().fetchChats();
-    messageController.clear();
-    imageNameController.clear();
-    FocusScope.of(context).unfocus();
-    context.read<DetailTaskCubit>().getTaskChat();
   }
 
   // void takeImageFromCamera() async {
@@ -164,7 +173,13 @@ class ActionBarState extends State<ActionBar> {
                           borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(50)),
                     ),
-                    onSubmitted: (_) => _sendMessage(),
+                    onSubmitted: (_) {
+                      _sendMessage();
+                      AppNotifications().showNotification(
+                          title: "Новое сообщение",
+                          body:
+                          "${userId?.username}: ${messageController.text}");
+                    },
                   ),
                 ),
               ),
@@ -178,6 +193,10 @@ class ActionBarState extends State<ActionBar> {
                       if (imageNameController.text.isNotEmpty ||
                           messageController.text.isNotEmpty) {
                         _sendMessage();
+                        AppNotifications().showNotification(
+                            title: "Новое сообщение",
+                            body:
+                            "${userId?.username}: ${messageController.text}");
                       }
                     }),
               ),

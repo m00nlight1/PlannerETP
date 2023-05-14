@@ -10,6 +10,8 @@ abstract class AppApi {
 
   Future<dynamic> getProfile();
 
+  Future<dynamic> fetchUsers();
+
   Future<dynamic> updateUser({String? email, String? username});
 
   Future<dynamic> updatePassword(

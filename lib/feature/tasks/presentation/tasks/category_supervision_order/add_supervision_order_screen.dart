@@ -7,7 +7,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:planner_etp/app/di/init_di.dart';
+import 'package:planner_etp/app/domain/app_notifications.dart';
+import 'package:planner_etp/app/presentation/app_loader.dart';
+import 'package:planner_etp/app/presentation/components/app_snack_bar.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
+import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
+import 'package:planner_etp/feature/auth/domain/entities/user_entity/user_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/file_pdf_service.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
@@ -47,6 +53,12 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
   int? selectedTypeId;
   int? selectedIndustryId;
 
+  List<UserEntity> userList = [];
+  final userId = locator
+      .get<AuthCubit>()
+      .state
+      .whenOrNull(authorized: (userEntity) => userEntity);
+
   void _getImgFromGallery() async {
     XFile? pickedFile = await _picker.pickImage(
       source: ImageSource.gallery,
@@ -63,9 +75,9 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
 
   void _getPdfFile() async {
     FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
-      // type: FileType.custom,
-      // allowedExtensions: ['pdf'],
-    );
+        // type: FileType.custom,
+        // allowedExtensions: ['pdf'],
+        );
     if (pickedFile != null) {
       setState(() {
         pathPdf = pickedFile.files.first.path;
@@ -139,37 +151,72 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
       appBar: AppBar(
         title: const Text("Создать предписание"),
         actions: [
-          IconButton(
-            onPressed: () {
-              if (imageFile != null) {
-                storage.uploadImage(imageFile!.path, imageNameController.text);
+          BlocConsumer<TaskCubit, TaskState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              if (state.usersList.isNotEmpty) {
+                userList = state.usersList.toList();
+                return IconButton(
+                  onPressed: () {
+                    if (imageFile != null) {
+                      storage.uploadImage(
+                          imageFile!.path, imageNameController.text);
+                    }
+                    if (fileNameController.text.isNotEmpty) {
+                      storage.uploadPdfFile(
+                          fileNameController.text, pdfFile!, settableMetadata!);
+                    }
+                    if (titleController.text.isNotEmpty &&
+                        commentsController.text.isNotEmpty) {
+                      context.read<TaskCubit>().createTask({
+                        "title": titleController.text,
+                        "content": commentsController.text,
+                        "startOfWork": selectedDate.toString(),
+                        "endOfWork": endWorkDateTime.toString(),
+                        "imageUrl": imageNameController.text,
+                        "fileUrl": fileNameController.text,
+                        "contractorCompany": null,
+                        "responsibleMaster": masterController.text,
+                        "representative": null,
+                        "equipmentLevel": null,
+                        "staffLevel": null,
+                        "resultsOfTheWork": null,
+                        "expenses": expansesController.text,
+                        "idCategory": 2,
+                        "idStatus": selectedItemId,
+                        "idIndustry": selectedIndustryId,
+                        "idTaskType": selectedTypeId
+                      }).then((_) {
+                        if (userList.map((e) => e.id).contains(userId!.id)) {
+                          AppNotifications().showNotification(
+                              title: "Новая задача",
+                              body:
+                              "Пользователь ${userId?.username} добавил «${titleController.text}: ${commentsController.text}»");
+                          // print("yes");
+                        } else {
+                          AppNotifications().showNotification(
+                              title: "Новая задача",
+                              body:
+                              "Пользователь ${userId?.username} добавил «${titleController.text}: ${commentsController.text}»");
+                          // print("no");
+                        }
+                      });
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    } else {
+                      AppSnackBar.showSnackBarWithMessage(
+                          context, "Заполните поля Название и Описание задачи");
+                    }
+                  },
+                  icon: const Icon(Icons.done),
+                );
               }
-              if (fileNameController.text.isNotEmpty) {
-                storage.uploadPdfFile(fileNameController.text, pdfFile!, settableMetadata!);
+              if (state.asyncSnapshot?.connectionState ==
+                  ConnectionState.waiting) {
+                return const AppLoader();
               }
-              context.read<TaskCubit>().createTask({
-                "title": titleController.text,
-                "content": commentsController.text,
-                "startOfWork": selectedDate.toString(),
-                "endOfWork": endWorkDateTime.toString(),
-                "imageUrl": imageNameController.text,
-                "fileUrl": fileNameController.text,
-                "contractorCompany": null,
-                "responsibleMaster": masterController.text,
-                "representative": null,
-                "equipmentLevel": null,
-                "staffLevel": null,
-                "resultsOfTheWork": null,
-                "expenses": expansesController.text,
-                "idCategory": 2,
-                "idStatus": selectedItemId,
-                "idIndustry": selectedIndustryId,
-                "idTaskType": selectedTypeId
-              });
-              Navigator.pop(context);
-              Navigator.pop(context);
+              return const SizedBox.shrink();
             },
-            icon: const Icon(Icons.done),
           ),
         ],
       ),
@@ -548,12 +595,12 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                                   children: [
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(fileNameController.text),
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.end,
+                                              MainAxisAlignment.end,
                                           children: [
                                             ElevatedButton(
                                               onPressed: () {
@@ -569,7 +616,7 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                                               },
                                               style: ElevatedButton.styleFrom(
                                                   backgroundColor:
-                                                  Colors.transparent,
+                                                      Colors.transparent,
                                                   foregroundColor: Colors.grey,
                                                   elevation: 0),
                                               child: const Icon(
@@ -585,7 +632,7 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                                               },
                                               style: ElevatedButton.styleFrom(
                                                   backgroundColor:
-                                                  Colors.transparent,
+                                                      Colors.transparent,
                                                   foregroundColor: Colors.red,
                                                   elevation: 0),
                                               child: const Icon(

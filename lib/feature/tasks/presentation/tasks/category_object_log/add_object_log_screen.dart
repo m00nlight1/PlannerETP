@@ -5,10 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:planner_etp/app/di/init_di.dart';
+import 'package:planner_etp/app/domain/app_notifications.dart';
+import 'package:planner_etp/app/presentation/app_loader.dart';
+import 'package:planner_etp/app/presentation/components/app_snack_bar.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
+import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
+import 'package:planner_etp/feature/auth/domain/entities/user_entity/user_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/file_pdf_service.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
-import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
+import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart' as tc;
 
 class AddObjectLogScreen extends StatefulWidget {
   const AddObjectLogScreen({super.key});
@@ -46,6 +52,12 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
   File? pdfFile;
   String? pathPdf;
   SettableMetadata? settableMetadata;
+
+  List<UserEntity> userList = [];
+  final userId = locator
+      .get<AuthCubit>()
+      .state
+      .whenOrNull(authorized: (userEntity) => userEntity);
 
   void _getImgFromGallery() async {
     XFile? pickedFile = await _picker.pickImage(
@@ -157,38 +169,73 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
       appBar: AppBar(
         title: const Text("Создать журнал"),
         actions: [
-          IconButton(
-            onPressed: () {
-              if (imageFile != null && imageNameController.text.isNotEmpty) {
-                storage.uploadImage(imageFile!.path, imageNameController.text);
+          BlocConsumer<tc.TaskCubit, tc.TaskState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              if (state.usersList.isNotEmpty) {
+                userList = state.usersList.toList();
+                return IconButton(
+                  onPressed: () {
+                    if (imageFile != null &&
+                        imageNameController.text.isNotEmpty) {
+                      storage.uploadImage(
+                          imageFile!.path, imageNameController.text);
+                    }
+                    if (fileNameController.text.isNotEmpty) {
+                      storage.uploadPdfFile(
+                          fileNameController.text, pdfFile!, settableMetadata!);
+                    }
+                    if (titleController.text.isNotEmpty &&
+                        commentsController.text.isNotEmpty) {
+                      context.read<tc.TaskCubit>().createTask({
+                        "title": titleController.text,
+                        "content": commentsController.text,
+                        "startOfWork": startWorkDateTime.toString(),
+                        "endOfWork": endWorkDateTime.toString(),
+                        "imageUrl": imageNameController.text,
+                        "fileUrl": fileNameController.text,
+                        "contractorCompany": companyController.text,
+                        "responsibleMaster": masterController.text,
+                        "representative": representativeController.text,
+                        "equipmentLevel": equipmentLevelController.text,
+                        "staffLevel": staffLevelController.text,
+                        "resultsOfTheWork": resultsOfTheWorkController.text,
+                        "expenses": null,
+                        "idCategory": 1,
+                        "idStatus": null,
+                        "idIndustry": null,
+                        "idTaskType": null
+                      }).then((_) {
+                        if (userList.map((e) => e.id).contains(userId!.id)) {
+                          AppNotifications().showNotification(
+                              title: "Новая задача",
+                              body:
+                                  "Пользователь ${userId?.username} добавил «${titleController.text}: ${commentsController.text}»");
+                          // print("yes");
+                        } else {
+                          AppNotifications().showNotification(
+                              title: "Новая задача",
+                              body:
+                              "Пользователь ${userId?.username} добавил «${titleController.text}: ${commentsController.text}»");
+                          // print("no");
+                        }
+                      });
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    } else {
+                      AppSnackBar.showSnackBarWithMessage(
+                          context, "Заполните поля Название и Описание задачи");
+                    }
+                  },
+                  icon: const Icon(Icons.done),
+                );
               }
-              if (fileNameController.text.isNotEmpty) {
-                storage.uploadPdfFile(
-                    fileNameController.text, pdfFile!, settableMetadata!);
+              if (state.asyncSnapshot?.connectionState ==
+                  ConnectionState.waiting) {
+                return const AppLoader();
               }
-              context.read<TaskCubit>().createTask({
-                "title": titleController.text,
-                "content": commentsController.text,
-                "startOfWork": startWorkDateTime.toString(),
-                "endOfWork": endWorkDateTime.toString(),
-                "imageUrl": imageNameController.text,
-                "fileUrl": fileNameController.text,
-                "contractorCompany": companyController.text,
-                "responsibleMaster": masterController.text,
-                "representative": representativeController.text,
-                "equipmentLevel": equipmentLevelController.text,
-                "staffLevel": staffLevelController.text,
-                "resultsOfTheWork": resultsOfTheWorkController.text,
-                "expenses": null,
-                "idCategory": 1,
-                "idStatus": null,
-                "idIndustry": null,
-                "idTaskType": null
-              });
-              Navigator.pop(context);
-              Navigator.pop(context);
+              return const SizedBox.shrink();
             },
-            icon: const Icon(Icons.done),
           ),
         ],
       ),
