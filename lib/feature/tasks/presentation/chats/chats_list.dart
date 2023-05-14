@@ -32,7 +32,7 @@ class _ChatsListState extends State<ChatsList> {
                 list.firstWhereOrNull((value) => value.task?.id == item.id);
             return listObj;
           }).toList();
-          filterChatList.remove(null);
+          filterChatList.removeWhere((item) => item == null);
           filterChatList.sort((a, b) => b!.id.compareTo(a!.id));
 
           return Column(
