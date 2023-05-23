@@ -235,17 +235,14 @@ class _TaskListState extends State<TaskList> {
                         title: Text(
                             "Открыто (${openTasksResult.length.toString()})"),
                         children: [
-                          SingleChildScrollView(
-                            child: Expanded(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: openTasksResult.length,
-                                itemBuilder: (context, index) {
-                                  return TaskItem(
-                                      taskEntity: openTasksResult[index]);
-                                },
-                              ),
-                            ),
+                          ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: openTasksResult.length,
+                            itemBuilder: (context, index) {
+                              return TaskItem(
+                                  taskEntity: openTasksResult[index]);
+                            },
                           ),
                         ],
                       ),
@@ -254,17 +251,14 @@ class _TaskListState extends State<TaskList> {
                         title: Text(
                             "В работе (${inWorkTasksResult.length.toString()})"),
                         children: [
-                          SingleChildScrollView(
-                            child: Expanded(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: inWorkTasksResult.length,
-                                itemBuilder: (context, index) {
-                                  return TaskItem(
-                                      taskEntity: inWorkTasksResult[index]);
-                                },
-                              ),
-                            ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: inWorkTasksResult.length,
+                            itemBuilder: (context, index) {
+                              return TaskItem(
+                                  taskEntity: inWorkTasksResult[index]);
+                            },
                           ),
                         ],
                       ),
@@ -273,17 +267,14 @@ class _TaskListState extends State<TaskList> {
                         title: Text(
                             "Решено (${solvedTasksResult.length.toString()})"),
                         children: [
-                          SingleChildScrollView(
-                            child: Expanded(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: solvedTasksResult.length,
-                                itemBuilder: (context, index) {
-                                  return TaskItem(
-                                      taskEntity: solvedTasksResult[index]);
-                                },
-                              ),
-                            ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: solvedTasksResult.length,
+                            itemBuilder: (context, index) {
+                              return TaskItem(
+                                  taskEntity: solvedTasksResult[index]);
+                            },
                           ),
                         ],
                       ),
@@ -292,17 +283,14 @@ class _TaskListState extends State<TaskList> {
                         title: Text(
                             "Закрыто (${closedTasksResult.length.toString()})"),
                         children: [
-                          SingleChildScrollView(
-                            child: Expanded(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: closedTasksResult.length,
-                                itemBuilder: (context, index) {
-                                  return TaskItem(
-                                      taskEntity: closedTasksResult[index]);
-                                },
-                              ),
-                            ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: closedTasksResult.length,
+                            itemBuilder: (context, index) {
+                              return TaskItem(
+                                  taskEntity: closedTasksResult[index]);
+                            },
                           ),
                         ],
                       ),
@@ -311,18 +299,15 @@ class _TaskListState extends State<TaskList> {
                         title: Text(
                             "Без статуса (${withoutStatusTasksResult.length.toString()})"),
                         children: [
-                          SingleChildScrollView(
-                            child: Expanded(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: withoutStatusTasksResult.length,
-                                itemBuilder: (context, index) {
-                                  return TaskItem(
-                                      taskEntity:
-                                      withoutStatusTasksResult[index]);
-                                },
-                              ),
-                            ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: withoutStatusTasksResult.length,
+                            itemBuilder: (context, index) {
+                              return TaskItem(
+                                  taskEntity:
+                                  withoutStatusTasksResult[index]);
+                            },
                           ),
                         ],
                       ),
