@@ -8,21 +8,24 @@ class AllTasksScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Задачи"),
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AddTaskScreen(),
-                )),
-            icon: const Icon(Icons.add),
-          ),
-        ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Задачи"),
+          actions: [
+            IconButton(
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddTaskScreen(),
+                  )),
+              icon: const Icon(Icons.add),
+            ),
+          ],
+        ),
+        body: const TaskList(),
       ),
-      body: const TaskList(),
     );
   }
 

@@ -6,6 +6,7 @@ class AppTextField extends StatelessWidget {
   final Icon prefixIcon;
   final TextEditingController controller;
   final String? Function(String?) validator;
+  final int maxLines;
 
   const AppTextField(
       {super.key,
@@ -13,7 +14,8 @@ class AppTextField extends StatelessWidget {
       required this.obscureText,
       required this.prefixIcon,
       required this.controller,
-      required this.validator});
+      required this.validator,
+      required this.maxLines});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,7 @@ class AppTextField extends StatelessWidget {
             hintStyle: TextStyle(color: Colors.grey[500])),
         controller: controller,
         validator: validator,
+        maxLines: maxLines,
       ),
     );
   }

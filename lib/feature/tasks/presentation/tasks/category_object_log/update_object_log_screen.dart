@@ -267,6 +267,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 AppTextField(
                     hintText: 'Название',
                     obscureText: false,
+                    maxLines: 10,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: titleController!,
@@ -400,6 +401,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 AppTextField(
                     hintText: 'Компания исполнитель',
                     obscureText: false,
+                    maxLines: 10,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: companyController!,
@@ -419,6 +421,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 AppTextField(
                     hintText: 'Ответственный мастер',
                     obscureText: false,
+                    maxLines: 10,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: masterController!,
@@ -437,6 +440,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 AppTextField(
                     hintText: 'Представитель',
                     obscureText: false,
+                    maxLines: 10,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: representativeController!,
@@ -585,6 +589,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 AppTextField(
                     hintText: 'Уровень оснащения',
                     obscureText: false,
+                    maxLines: 10,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: equipmentLevelController!,
@@ -604,6 +609,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 AppTextField(
                     hintText: 'Уровень персонала',
                     obscureText: false,
+                    maxLines: 10,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: staffLevelController!,

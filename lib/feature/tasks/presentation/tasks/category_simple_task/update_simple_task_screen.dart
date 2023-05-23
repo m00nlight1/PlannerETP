@@ -237,6 +237,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 AppTextField(
                     hintText: 'Название',
                     obscureText: false,
+                    maxLines: 10,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: titleController!,
@@ -333,6 +334,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 ),
                 const SizedBox(height: 8),
                 AppTextField(
+                    maxLines: 10,
                     hintText: 'Ответственное лицо',
                     obscureText: false,
                     prefixIcon: const Icon(Icons.rate_review_outlined,

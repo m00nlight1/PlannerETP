@@ -156,6 +156,7 @@ class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
                 AppTextField(
                   hintText: 'Логин',
                   obscureText: false,
+                  maxLines: 1,
                   prefixIcon:
                       const Icon(Icons.account_circle, color: Colors.grey),
                   controller: usernameController,
@@ -168,6 +169,7 @@ class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
                 AppTextField(
                   hintText: 'Email',
                   obscureText: false,
+                  maxLines: 1,
                   prefixIcon: const Icon(Icons.email, color: Colors.grey),
                   controller: emailController,
                   validator: (email) =>
@@ -242,6 +244,7 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
                 AppTextField(
                   hintText: 'Текущий пароль',
                   obscureText: true,
+                  maxLines: 1,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   controller: oldPasswordController,
                   validator: (value) => value != null && value.length < 6
@@ -252,6 +255,7 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
                 AppTextField(
                   hintText: 'Новый пароль',
                   obscureText: false,
+                  maxLines: 1,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   controller: newPasswordController,
                   validator: (value) => value != null && value.length < 6
@@ -262,6 +266,7 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
                 AppTextField(
                   hintText: 'Повторите пароль',
                   obscureText: true,
+                  maxLines: 1,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   controller: newPasswordRepeatController,
                   validator: (value) => value != null && value.length < 6

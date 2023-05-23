@@ -23,6 +23,7 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(),
       body: SafeArea(
         child: Form(
@@ -53,6 +54,7 @@ class SignUpScreen extends StatelessWidget {
                 AppTextField(
                     hintText: 'Логин',
                     obscureText: false,
+                    maxLines: 1,
                     prefixIcon:
                         const Icon(Icons.account_circle, color: Colors.grey),
                     controller: usernameController,
@@ -67,6 +69,7 @@ class SignUpScreen extends StatelessWidget {
                 AppTextField(
                   hintText: 'Email',
                   obscureText: false,
+                  maxLines: 1,
                   prefixIcon: const Icon(Icons.email, color: Colors.grey),
                   controller: emailController,
                   validator: (email) =>
@@ -81,6 +84,7 @@ class SignUpScreen extends StatelessWidget {
                 AppTextField(
                   hintText: 'Пароль',
                   obscureText: true,
+                  maxLines: 1,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   controller: passwordController,
                   validator: (value) => value != null && value.length < 6
@@ -94,6 +98,7 @@ class SignUpScreen extends StatelessWidget {
                 AppTextField(
                   hintText: 'Повторите пароль',
                   obscureText: true,
+                  maxLines: 1,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   controller: passwordRepeatController,
                   validator: (value) => value != null && value.length < 6

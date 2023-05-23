@@ -216,7 +216,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                           AppNotifications().showNotification(
                               title: "Новая задача",
                               body:
-                              "Пользователь ${userId?.username} добавил «${titleController.text}: ${commentsController.text}»");
+                                  "Пользователь ${userId?.username} добавил «${titleController.text}: ${commentsController.text}»");
                           // print("no");
                         }
                       });
@@ -249,6 +249,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                 AppTextField(
                     hintText: 'Название',
                     obscureText: false,
+                    maxLines: 10,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: titleController,
@@ -366,6 +367,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                 AppTextField(
                     hintText: 'Компания исполнитель',
                     obscureText: false,
+                    maxLines: 10,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: companyController,
@@ -377,6 +379,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                 AppTextField(
                     hintText: 'Ответственный мастер',
                     obscureText: false,
+                    maxLines: 10,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: masterController,
@@ -388,6 +391,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                 AppTextField(
                     hintText: 'Представитель',
                     obscureText: false,
+                    maxLines: 10,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: representativeController,
@@ -396,40 +400,39 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                         : null),
                 const SizedBox(height: 10),
                 //images
-                Card(
-                  color: Colors.grey.shade200,
-                  child: imageNameController.text.isEmpty
-                      ? SizedBox(
-                          width: 342,
-                          height: 100,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Фото',
-                                    style: theme.textTheme.headlineSmall),
-                                MaterialButton(
-                                  onPressed: () {
-                                    _getImgFromGallery();
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 55.0),
-                                    child: Text(
-                                      'Добавить медиафайл',
-                                      style: theme.textTheme.labelMedium,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Card(
+                    color: Colors.grey.shade200,
+                    child: imageNameController.text.isEmpty
+                        ? SizedBox(
+                            width: 342,
+                            height: 100,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Фото',
+                                      style: theme.textTheme.headlineSmall),
+                                  MaterialButton(
+                                    onPressed: () {
+                                      _getImgFromGallery();
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 55.0),
+                                      child: Text(
+                                        'Добавить медиафайл',
+                                        style: theme.textTheme.labelMedium,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        )
-                      : SizedBox(
-                          width: 342,
-                          height: 320,
-                          child: Padding(
+                          )
+                        : Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -437,9 +440,15 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                                 Text('Фото',
                                     style: theme.textTheme.headlineSmall),
                                 const SizedBox(height: 10),
-                                Image.file(
-                                  imageFile!,
-                                  fit: BoxFit.cover,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.file(
+                                      imageFile!,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(height: 10),
                                 Row(
@@ -474,13 +483,14 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                               ],
                             ),
                           ),
-                        ),
+                  ),
                 ),
                 const SizedBox(height: 10),
                 //equipment level
                 AppTextField(
                     hintText: 'Уровень оснащения',
                     obscureText: false,
+                    maxLines: 10,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: equipmentLevelController,
@@ -492,6 +502,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                 AppTextField(
                     hintText: 'Уровень персонала',
                     obscureText: false,
+                    maxLines: 10,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: staffLevelController,

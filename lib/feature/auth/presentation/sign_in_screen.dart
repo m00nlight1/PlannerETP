@@ -20,6 +20,7 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Center(
           child: Form(
@@ -52,6 +53,7 @@ class SignInScreen extends StatelessWidget {
                 AppTextField(
                   hintText: 'Email',
                   obscureText: false,
+                  maxLines: 1,
                   prefixIcon: const Icon(Icons.email, color: Colors.grey),
                   controller: emailController,
                   validator: (email) =>
@@ -66,6 +68,7 @@ class SignInScreen extends StatelessWidget {
                 AppTextField(
                   hintText: 'Пароль',
                   obscureText: true,
+                  maxLines: 1,
                   prefixIcon: const Icon(Icons.lock, color: Colors.grey),
                   controller: passwordController,
                   validator: (value) => value != null && value.length < 6
