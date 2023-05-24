@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:planner_etp/feature/auth/domain/entities/user_entity/user_entity.dart';
 import 'package:planner_etp/feature/profile/presentation/profile_screen.dart';
 import 'package:planner_etp/feature/tasks/presentation/chats/all_chats_screen.dart';
 import 'package:planner_etp/feature/tasks/presentation/documents/all_documents_screen.dart';
 import 'package:planner_etp/feature/tasks/presentation/tasks/all_tasks_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({Key? key, required this.userEntity}) : super(key: key);
-  final UserEntity userEntity;
+  const DashboardScreen({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _DashboardScreenState();
-
 }
 
-class _DashboardScreenState extends State<DashboardScreen>{
+class _DashboardScreenState extends State<DashboardScreen> {
   int _currentIndex = 0;
 
   final tabs = [

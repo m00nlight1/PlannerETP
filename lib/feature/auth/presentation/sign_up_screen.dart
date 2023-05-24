@@ -1,9 +1,12 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planner_etp/app/data/firebase_constants.dart';
 import 'package:planner_etp/app/presentation/components/app_button.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
+import 'package:planner_etp/feature/auth/presentation/email_verification_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
@@ -18,6 +21,30 @@ class SignUpScreen extends StatelessWidget {
       email: emailController.text,
       username: usernameController.text,
       password: passwordController.text);
+
+  static Future<User?> signUp({
+    required String password,
+    required String email,
+    required String username,
+    required BuildContext context,
+  }) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      return userCredential.user;
+    } on FirebaseAuthException catch (error) {
+      if (error.code == 'weak-password') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Пароль слишком слабый')));
+      } else if (error.code == 'email-already-in-use') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Учетная запись уже существует')));
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +137,7 @@ class SignUpScreen extends StatelessWidget {
 
                 // sign up button
                 AppButton(
-                  onTap: () {
+                  onTap: () async {
                     if (formKey.currentState?.validate() != true) return;
                     if (passwordRepeatController.text !=
                         passwordController.text) {
@@ -118,7 +145,19 @@ class SignUpScreen extends StatelessWidget {
                           content: Text("Пароли должны совпадать")));
                     } else {
                       _onTapToSignUpButton(context.read<AuthCubit>());
-                      Navigator.of(context).pop();
+                      await signUp(
+                          password: passwordController.text,
+                          email: emailController.text,
+                          username: usernameController.text,
+                          context: context);
+                      if (auth.currentUser != null) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (ctx) =>
+                                    const EmailVerificationScreen()));
+                      }
+                      // Navigator.of(context).pop();
                     }
                   },
                   text: 'Зарегистрироваться',

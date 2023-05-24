@@ -32,14 +32,17 @@ class _DocumentItemState extends State<DocumentItem> {
         child: Card(
           child: ListTile(
             title: Text(widget.documentEntity.name,
-                style: theme.textTheme.headlineSmall),
+                maxLines: 2, style: theme.textTheme.headlineSmall),
             subtitle: Row(
               children: [
-                Text(DateFormat.yMMMd("ru")
-                    .format(widget.documentEntity.createdAt), style: theme.textTheme.bodyMedium),
+                Text(
+                    DateFormat.yMMMd("ru")
+                        .format(widget.documentEntity.createdAt),
+                    style: theme.textTheme.bodyMedium),
                 const SizedBox(width: 5),
-                Text(DateFormat.Hm("ru")
-                    .format(widget.documentEntity.createdAt), style: theme.textTheme.bodyMedium),
+                Text(
+                    DateFormat.Hm("ru").format(widget.documentEntity.createdAt),
+                    style: theme.textTheme.bodyMedium),
               ],
             ),
             trailing: const Icon(

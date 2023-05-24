@@ -8,7 +8,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox("pdf");
-  Firebase.initializeApp();
+  await Firebase.initializeApp();
   const environment = String.fromEnvironment("env", defaultValue: "prod");
   const runner = MainAppRunner(environment);
   final builder = MainAppBuilder();

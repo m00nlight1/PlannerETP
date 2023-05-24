@@ -12,7 +12,6 @@ class RootScreen extends StatelessWidget {
     return AuthBuilder(
         isNotAuthorized: (context) => SignInScreen(),
         isWaiting: (context) => const AppLoader(),
-        isAuthorized: (context, value, child) =>
-            DashboardScreen(userEntity: value));
+        isAuthorized: (context, value, child) => const DashboardScreen());
   }
 }

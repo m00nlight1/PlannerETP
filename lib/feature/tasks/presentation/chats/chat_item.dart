@@ -70,6 +70,7 @@ class _ChatItemState extends State<ChatItem> {
                 Flexible(
                   child: Text(
                       "${widget.messageEntity.user!.username!}: ${widget.messageEntity.content!}",
+                      maxLines: 2,
                       style: theme.textTheme.bodyMedium),
                 ),
               ],
