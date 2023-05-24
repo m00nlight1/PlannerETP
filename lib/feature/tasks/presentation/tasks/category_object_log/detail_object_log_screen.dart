@@ -210,7 +210,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: SizedBox(
                   width: 370,
-                  height: 90,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -218,6 +217,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Название', style: theme.textTheme.headlineSmall),
                         Text(widget.taskEntity.title,
+                            maxLines: 10,
                             style: theme.textTheme.bodyMedium),
                       ],
                     ),
@@ -234,13 +234,13 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                     color: Colors.grey.shade200,
                     child: SizedBox(
                       width: 180,
-                      height: 100,
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Начало работ',
+                                maxLines: 10,
                                 style: theme.textTheme.headlineSmall),
                             const SizedBox(height: 10),
                             Row(
@@ -265,13 +265,13 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                     color: Colors.grey.shade200,
                     child: SizedBox(
                       width: 180,
-                      height: 100,
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Окончание работ',
+                                maxLines: 10,
                                 style: theme.textTheme.headlineSmall),
                             const SizedBox(height: 10),
                             Row(
@@ -299,7 +299,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: SizedBox(
                   width: 370,
-                  height: 90,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -307,9 +306,11 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Компания исполнитель',
                             style: theme.textTheme.headlineSmall),
+                        widget.taskEntity.contractorCompany!.isNotEmpty ?
                         Text(
                             widget.taskEntity.contractorCompany ?? "Не указано",
-                            style: theme.textTheme.bodyMedium),
+                            maxLines: 10,
+                            style: theme.textTheme.bodyMedium) : const Text("Не указано"),
                       ],
                     ),
                   ),
@@ -321,7 +322,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: SizedBox(
                   width: 370,
-                  height: 90,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -329,9 +329,11 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Ответственный мастер',
                             style: theme.textTheme.headlineSmall),
+                        widget.taskEntity.responsibleMaster!.isNotEmpty ?
                         Text(
                             widget.taskEntity.responsibleMaster ?? "Не указано",
-                            style: theme.textTheme.bodyMedium),
+                            maxLines: 10,
+                            style: theme.textTheme.bodyMedium) : const Text("Не указано"),
                       ],
                     ),
                   ),
@@ -343,7 +345,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: SizedBox(
                   width: 370,
-                  height: 90,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -351,8 +352,10 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Представитель',
                             style: theme.textTheme.headlineSmall),
+                        widget.taskEntity.representative!.isNotEmpty ?
                         Text(widget.taskEntity.representative ?? "Не указано",
-                            style: theme.textTheme.bodyMedium),
+                            maxLines: 10,
+                            style: theme.textTheme.bodyMedium) : const Text("Не указано"),
                       ],
                     ),
                   ),
@@ -417,7 +420,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: SizedBox(
                   width: 368,
-                  height: 90,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -425,8 +427,10 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Уровень оснащения',
                             style: theme.textTheme.headlineSmall),
+                        widget.taskEntity.equipmentLevel!.isNotEmpty ?
                         Text(widget.taskEntity.equipmentLevel ?? "Не указано",
-                            style: theme.textTheme.bodyMedium),
+                            maxLines: 10,
+                            style: theme.textTheme.bodyMedium) : const Text("Не указано"),
                       ],
                     ),
                   ),
@@ -438,7 +442,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: SizedBox(
                   width: 370,
-                  height: 90,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -446,8 +449,10 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Уровень персонала',
                             style: theme.textTheme.headlineSmall),
+                        widget.taskEntity.staffLevel!.isNotEmpty ?
                         Text(widget.taskEntity.staffLevel ?? "Не указано",
-                            style: theme.textTheme.bodyMedium),
+                            maxLines: 10,
+                            style: theme.textTheme.bodyMedium) : const Text("Не указано"),
                       ],
                     ),
                   ),
@@ -459,7 +464,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: SizedBox(
                   width: 370,
-                  height: 120,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -467,12 +471,11 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Результаты работы',
                             style: theme.textTheme.headlineSmall),
-                        Flexible(
-                          child: Text(
+                        Text(
                               widget.taskEntity.resultsOfTheWork ??
                                   "Не указано",
+                              maxLines: 10,
                               style: theme.textTheme.bodyMedium),
-                        ),
                       ],
                     ),
                   ),
@@ -484,7 +487,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: SizedBox(
                   width: 370,
-                  height: 120,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -492,10 +494,9 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Комментарии',
                             style: theme.textTheme.headlineSmall),
-                        Flexible(
-                          child: Text(widget.taskEntity.content ?? "Не указано",
+                        Text(widget.taskEntity.content ?? "Не указано",
+                              maxLines: 10,
                               style: theme.textTheme.bodyMedium),
-                        ),
                       ],
                     ),
                   ),
@@ -510,13 +511,13 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                         widget.taskEntity.fileUrl == ""
                     ? SizedBox(
                         width: 365,
-                        height: 100,
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Документы',
+                                  maxLines: 3,
                                   style: theme.textTheme.headlineSmall),
                             ],
                           ),

@@ -7,15 +7,18 @@ class AppTextField extends StatelessWidget {
   final TextEditingController controller;
   final String? Function(String?) validator;
   final int maxLines;
+  final int minLines;
 
-  const AppTextField(
-      {super.key,
-      required this.hintText,
-      required this.obscureText,
-      required this.prefixIcon,
-      required this.controller,
-      required this.validator,
-      required this.maxLines});
+  const AppTextField({
+    super.key,
+    required this.hintText,
+    required this.obscureText,
+    required this.prefixIcon,
+    required this.controller,
+    required this.validator,
+    required this.maxLines,
+    required this.minLines,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -227,12 +227,13 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                 AppTextField(
                     hintText: 'Название',
                     obscureText: false,
-                    maxLines: 10,
+                    maxLines: 1,
                     prefixIcon: const Icon(Icons.rate_review_outlined,
                         color: Color(0xFF0d74ba)),
                     controller: titleController,
                     validator: (title) =>
-                        title != null ? 'Введите название' : null),
+                        title != null ? 'Введите название' : null,
+                    minLines: 1),
                 const SizedBox(height: 10),
                 //comments
                 Card(
@@ -311,18 +312,20 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                 const SizedBox(height: 10),
                 //responsible master
                 AppTextField(
-                    hintText: 'Ответственное лицо',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.perm_identity,
-                        color: Color(0xFF0d74ba)),
-                    controller: masterController,
-                    validator: (master) =>
-                        master != null ? 'Укажите ответственное лицо' : null),
+                  hintText: 'Ответственное лицо',
+                  obscureText: false,
+                  minLines: 1,
+                  maxLines: 1,
+                  prefixIcon:
+                      const Icon(Icons.perm_identity, color: Color(0xFF0d74ba)),
+                  controller: masterController,
+                  validator: (master) =>
+                      master != null ? 'Укажите ответственное лицо' : null,
+                ),
                 const SizedBox(height: 10),
                 //images
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Card(
                     color: Colors.grey.shade200,
                     child: imageNameController.text.isEmpty

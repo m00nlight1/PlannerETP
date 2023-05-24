@@ -208,7 +208,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: SizedBox(
                   width: 370,
-                  height: 90,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -216,7 +215,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Название', style: theme.textTheme.headlineSmall),
                         Text(widget.taskEntity.title,
-                            style: theme.textTheme.bodyMedium),
+                            maxLines: 10, style: theme.textTheme.bodyMedium),
                       ],
                     ),
                   ),
@@ -228,7 +227,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: SizedBox(
                   width: 370,
-                  height: 90,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -236,7 +234,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Тип', style: theme.textTheme.headlineSmall),
                         Text(widget.taskEntity.taskType?.name ?? "Не указано",
-                            style: theme.textTheme.bodyMedium),
+                            maxLines: 10, style: theme.textTheme.bodyMedium),
                       ],
                     ),
                   ),
@@ -248,7 +246,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: SizedBox(
                   width: 370,
-                  height: 90,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -256,7 +253,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Отрасль', style: theme.textTheme.headlineSmall),
                         Text(widget.taskEntity.industry?.name ?? "Не указано",
-                            style: theme.textTheme.bodyMedium),
+                            maxLines: 10, style: theme.textTheme.bodyMedium),
                       ],
                     ),
                   ),
@@ -268,7 +265,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: SizedBox(
                   width: 370,
-                  height: 90,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -281,10 +277,12 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                             const Icon(Icons.perm_identity,
                                 color: Color(0xFF0d74ba)),
                             const SizedBox(width: 10),
-                            Text(
-                                widget.taskEntity.responsibleMaster ??
-                                    "Не указано",
-                                style: theme.textTheme.bodyMedium),
+                            widget.taskEntity.responsibleMaster!.isNotEmpty
+                                ? Text(
+                                    widget.taskEntity.responsibleMaster ??
+                                        "Не указано",
+                                    style: theme.textTheme.bodyMedium)
+                                : const Text("Не указано"),
                           ],
                         ),
                       ],
@@ -315,7 +313,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                             Flexible(
                               child: Text(
                                 "${DateFormat.yMMMd("ru").format(widget.taskEntity.endOfWork!)},"
-                                    "${DateFormat.Hm("ru").format(widget.taskEntity.endOfWork!)}",
+                                "${DateFormat.Hm("ru").format(widget.taskEntity.endOfWork!)}",
                               ),
                             ),
                           ],
@@ -331,17 +329,14 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: SizedBox(
                   width: 370,
-                  height: 120,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Описание', style: theme.textTheme.headlineSmall),
-                        Flexible(
-                          child: Text(widget.taskEntity.content ?? "Не указано",
-                              style: theme.textTheme.bodyMedium),
-                        ),
+                        Text(widget.taskEntity.content ?? "Не указано",
+                            maxLines: 10, style: theme.textTheme.bodyMedium),
                       ],
                     ),
                   ),
@@ -406,7 +401,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: SizedBox(
                   width: 370,
-                  height: 90,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -418,8 +412,12 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                             const Icon(Icons.monetization_on_outlined,
                                 color: Color(0xFF0d74ba)),
                             const SizedBox(width: 10),
-                            Text(widget.taskEntity.expenses ?? "Не указано",
-                                style: theme.textTheme.bodyMedium),
+                            widget.taskEntity.expenses!.isNotEmpty
+                                ? Text(
+                                    widget.taskEntity.expenses ?? "Не указано",
+                                    maxLines: 10,
+                                    style: theme.textTheme.bodyMedium)
+                                : const Text("0"),
                           ],
                         ),
                       ],
@@ -502,7 +500,6 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: SizedBox(
                   width: 370,
-                  height: 90,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -510,7 +507,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Статус', style: theme.textTheme.headlineSmall),
                         Text(widget.taskEntity.status?.name ?? "Не указано",
-                            style: theme.textTheme.bodyMedium),
+                            maxLines: 10, style: theme.textTheme.bodyMedium),
                       ],
                     ),
                   ),
@@ -520,7 +517,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
               //created at date and author
               Text(
                   "Дата создания: ${DateFormat.yMMMd("ru").format(widget.taskEntity.createdAt)},"
-                      "${DateFormat.Hm("ru").format(widget.taskEntity.createdAt)}",
+                  "${DateFormat.Hm("ru").format(widget.taskEntity.createdAt)}",
                   style: theme.textTheme.bodyMedium),
               const SizedBox(height: 10),
               Text(

@@ -86,9 +86,9 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
 
   void _getPdfFile() async {
     FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
-      // type: FileType.custom,
-      // allowedExtensions: ['pdf'],
-    );
+        // type: FileType.custom,
+        // allowedExtensions: ['pdf'],
+        );
     if (pickedFile != null) {
       setState(() {
         pathPdf = pickedFile.files.first.path;
@@ -114,7 +114,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
       selectedIndustryId = widget.taskEntity.industry?.id;
     }
     if (widget.taskEntity.fileUrl != null) {
-      fileNameController = TextEditingController(text: widget.taskEntity.fileUrl);
+      fileNameController =
+          TextEditingController(text: widget.taskEntity.fileUrl);
       fileDownload = storage.downloadPdfFile(widget.taskEntity.fileUrl ?? "");
       fileMetadataPath =
           storage.downloadPdfFilePath(widget.taskEntity.fileUrl ?? "");
@@ -199,7 +200,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 storage.uploadImage(imageFile!.path, fileName!);
               }
               if (fileNameController!.text.isNotEmpty) {
-                storage.uploadPdfFile(fileNameController!.text, pdfFile!, settableMetadata!);
+                storage.uploadPdfFile(
+                    fileNameController!.text, pdfFile!, settableMetadata!);
               }
               context.read<DetailTaskCubit>().updateTask({
                 "title": titleController?.text,
@@ -245,14 +247,16 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 ),
                 const SizedBox(height: 8),
                 AppTextField(
-                    hintText: 'Название',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.rate_review_outlined,
-                        color: Color(0xFF0d74ba)),
-                    controller: titleController!,
-                    validator: (title) =>
-                        title != null ? 'Введите название' : null),
+                  hintText: 'Название',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.rate_review_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: titleController!,
+                  validator: (title) =>
+                      title != null ? 'Введите название' : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //type
                 Card(
@@ -344,14 +348,16 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 ),
                 const SizedBox(height: 8),
                 AppTextField(
-                    hintText: 'Ответственное лицо',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.rate_review_outlined,
-                        color: Color(0xFF0d74ba)),
-                    controller: masterController!,
-                    validator: (master) =>
-                        master != null ? 'Укажите ответственное лицо' : null),
+                  hintText: 'Ответственное лицо',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.rate_review_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: masterController!,
+                  validator: (master) =>
+                      master != null ? 'Укажите ответственное лицо' : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //run to
                 Card(
@@ -373,7 +379,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                   ? const Icon(Icons.date_range_outlined,
                                       color: Color(0xFF0d74ba))
                                   : Flexible(
-                                      child: Text("${DateFormat.yMMMd("ru").format(widget.taskEntity.endOfWork!)},"
+                                      child: Text(
+                                          "${DateFormat.yMMMd("ru").format(widget.taskEntity.endOfWork!)},"
                                           "${DateFormat.Hm("ru").format(widget.taskEntity.endOfWork!)}"),
                                     ),
                               const SizedBox(width: 5),
@@ -425,6 +432,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                           Expanded(
                             child: TextFormField(
                               controller: commentsController,
+                              maxLines: 5,
+                              minLines: 1,
                             ),
                           ),
                         ],
@@ -438,7 +447,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                   margin: const EdgeInsets.only(left: 25, right: 25),
                   color: Colors.grey.shade200,
                   child: widget.taskEntity.imageUrl == null ||
-                      widget.taskEntity.imageUrl == "" && imageFile == null
+                          widget.taskEntity.imageUrl == "" && imageFile == null
                       ? SizedBox(
                           width: 342,
                           height: 100,
@@ -562,6 +571,26 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                         ),
                 ),
                 const SizedBox(height: 10),
+                //expanses
+                Row(
+                  children: [
+                    const SizedBox(width: 25),
+                    Text("Расходы", style: theme.textTheme.headlineSmall)
+                  ],
+                ),
+                const SizedBox(height: 8),
+                AppTextField(
+                  hintText: 'Расходы',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.monetization_on_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: expensesController!,
+                  validator: (master) =>
+                      master != null ? 'Укажите ответственное лицо' : null,
+                  minLines: 1,
+                ),
+                const SizedBox(height: 10),
                 //status
                 Card(
                   color: Colors.grey.shade200,
@@ -609,138 +638,73 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                   color: Colors.grey.shade200,
                   child: fileNameController!.text.isEmpty
                       ? SizedBox(
-                    width: 342,
-                    height: 100,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Документы',
-                              style: theme.textTheme.headlineSmall),
-                          MaterialButton(
-                            onPressed: () {
-                              _getPdfFile();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 55.0),
-                              child: Text(
-                                'Добавить документ',
-                                style: theme.textTheme.labelMedium,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                      : GFCard(
-                    boxFit: BoxFit.cover,
-                    color: Colors.grey.shade200,
-                    margin: EdgeInsets.zero,
-                    content: FutureBuilder(
-                      future: fileMetadataPath,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<String> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.done &&
-                            snapshot.hasData) {
-                          final String path = snapshot.data!;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Документ',
-                                  style: theme.textTheme.headlineSmall),
-                              Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(fileNameController!.text),
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.end,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          if (fileDownload != null) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      PDFScreen(path: path)),
-                                            );
-                                          }
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                            Colors.transparent,
-                                            foregroundColor: Colors.grey,
-                                            elevation: 0),
-                                        child: const Icon(
-                                          Icons.remove_red_eye,
-                                          size: 25.0,
-                                        ),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            fileNameController?.clear();
-                                            fileDownload == null;
-                                          });
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor:
-                                            Colors.transparent,
-                                            foregroundColor: Colors.red,
-                                            elevation: 0),
-                                        child: const Icon(
-                                          Icons.clear,
-                                          size: 25.0,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          );
-                        } else {
-                          return SizedBox(
-                            width: 342,
-                            height: 100,
+                          width: 342,
+                          height: 100,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Документ',
+                                Text('Документы',
                                     style: theme.textTheme.headlineSmall),
-                                const SizedBox(height: 10),
-                                Column(
+                                MaterialButton(
+                                  onPressed: () {
+                                    _getPdfFile();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 55.0),
+                                    child: Text(
+                                      'Добавить документ',
+                                      style: theme.textTheme.labelMedium,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : GFCard(
+                          boxFit: BoxFit.cover,
+                          color: Colors.grey.shade200,
+                          margin: EdgeInsets.zero,
+                          content: FutureBuilder(
+                            future: fileMetadataPath,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<String> snapshot) {
+                              if (snapshot.connectionState ==
+                                      ConnectionState.done &&
+                                  snapshot.hasData) {
+                                final String path = snapshot.data!;
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    Text('Документ',
+                                        style: theme.textTheme.headlineSmall),
                                     Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(fileNameController!.text),
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.end,
+                                              MainAxisAlignment.end,
                                           children: [
                                             ElevatedButton(
                                               onPressed: () {
-                                                if (pathPdf!.isNotEmpty) {
+                                                if (fileDownload != null) {
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
                                                             PDFScreen(
-                                                                path: pathPdf)),
+                                                                path: path)),
                                                   );
                                                 }
                                               },
                                               style: ElevatedButton.styleFrom(
                                                   backgroundColor:
-                                                  Colors.transparent,
+                                                      Colors.transparent,
                                                   foregroundColor: Colors.grey,
                                                   elevation: 0),
                                               child: const Icon(
@@ -757,7 +721,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                               },
                                               style: ElevatedButton.styleFrom(
                                                   backgroundColor:
-                                                  Colors.transparent,
+                                                      Colors.transparent,
                                                   foregroundColor: Colors.red,
                                                   elevation: 0),
                                               child: const Icon(
@@ -770,14 +734,89 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                       ],
                                     ),
                                   ],
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
+                                );
+                              } else {
+                                return SizedBox(
+                                  width: 342,
+                                  height: 100,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Документ',
+                                          style: theme.textTheme.headlineSmall),
+                                      const SizedBox(height: 10),
+                                      Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(fileNameController!.text),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      if (pathPdf!.isNotEmpty) {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  PDFScreen(
+                                                                      path:
+                                                                          pathPdf)),
+                                                        );
+                                                      }
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            foregroundColor:
+                                                                Colors.grey,
+                                                            elevation: 0),
+                                                    child: const Icon(
+                                                      Icons.remove_red_eye,
+                                                      size: 25.0,
+                                                    ),
+                                                  ),
+                                                  ElevatedButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        fileNameController
+                                                            ?.clear();
+                                                        fileDownload == null;
+                                                      });
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            foregroundColor:
+                                                                Colors.red,
+                                                            elevation: 0),
+                                                    child: const Icon(
+                                                      Icons.clear,
+                                                      size: 25.0,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
                 ),
                 const SizedBox(height: 10),
               ],

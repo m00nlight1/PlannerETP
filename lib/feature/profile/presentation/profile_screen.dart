@@ -164,6 +164,7 @@ class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
                       username != null && username.length < 3
                           ? 'Введите правильный логин'
                           : null,
+                  minLines: 1,
                 ),
                 const SizedBox(height: 10),
                 AppTextField(
@@ -176,6 +177,7 @@ class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
                       email != null && !EmailValidator.validate(email)
                           ? 'Введите правильный Email'
                           : null,
+                  minLines: 1,
                 ),
                 const SizedBox(height: 15),
                 GestureDetector(
@@ -250,6 +252,7 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
                   validator: (value) => value != null && value.length < 6
                       ? 'Минимум 6 символов'
                       : null,
+                  minLines: 1,
                 ),
                 const SizedBox(height: 10),
                 AppTextField(
@@ -261,6 +264,7 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
                   validator: (value) => value != null && value.length < 6
                       ? 'Минимум 6 символов'
                       : null,
+                  minLines: 1,
                 ),
                 const SizedBox(height: 10),
                 AppTextField(
@@ -272,6 +276,7 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
                   validator: (value) => value != null && value.length < 6
                       ? 'Минимум 6 символов'
                       : null,
+                  minLines: 1,
                 ),
                 const SizedBox(height: 15),
                 GestureDetector(

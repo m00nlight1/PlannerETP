@@ -247,14 +247,16 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
               children: [
                 //title
                 AppTextField(
-                    hintText: 'Название',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.rate_review_outlined,
-                        color: Color(0xFF0d74ba)),
-                    controller: titleController,
-                    validator: (title) =>
-                        title != null ? 'Введите название' : null),
+                  hintText: 'Название',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.rate_review_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: titleController,
+                  validator: (title) =>
+                      title != null ? 'Введите название' : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //start and end datetime
                 Row(
@@ -365,43 +367,46 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                 const SizedBox(height: 10),
                 //contractor company
                 AppTextField(
-                    hintText: 'Компания исполнитель',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.rate_review_outlined,
-                        color: Color(0xFF0d74ba)),
-                    controller: companyController,
-                    validator: (company) => company != null
-                        ? 'Укажите компанию исполнителя'
-                        : null),
+                  hintText: 'Компания исполнитель',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.rate_review_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: companyController,
+                  validator: (company) =>
+                      company != null ? 'Укажите компанию исполнителя' : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //responsible master
                 AppTextField(
-                    hintText: 'Ответственный мастер',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.rate_review_outlined,
-                        color: Color(0xFF0d74ba)),
-                    controller: masterController,
-                    validator: (master) => master != null
-                        ? 'Укажите ответственного мастера'
-                        : null),
+                  hintText: 'Ответственный мастер',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.rate_review_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: masterController,
+                  validator: (master) =>
+                      master != null ? 'Укажите ответственного мастера' : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //representative
                 AppTextField(
-                    hintText: 'Представитель',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.rate_review_outlined,
-                        color: Color(0xFF0d74ba)),
-                    controller: representativeController,
-                    validator: (representative) => representative != null
-                        ? 'Укажите представителя'
-                        : null),
+                  hintText: 'Представитель',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.rate_review_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: representativeController,
+                  validator: (representative) =>
+                      representative != null ? 'Укажите представителя' : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //images
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Card(
                     color: Colors.grey.shade200,
                     child: imageNameController.text.isEmpty
@@ -488,27 +493,30 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                 const SizedBox(height: 10),
                 //equipment level
                 AppTextField(
-                    hintText: 'Уровень оснащения',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.rate_review_outlined,
-                        color: Color(0xFF0d74ba)),
-                    controller: equipmentLevelController,
-                    validator: (equipmentLevel) => equipmentLevel != null
-                        ? 'Укажите уровень оснащения'
-                        : null),
+                  hintText: 'Уровень оснащения',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.rate_review_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: equipmentLevelController,
+                  validator: (equipmentLevel) => equipmentLevel != null
+                      ? 'Укажите уровень оснащения'
+                      : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //staff level
                 AppTextField(
-                    hintText: 'Уровень персонала',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.rate_review_outlined,
-                        color: Color(0xFF0d74ba)),
-                    controller: staffLevelController,
-                    validator: (staffLevel) => staffLevel != null
-                        ? 'Укажите уровень персонала'
-                        : null),
+                  hintText: 'Уровень персонала',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.rate_review_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: staffLevelController,
+                  validator: (staffLevel) =>
+                      staffLevel != null ? 'Укажите уровень персонала' : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //resultsOfTheWork
                 Card(

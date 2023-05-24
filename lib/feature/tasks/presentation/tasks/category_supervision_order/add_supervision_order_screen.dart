@@ -191,13 +191,13 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                           AppNotifications().showNotification(
                               title: "Новая задача",
                               body:
-                              "Пользователь ${userId?.username} добавил «${titleController.text}: ${commentsController.text}»");
+                                  "Пользователь ${userId?.username} добавил «${titleController.text}: ${commentsController.text}»");
                           // print("yes");
                         } else {
                           AppNotifications().showNotification(
                               title: "Новая задача",
                               body:
-                              "Пользователь ${userId?.username} добавил «${titleController.text}: ${commentsController.text}»");
+                                  "Пользователь ${userId?.username} добавил «${titleController.text}: ${commentsController.text}»");
                           // print("no");
                         }
                       });
@@ -228,14 +228,16 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
               children: [
                 //title
                 AppTextField(
-                    hintText: 'Название',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.rate_review_outlined,
-                        color: Color(0xFF0d74ba)),
-                    controller: titleController,
-                    validator: (title) =>
-                        title != null ? 'Введите название' : null),
+                  hintText: 'Название',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.rate_review_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: titleController,
+                  validator: (title) =>
+                      title != null ? 'Введите название' : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //type
                 Card(
@@ -321,14 +323,16 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                 const SizedBox(height: 10),
                 //responsible master
                 AppTextField(
-                    hintText: 'Ответственное лицо',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.perm_identity,
-                        color: Color(0xFF0d74ba)),
-                    controller: masterController,
-                    validator: (master) =>
-                        master != null ? 'Укажите ответственное лицо' : null),
+                  hintText: 'Ответственное лицо',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon:
+                      const Icon(Icons.perm_identity, color: Color(0xFF0d74ba)),
+                  controller: masterController,
+                  validator: (master) =>
+                      master != null ? 'Укажите ответственное лицо' : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //run to
                 Card(
@@ -407,88 +411,88 @@ class _AddSupervisionOrderScreenState extends State<AddSupervisionOrderScreen> {
                 ),
                 //images
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Card(
                     color: Colors.grey.shade200,
                     child: imageNameController.text.isEmpty
                         ? SizedBox(
-                      width: 342,
-                      height: 100,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Фото',
-                                style: theme.textTheme.headlineSmall),
-                            MaterialButton(
-                              onPressed: () {
-                                _getImgFromGallery();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 55.0),
-                                child: Text(
-                                  'Добавить медиафайл',
-                                  style: theme.textTheme.labelMedium,
-                                ),
+                            width: 342,
+                            height: 100,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Фото',
+                                      style: theme.textTheme.headlineSmall),
+                                  MaterialButton(
+                                    onPressed: () {
+                                      _getImgFromGallery();
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 55.0),
+                                      child: Text(
+                                        'Добавить медиафайл',
+                                        style: theme.textTheme.labelMedium,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    )
+                          )
                         : Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Фото',
-                              style: theme.textTheme.headlineSmall),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.file(
-                                imageFile!,
-                                fit: BoxFit.cover,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              MaterialButton(
-                                onPressed: () {
-                                  _getImgFromGallery();
-                                },
-                                child: Text(
-                                  'Выбрать другой медиафайл',
-                                  style: theme.textTheme.labelMedium,
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Фото',
+                                    style: theme.textTheme.headlineSmall),
+                                const SizedBox(height: 10),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Image.file(
+                                      imageFile!,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    imageNameController.clear();
-                                    imageFile == null;
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.transparent,
-                                    foregroundColor: Colors.red,
-                                    elevation: 0),
-                                child: const Icon(
-                                  Icons.clear,
-                                  size: 25.0,
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    MaterialButton(
+                                      onPressed: () {
+                                        _getImgFromGallery();
+                                      },
+                                      child: Text(
+                                        'Выбрать другой медиафайл',
+                                        style: theme.textTheme.labelMedium,
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          imageNameController.clear();
+                                          imageFile == null;
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.transparent,
+                                          foregroundColor: Colors.red,
+                                          elevation: 0),
+                                      child: const Icon(
+                                        Icons.clear,
+                                        size: 25.0,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
                   ),
                 ),
                 const SizedBox(height: 10),

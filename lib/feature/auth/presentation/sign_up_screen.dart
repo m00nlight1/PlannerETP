@@ -88,7 +88,8 @@ class SignUpScreen extends StatelessWidget {
                     validator: (username) =>
                         username != null && username.length < 3
                             ? 'Введите правильный логин'
-                            : null),
+                            : null,
+                    minLines: 1),
 
                 const SizedBox(height: 10),
 
@@ -103,6 +104,7 @@ class SignUpScreen extends StatelessWidget {
                       email != null && !EmailValidator.validate(email)
                           ? 'Введите правильный Email'
                           : null,
+                  minLines: 1,
                 ),
 
                 const SizedBox(height: 10),
@@ -117,6 +119,7 @@ class SignUpScreen extends StatelessWidget {
                   validator: (value) => value != null && value.length < 6
                       ? 'Минимум 6 символов'
                       : null,
+                  minLines: 1,
                 ),
 
                 const SizedBox(height: 10),
@@ -131,6 +134,7 @@ class SignUpScreen extends StatelessWidget {
                   validator: (value) => value != null && value.length < 6
                       ? 'Минимум 6 символов'
                       : null,
+                  minLines: 1,
                 ),
 
                 const SizedBox(height: 45),

@@ -60,6 +60,7 @@ class SignInScreen extends StatelessWidget {
                       email != null && !EmailValidator.validate(email)
                           ? 'Введите правильный Email'
                           : null,
+                  minLines: 1,
                 ),
 
                 const SizedBox(height: 10),
@@ -74,6 +75,7 @@ class SignInScreen extends StatelessWidget {
                   validator: (value) => value != null && value.length < 6
                       ? 'Минимум 6 символов'
                       : null,
+                  minLines: 1,
                 ),
 
                 const SizedBox(height: 10),

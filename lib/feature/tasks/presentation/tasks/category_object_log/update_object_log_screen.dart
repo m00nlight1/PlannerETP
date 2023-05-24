@@ -89,9 +89,9 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
 
   void _getPdfFile() async {
     FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
-      // type: FileType.custom,
-      // allowedExtensions: ['pdf'],
-    );
+        // type: FileType.custom,
+        // allowedExtensions: ['pdf'],
+        );
     if (pickedFile != null) {
       setState(() {
         pathPdf = pickedFile.files.first.path;
@@ -108,7 +108,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
       imgDownload = storage.downloadImage(widget.taskEntity.imageUrl ?? "");
     }
     if (widget.taskEntity.fileUrl != null) {
-      fileNameController = TextEditingController(text: widget.taskEntity.fileUrl);
+      fileNameController =
+          TextEditingController(text: widget.taskEntity.fileUrl);
       fileDownload = storage.downloadPdfFile(widget.taskEntity.fileUrl ?? "");
       fileMetadataPath =
           storage.downloadPdfFilePath(widget.taskEntity.fileUrl ?? "");
@@ -219,7 +220,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 storage.uploadImage(imageFile!.path, fileName!);
               }
               if (fileNameController!.text.isNotEmpty) {
-                storage.uploadPdfFile(fileNameController!.text, pdfFile!, settableMetadata!);
+                storage.uploadPdfFile(
+                    fileNameController!.text, pdfFile!, settableMetadata!);
               }
               context.read<DetailTaskCubit>().updateTask({
                 "title": titleController?.text,
@@ -265,14 +267,16 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 ),
                 const SizedBox(height: 8),
                 AppTextField(
-                    hintText: 'Название',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.rate_review_outlined,
-                        color: Color(0xFF0d74ba)),
-                    controller: titleController!,
-                    validator: (title) =>
-                        title != null ? 'Введите название' : null),
+                  hintText: 'Название',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.rate_review_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: titleController!,
+                  validator: (title) =>
+                      title != null ? 'Введите название' : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //start and end datetime
                 Row(
@@ -300,7 +304,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                       : Flexible(
                                           child: Text(
                                               "${DateFormat.yMMMd("ru").format(widget.taskEntity.startOfWork!)},"
-                                                  "${DateFormat.Hm("ru").format(widget.taskEntity.startOfWork!)}",
+                                              "${DateFormat.Hm("ru").format(widget.taskEntity.startOfWork!)}",
                                               textAlign: TextAlign.center)),
                                   const SizedBox(width: 5),
                                   showStartWorkDateTime
@@ -354,7 +358,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                       : Flexible(
                                           child: Text(
                                               "${DateFormat.yMMMd("ru").format(widget.taskEntity.endOfWork!)},"
-                                                  "${DateFormat.Hm("ru").format(widget.taskEntity.endOfWork!)}",
+                                              "${DateFormat.Hm("ru").format(widget.taskEntity.endOfWork!)}",
                                               textAlign: TextAlign.center)),
                                   const SizedBox(width: 5),
                                   showEndWorkDateTime
@@ -399,15 +403,16 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 ),
                 const SizedBox(height: 8),
                 AppTextField(
-                    hintText: 'Компания исполнитель',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.rate_review_outlined,
-                        color: Color(0xFF0d74ba)),
-                    controller: companyController!,
-                    validator: (company) => company != null
-                        ? 'Укажите компанию исполнителя'
-                        : null),
+                  hintText: 'Компания исполнитель',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.rate_review_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: companyController!,
+                  validator: (company) =>
+                      company != null ? 'Укажите компанию исполнителя' : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //responsible master
                 Row(
@@ -419,15 +424,16 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 ),
                 const SizedBox(height: 8),
                 AppTextField(
-                    hintText: 'Ответственный мастер',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.rate_review_outlined,
-                        color: Color(0xFF0d74ba)),
-                    controller: masterController!,
-                    validator: (master) => master != null
-                        ? 'Укажите ответственного мастера'
-                        : null),
+                  hintText: 'Ответственный мастер',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.rate_review_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: masterController!,
+                  validator: (master) =>
+                      master != null ? 'Укажите ответственного мастера' : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //representative
                 Row(
@@ -438,15 +444,16 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 ),
                 const SizedBox(height: 8),
                 AppTextField(
-                    hintText: 'Представитель',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.rate_review_outlined,
-                        color: Color(0xFF0d74ba)),
-                    controller: representativeController!,
-                    validator: (representative) => representative != null
-                        ? 'Укажите представителя'
-                        : null),
+                  hintText: 'Представитель',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.rate_review_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: representativeController!,
+                  validator: (representative) =>
+                      representative != null ? 'Укажите представителя' : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //images
                 Card(
@@ -587,15 +594,17 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 ),
                 const SizedBox(height: 8),
                 AppTextField(
-                    hintText: 'Уровень оснащения',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.rate_review_outlined,
-                        color: Color(0xFF0d74ba)),
-                    controller: equipmentLevelController!,
-                    validator: (equipmentLevel) => equipmentLevel != null
-                        ? 'Укажите уровень оснащения'
-                        : null),
+                  hintText: 'Уровень оснащения',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.rate_review_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: equipmentLevelController!,
+                  validator: (equipmentLevel) => equipmentLevel != null
+                      ? 'Укажите уровень оснащения'
+                      : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //staff level
                 Row(
@@ -607,15 +616,16 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 ),
                 const SizedBox(height: 8),
                 AppTextField(
-                    hintText: 'Уровень персонала',
-                    obscureText: false,
-                    maxLines: 10,
-                    prefixIcon: const Icon(Icons.rate_review_outlined,
-                        color: Color(0xFF0d74ba)),
-                    controller: staffLevelController!,
-                    validator: (staffLevel) => staffLevel != null
-                        ? 'Укажите уровень персонала'
-                        : null),
+                  hintText: 'Уровень персонала',
+                  obscureText: false,
+                  maxLines: 1,
+                  prefixIcon: const Icon(Icons.rate_review_outlined,
+                      color: Color(0xFF0d74ba)),
+                  controller: staffLevelController!,
+                  validator: (staffLevel) =>
+                      staffLevel != null ? 'Укажите уровень персонала' : null,
+                  minLines: 1,
+                ),
                 const SizedBox(height: 10),
                 //resultsOfTheWork
                 Card(
@@ -632,6 +642,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                               style: theme.textTheme.headlineSmall),
                           Expanded(
                             child: TextFormField(
+                              maxLines: 5,
+                              minLines: 1,
                               controller: resultsOfTheWorkController,
                             ),
                           ),
@@ -656,6 +668,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                           Expanded(
                             child: TextFormField(
                               controller: commentsController,
+                              maxLines: 5,
+                              minLines: 1,
                             ),
                           ),
                         ],
@@ -670,32 +684,32 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                   color: Colors.grey.shade200,
                   child: fileNameController!.text.isEmpty
                       ? SizedBox(
-                    width: 342,
-                    height: 100,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Документы',
-                              style: theme.textTheme.headlineSmall),
-                          MaterialButton(
-                            onPressed: () {
-                              _getPdfFile();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 55.0),
-                              child: Text(
-                                'Добавить документ',
-                                style: theme.textTheme.labelMedium,
-                              ),
+                          width: 342,
+                          height: 100,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Документы',
+                                    style: theme.textTheme.headlineSmall),
+                                MaterialButton(
+                                  onPressed: () {
+                                    _getPdfFile();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 55.0),
+                                    child: Text(
+                                      'Добавить документ',
+                                      style: theme.textTheme.labelMedium,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  )
+                        )
                       : GFCard(
                           boxFit: BoxFit.cover,
                           color: Colors.grey.shade200,
@@ -720,7 +734,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                         Text(fileNameController!.text),
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.end,
+                                              MainAxisAlignment.end,
                                           children: [
                                             ElevatedButton(
                                               onPressed: () {
@@ -729,13 +743,14 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            PDFScreen(path: path)),
+                                                            PDFScreen(
+                                                                path: path)),
                                                   );
                                                 }
                                               },
                                               style: ElevatedButton.styleFrom(
                                                   backgroundColor:
-                                                  Colors.transparent,
+                                                      Colors.transparent,
                                                   foregroundColor: Colors.grey,
                                                   elevation: 0),
                                               child: const Icon(
@@ -752,7 +767,7 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                               },
                                               style: ElevatedButton.styleFrom(
                                                   backgroundColor:
-                                                  Colors.transparent,
+                                                      Colors.transparent,
                                                   foregroundColor: Colors.red,
                                                   elevation: 0),
                                               child: const Icon(
@@ -771,7 +786,8 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                   width: 342,
                                   height: 100,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text('Документ',
                                           style: theme.textTheme.headlineSmall),
@@ -780,12 +796,12 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                         children: [
                                           Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text(fileNameController!.text),
                                               Row(
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.end,
+                                                    MainAxisAlignment.end,
                                                 children: [
                                                   ElevatedButton(
                                                     onPressed: () {
@@ -795,15 +811,19 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                                           MaterialPageRoute(
                                                               builder: (context) =>
                                                                   PDFScreen(
-                                                                      path: pathPdf)),
+                                                                      path:
+                                                                          pathPdf)),
                                                         );
                                                       }
                                                     },
-                                                    style: ElevatedButton.styleFrom(
-                                                        backgroundColor:
-                                                        Colors.transparent,
-                                                        foregroundColor: Colors.grey,
-                                                        elevation: 0),
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            foregroundColor:
+                                                                Colors.grey,
+                                                            elevation: 0),
                                                     child: const Icon(
                                                       Icons.remove_red_eye,
                                                       size: 25.0,
@@ -812,15 +832,19 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                                                   ElevatedButton(
                                                     onPressed: () {
                                                       setState(() {
-                                                        fileNameController?.clear();
+                                                        fileNameController
+                                                            ?.clear();
                                                         fileDownload == null;
                                                       });
                                                     },
-                                                    style: ElevatedButton.styleFrom(
-                                                        backgroundColor:
-                                                        Colors.transparent,
-                                                        foregroundColor: Colors.red,
-                                                        elevation: 0),
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            foregroundColor:
+                                                                Colors.red,
+                                                            elevation: 0),
                                                     child: const Icon(
                                                       Icons.clear,
                                                       size: 25.0,
