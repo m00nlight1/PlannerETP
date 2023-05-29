@@ -1,11 +1,14 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planner_etp/app/data/firebase_constants.dart';
 import 'package:planner_etp/app/domain/error_entity/error_entity.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
 import 'package:planner_etp/app/presentation/components/app_snack_bar.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
+import 'package:planner_etp/feature/auth/presentation/email_verification_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -143,6 +146,29 @@ class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
     super.dispose();
   }
 
+  static Future<User?> updateProfile({
+    required String email,
+    required String username,
+    required BuildContext context,
+  }) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await user.updateEmail(email);
+        await user.updateDisplayName(username);
+      }
+      return user;
+    } on FirebaseAuthException catch (error) {
+      if (error.code == 'email-already-in-use') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Учетная запись уже существует')));
+      }
+      return null;
+    } catch (_) {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -181,12 +207,30 @@ class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
                 ),
                 const SizedBox(height: 15),
                 GestureDetector(
-                  onTap: () {
-                    if (formKey.currentState?.validate() != true) return;
-                    Navigator.pop(context);
-                    context.read<AuthCubit>().updateUser(
-                        email: emailController.text,
-                        username: usernameController.text);
+                  onTap: () async {
+                    if (!formKey.currentState!.validate()) return;
+                    final email = emailController.text;
+                    final username = usernameController.text;
+                    final authCubit = context.read<AuthCubit>();
+                    updateProfile(
+                            email: email, username: username, context: context)
+                        .then((_) async {
+                      if (auth.currentUser != null) {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (ctx) => const EmailVerificationScreen(
+                                isEmailUpdated: true),
+                          ),
+                        );
+
+                        await authCubit
+                            .updateUser(email: email, username: username)
+                            .then((_) {
+                          Navigator.pop(context);
+                        });
+                      }
+                    });
                   },
                   child: Container(
                     padding: const EdgeInsets.all(15),
@@ -231,6 +275,20 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
     oldPasswordController.dispose();
     newPasswordRepeatController.dispose();
     super.dispose();
+  }
+
+  Future<void> updatePassword(String newPassword) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        await user.updatePassword(newPassword);
+      } else {
+        throw Exception('Пользователь не авторизован');
+      }
+    } catch (_) {
+      rethrow;
+    }
   }
 
   @override
@@ -281,15 +339,16 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
                 const SizedBox(height: 15),
                 GestureDetector(
                   onTap: () {
-                    if (formKey.currentState?.validate() != true) return;
-                    if (newPasswordRepeatController.text !=
-                        newPasswordController.text) {
+                    if (!formKey.currentState!.validate()) return;
+                    final newPassword = newPasswordController.text;
+                    if (newPasswordRepeatController.text != newPassword) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Пароли должны совпадать")));
                     } else {
+                      updatePassword(newPassword);
                       Navigator.pop(context);
                       context.read<AuthCubit>().updatePassword(
-                          newPassword: newPasswordController.text,
+                          newPassword: newPassword,
                           oldPassword: oldPasswordController.text);
                     }
                   },

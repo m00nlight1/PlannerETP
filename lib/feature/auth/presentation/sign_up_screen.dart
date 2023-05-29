@@ -2,7 +2,6 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:planner_etp/app/data/firebase_constants.dart';
 import 'package:planner_etp/app/presentation/components/app_button.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
@@ -142,26 +141,31 @@ class SignUpScreen extends StatelessWidget {
                 // sign up button
                 AppButton(
                   onTap: () async {
-                    if (formKey.currentState?.validate() != true) return;
-                    if (passwordRepeatController.text !=
-                        passwordController.text) {
+                    if (!formKey.currentState!.validate()) return;
+                    final email = emailController.text;
+                    final username = usernameController.text;
+                    final password = passwordController.text;
+                    final authCubit = context.read<AuthCubit>();
+                    if (passwordRepeatController.text != password) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Пароли должны совпадать")));
                     } else {
-                      _onTapToSignUpButton(context.read<AuthCubit>());
-                      await signUp(
-                          password: passwordController.text,
-                          email: emailController.text,
-                          username: usernameController.text,
-                          context: context);
-                      if (auth.currentUser != null) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (ctx) =>
-                                    const EmailVerificationScreen()));
-                      }
-                      // Navigator.of(context).pop();
+                      signUp(
+                              password: password,
+                              email: email,
+                              username: username,
+                              context: context)
+                          .then((_) async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (ctx) => const EmailVerificationScreen(
+                                isEmailUpdated: false),
+                          ),
+                        );
+
+                        _onTapToSignUpButton(authCubit);
+                      });
                     }
                   },
                   text: 'Зарегистрироваться',

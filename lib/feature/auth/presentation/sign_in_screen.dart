@@ -1,7 +1,9 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:planner_etp/app/data/firebase_constants.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
 import 'package:planner_etp/app/presentation/components/app_button.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
@@ -14,7 +16,30 @@ class SignInScreen extends StatelessWidget {
   final GlobalKey<FormState> formKey = GlobalKey();
 
   void _onTapToSignInButton(AuthCubit authCubit) => authCubit.signIn(
-      email: emailController.text, password: passwordController.text);
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+  Future<UserCredential> signIn(String email, String password) async {
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return userCredential;
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  // Future<void> sendPasswordResetEmail(String email) async {
+  //   try {
+  //     await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+  //   } catch (_) {
+  //     rethrow;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -86,9 +111,39 @@ class SignInScreen extends StatelessWidget {
                 //   child: Row(
                 //     mainAxisAlignment: MainAxisAlignment.end,
                 //     children: [
-                //       Text(
-                //         'Забыли пароль?',
-                //         style: theme.textTheme.bodyMedium,
+                //       TextButton(
+                //         onPressed: () async {
+                //           final email = emailController.text;
+                //           bool isPasswordChanged = false;
+                //           if (email.isNotEmpty &&
+                //               EmailValidator.validate(email) == true) {
+                //             await sendPasswordResetEmail(email);
+                //             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                //                 content: Text(
+                //                     "Письмо было отправлено на $email")));
+                //           } else {
+                //             ScaffoldMessenger.of(context).showSnackBar(
+                //                 const SnackBar(
+                //                     content: Text(
+                //                         "Чтобы сбросить пароль, укажите корректный адрес электронной почты")));
+                //           }
+                //
+                //           // Проверка изменения пароля после перехода по ссылке из письма
+                //           FirebaseAuth.instance.authStateChanges().listen((User? user) {
+                //             if (user != null && user.email == email && user.emailVerified) {
+                //               isPasswordChanged = true;
+                //               ScaffoldMessenger.of(context).showSnackBar(
+                //                 const SnackBar(
+                //                   content: Text("Пароль успешно изменен"),
+                //                 ),
+                //               );
+                //             }
+                //           });
+                //         },
+                //         child: Text(
+                //           'Забыли пароль?',
+                //           style: theme.textTheme.bodyMedium,
+                //         ),
                 //       ),
                 //     ],
                 //   ),
@@ -98,9 +153,15 @@ class SignInScreen extends StatelessWidget {
 
                 // sign in button
                 AppButton(
-                  onTap: () {
+                  onTap: () async {
                     if (formKey.currentState?.validate() == true) {
-                      _onTapToSignInButton(context.read<AuthCubit>());
+                      final email = emailController.text;
+                      final password = passwordController.text;
+                      final authCubit = context.read<AuthCubit>();
+                      await signIn(email, password);
+                      if (auth.currentUser != null) {
+                        _onTapToSignInButton(authCubit);
+                      }
                     }
                   },
                   text: 'Войти',

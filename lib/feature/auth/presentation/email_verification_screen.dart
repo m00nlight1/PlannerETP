@@ -6,7 +6,10 @@ import 'package:planner_etp/app/data/firebase_constants.dart';
 import 'package:planner_etp/app/presentation/components/app_button.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
-  const EmailVerificationScreen({Key? key}) : super(key: key);
+  const EmailVerificationScreen({Key? key, required this.isEmailUpdated})
+      : super(key: key);
+
+  final bool isEmailUpdated;
 
   @override
   State<EmailVerificationScreen> createState() =>
@@ -36,7 +39,11 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Электронная почта успешно подтверждена")));
       timer?.cancel();
-      Navigator.of(context).pushNamed('/dashboard');
+      if (widget.isEmailUpdated == false) {
+        Navigator.of(context).pushNamed('/dashboard');
+      } else {
+        Navigator.of(context).pop();
+      }
     }
   }
 
