@@ -20,14 +20,30 @@ class SignInScreen extends StatelessWidget {
         password: passwordController.text,
       );
 
-  Future<UserCredential> signIn(String email, String password) async {
+  static Future<User?> signIn({
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
     try {
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      return userCredential;
+      return userCredential.user;
+    } on FirebaseAuthException catch (error) {
+      if (error.code == 'wrong-password') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Неверный пароль')));
+      } else if (error.code == 'invalid-email') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Неверный адрес электронный почты')));
+      } else if (error.code == 'user-not-found') {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Пользователь не найден')));
+      }
+      return null;
     } catch (_) {
       rethrow;
     }
@@ -158,7 +174,7 @@ class SignInScreen extends StatelessWidget {
                       final email = emailController.text;
                       final password = passwordController.text;
                       final authCubit = context.read<AuthCubit>();
-                      await signIn(email, password);
+                      await signIn(email: email, password: password, context: context);
                       if (auth.currentUser != null) {
                         _onTapToSignInButton(authCubit);
                       }
