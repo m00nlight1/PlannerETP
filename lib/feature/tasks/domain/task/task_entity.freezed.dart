@@ -28,6 +28,7 @@ mixin _$TaskEntity {
   DateTime? get endOfWork => throw _privateConstructorUsedError;
   String? get imageUrl => throw _privateConstructorUsedError;
   String? get fileUrl => throw _privateConstructorUsedError;
+  String? get fileName => throw _privateConstructorUsedError;
   String? get contractorCompany => throw _privateConstructorUsedError;
   String? get responsibleMaster => throw _privateConstructorUsedError;
   String? get representative => throw _privateConstructorUsedError;
@@ -66,6 +67,7 @@ abstract class $TaskEntityCopyWith<$Res> {
       DateTime? endOfWork,
       String? imageUrl,
       String? fileUrl,
+      String? fileName,
       String? contractorCompany,
       String? responsibleMaster,
       String? representative,
@@ -111,6 +113,7 @@ class _$TaskEntityCopyWithImpl<$Res, $Val extends TaskEntity>
     Object? endOfWork = freezed,
     Object? imageUrl = freezed,
     Object? fileUrl = freezed,
+    Object? fileName = freezed,
     Object? contractorCompany = freezed,
     Object? responsibleMaster = freezed,
     Object? representative = freezed,
@@ -160,6 +163,10 @@ class _$TaskEntityCopyWithImpl<$Res, $Val extends TaskEntity>
       fileUrl: freezed == fileUrl
           ? _value.fileUrl
           : fileUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      fileName: freezed == fileName
+          ? _value.fileName
+          : fileName // ignore: cast_nullable_to_non_nullable
               as String?,
       contractorCompany: freezed == contractorCompany
           ? _value.contractorCompany
@@ -306,6 +313,7 @@ abstract class _$$_TaskEntityCopyWith<$Res>
       DateTime? endOfWork,
       String? imageUrl,
       String? fileUrl,
+      String? fileName,
       String? contractorCompany,
       String? responsibleMaster,
       String? representative,
@@ -354,6 +362,7 @@ class __$$_TaskEntityCopyWithImpl<$Res>
     Object? endOfWork = freezed,
     Object? imageUrl = freezed,
     Object? fileUrl = freezed,
+    Object? fileName = freezed,
     Object? contractorCompany = freezed,
     Object? responsibleMaster = freezed,
     Object? representative = freezed,
@@ -403,6 +412,10 @@ class __$$_TaskEntityCopyWithImpl<$Res>
       fileUrl: freezed == fileUrl
           ? _value.fileUrl
           : fileUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      fileName: freezed == fileName
+          ? _value.fileName
+          : fileName // ignore: cast_nullable_to_non_nullable
               as String?,
       contractorCompany: freezed == contractorCompany
           ? _value.contractorCompany
@@ -484,6 +497,7 @@ class _$_TaskEntity extends _TaskEntity {
       this.endOfWork,
       this.imageUrl,
       this.fileUrl,
+      this.fileName,
       this.contractorCompany,
       this.responsibleMaster,
       this.representative,
@@ -522,6 +536,8 @@ class _$_TaskEntity extends _TaskEntity {
   @override
   final String? fileUrl;
   @override
+  final String? fileName;
+  @override
   final String? contractorCompany;
   @override
   final String? responsibleMaster;
@@ -556,7 +572,7 @@ class _$_TaskEntity extends _TaskEntity {
 
   @override
   String toString() {
-    return 'TaskEntity(id: $id, title: $title, content: $content, createdAt: $createdAt, startOfWork: $startOfWork, endOfWork: $endOfWork, imageUrl: $imageUrl, fileUrl: $fileUrl, contractorCompany: $contractorCompany, responsibleMaster: $responsibleMaster, representative: $representative, equipmentLevel: $equipmentLevel, staffLevel: $staffLevel, resultsOfTheWork: $resultsOfTheWork, expenses: $expenses, idCategory: $idCategory, idStatus: $idStatus, idIndustry: $idIndustry, idTaskType: $idTaskType, category: $category, status: $status, industry: $industry, taskType: $taskType, user: $user)';
+    return 'TaskEntity(id: $id, title: $title, content: $content, createdAt: $createdAt, startOfWork: $startOfWork, endOfWork: $endOfWork, imageUrl: $imageUrl, fileUrl: $fileUrl, fileName: $fileName, contractorCompany: $contractorCompany, responsibleMaster: $responsibleMaster, representative: $representative, equipmentLevel: $equipmentLevel, staffLevel: $staffLevel, resultsOfTheWork: $resultsOfTheWork, expenses: $expenses, idCategory: $idCategory, idStatus: $idStatus, idIndustry: $idIndustry, idTaskType: $idTaskType, category: $category, status: $status, industry: $industry, taskType: $taskType, user: $user)';
   }
 
   @override
@@ -576,6 +592,8 @@ class _$_TaskEntity extends _TaskEntity {
             (identical(other.imageUrl, imageUrl) ||
                 other.imageUrl == imageUrl) &&
             (identical(other.fileUrl, fileUrl) || other.fileUrl == fileUrl) &&
+            (identical(other.fileName, fileName) ||
+                other.fileName == fileName) &&
             (identical(other.contractorCompany, contractorCompany) ||
                 other.contractorCompany == contractorCompany) &&
             (identical(other.responsibleMaster, responsibleMaster) ||
@@ -620,6 +638,7 @@ class _$_TaskEntity extends _TaskEntity {
         endOfWork,
         imageUrl,
         fileUrl,
+        fileName,
         contractorCompany,
         responsibleMaster,
         representative,
@@ -662,6 +681,7 @@ abstract class _TaskEntity extends TaskEntity {
       final DateTime? endOfWork,
       final String? imageUrl,
       final String? fileUrl,
+      final String? fileName,
       final String? contractorCompany,
       final String? responsibleMaster,
       final String? representative,
@@ -699,6 +719,8 @@ abstract class _TaskEntity extends TaskEntity {
   String? get imageUrl;
   @override
   String? get fileUrl;
+  @override
+  String? get fileName;
   @override
   String? get contractorCompany;
   @override

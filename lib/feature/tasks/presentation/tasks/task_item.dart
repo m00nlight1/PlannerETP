@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/components/card/gf_card.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
+import 'package:planner_etp/feature/tasks/domain/firebase_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/painter_service.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/presentation/tasks/category_object_log/detail_object_log_screen.dart';

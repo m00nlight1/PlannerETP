@@ -7,7 +7,7 @@ import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/domain/app_notifications.dart';
 import 'package:planner_etp/app/presentation/components/bar_action_button.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
-import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
+import 'package:planner_etp/feature/tasks/domain/firebase_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';

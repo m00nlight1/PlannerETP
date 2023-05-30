@@ -3,29 +3,45 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:planner_etp/feature/tasks/domain/document/document_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/file_pdf_service.dart';
+import 'package:planner_etp/feature/tasks/domain/firebase_storage_service.dart';
 
 class DocumentItem extends StatefulWidget {
   final DocumentEntity documentEntity;
 
-  const DocumentItem({super.key, required this.documentEntity});
+  const DocumentItem({Key? key, required this.documentEntity})
+      : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _DocumentItemState();
+  DocumentItemState createState() => DocumentItemState();
 }
 
-class _DocumentItemState extends State<DocumentItem> {
+class DocumentItemState extends State<DocumentItem> {
+  String? pathPDF;
+
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting("ru");
+    FileImgStorage().createFileOfPdfUrl(widget.documentEntity.filePath).then((path) {
+      setState(() {
+        pathPDF = path;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    initializeDateFormatting("ru");
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  PDFScreen(path: widget.documentEntity.filePath)),
-        );
+        if (pathPDF != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PDFScreen(path: pathPDF!),
+            ),
+          );
+        }
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),

@@ -4,7 +4,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/chat/message_entity.dart';
-import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
+import 'package:planner_etp/feature/tasks/domain/firebase_storage_service.dart';
 
 class MessageItem extends StatefulWidget {
   const MessageItem({super.key, required this.messageEntity});

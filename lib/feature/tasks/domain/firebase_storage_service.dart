@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 
 class FileImgStorage {
   Future<String>? imgDownload;
@@ -48,6 +50,21 @@ class FileImgStorage {
     String downloadUrl =
         await storage.ref('message/img/$fileName').getDownloadURL();
     return downloadUrl;
+  }
+
+  Future<String> createFileOfPdfUrl(String filePath) async {
+    final url = filePath;
+    final filename = url.substring(url.lastIndexOf("/") + 1);
+    final dir = await getTemporaryDirectory();
+    final file = File("${dir.path}/$filename.pdf");
+
+    if (!await file.exists()) {
+      final request = await HttpClient().getUrl(Uri.parse(url));
+      final response = await request.close();
+      final bytes = await consolidateHttpClientResponseBytes(response);
+      await file.writeAsBytes(bytes);
+    }
+    return file.path;
   }
 
   Future<String> downloadPdfFile(String fileName) async {

@@ -22,6 +22,7 @@ class TaskEntity with _$TaskEntity {
     DateTime? endOfWork,
     String? imageUrl,
     String? fileUrl,
+    String? fileName,
     String? contractorCompany,
     String? responsibleMaster,
     String? representative,

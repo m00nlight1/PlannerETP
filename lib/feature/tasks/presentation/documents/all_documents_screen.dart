@@ -1,12 +1,11 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/presentation/documents/documents_list.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class AllDocumentsScreen extends StatefulWidget {
   const AllDocumentsScreen({super.key});
@@ -16,22 +15,14 @@ class AllDocumentsScreen extends StatefulWidget {
 }
 
 class _AllDocumentsScreenState extends State<AllDocumentsScreen> {
-  File? pdfFile;
-  String? pathPdf;
-  SettableMetadata? settableMetadata;
-
-  final FileImgStorage storage = FileImgStorage();
+  String? pdfPath;
 
   final fileNameController = TextEditingController();
 
   Future<void> _createDocument() async {
-    if (fileNameController.text.isNotEmpty) {
-      storage.uploadPdfFile(
-          fileNameController.text, pdfFile!, settableMetadata!);
-    }
     context.read<TaskCubit>().createDocument({
       "name": fileNameController.text,
-      "filePath": pathPdf.toString(),
+      "filePath": pdfPath,
       "idTask": null,
     }).then((_) {
       context.read<TaskCubit>().fetchDocuments();
@@ -39,16 +30,47 @@ class _AllDocumentsScreenState extends State<AllDocumentsScreen> {
     fileNameController.clear();
   }
 
-  void _getPdfFile() async {
+  Future<void> _selectPdfFile() async {
     FilePickerResult? pickedFile = await FilePicker.platform.pickFiles();
     if (pickedFile != null) {
-      setState(() {
-        pathPdf = pickedFile.files.first.path;
-        pdfFile = File(pickedFile.files.first.path!);
-        settableMetadata = SettableMetadata(contentType: pathPdf);
+      if (pickedFile.files.isNotEmpty) {
+        File file = File(pickedFile.files.first.path!);
         fileNameController.text = pickedFile.files.first.name;
-      });
+        await _uploadPDFFile(file);
+      }
       _createDocument();
+    }
+  }
+
+  Future<void> _uploadPDFFile(File file) async {
+    try {
+      final firebase_storage.Reference storageRef =
+      firebase_storage.FirebaseStorage.instance.ref().child('task/files/${fileNameController.text}');
+
+      final firebase_storage.UploadTask uploadTask = storageRef.putFile(file);
+
+      final firebase_storage.TaskSnapshot taskSnapshot =
+      await uploadTask.whenComplete(() => null);
+
+      final String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+      setState(() {
+        pdfPath = downloadUrl;
+      });
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Ошибка'),
+          content: Text('Произошла ошибка при загрузке файла: $error'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -60,7 +82,7 @@ class _AllDocumentsScreenState extends State<AllDocumentsScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              _getPdfFile();
+              _selectPdfFile();
             },
             icon: const Icon(Icons.add),
           ),

@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,8 +12,9 @@ import 'package:planner_etp/app/presentation/components/app_text_field.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 import 'package:planner_etp/feature/auth/domain/entities/user_entity/user_entity.dart';
 import 'package:planner_etp/feature/tasks/domain/file_pdf_service.dart';
-import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
+import 'package:planner_etp/feature/tasks/domain/firebase_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart' as tc;
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class AddObjectLogScreen extends StatefulWidget {
   const AddObjectLogScreen({super.key});
@@ -49,9 +49,8 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
   final ImagePicker _picker = ImagePicker();
 
   File? imageFile;
-  File? pdfFile;
-  String? pathPdf;
-  SettableMetadata? settableMetadata;
+  String? pdfPath;
+  String? pathPDF;
 
   List<UserEntity> userList = [];
   final userId = locator
@@ -73,18 +72,48 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
     }
   }
 
-  void _getPdfFile() async {
-    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles(
-        // type: FileType.custom,
-        // allowedExtensions: ['pdf'],
-        );
+  Future<void> _selectPdfFile() async {
+    FilePickerResult? pickedFile = await FilePicker.platform.pickFiles();
     if (pickedFile != null) {
-      setState(() {
-        pathPdf = pickedFile.files.first.path;
-        pdfFile = File(pickedFile.files.first.path!);
-        settableMetadata = SettableMetadata(contentType: pathPdf);
+      if (pickedFile.files.isNotEmpty) {
+        File file = File(pickedFile.files.first.path!);
         fileNameController.text = pickedFile.files.first.name;
+        await _uploadPDFFile(file);
+      }
+    }
+  }
+
+  Future<void> _uploadPDFFile(File file) async {
+    try {
+      final firebase_storage.Reference storageRef = firebase_storage
+          .FirebaseStorage.instance
+          .ref()
+          .child('task/files/${fileNameController.text}');
+
+      final firebase_storage.UploadTask uploadTask = storageRef.putFile(file);
+
+      final firebase_storage.TaskSnapshot taskSnapshot =
+          await uploadTask.whenComplete(() => null);
+
+      final String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+      setState(() {
+        pdfPath = downloadUrl;
       });
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Ошибка'),
+          content: Text('Произошла ошибка при загрузке файла: $error'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -197,10 +226,6 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                       storage.uploadImage(
                           imageFile!.path, imageNameController.text);
                     }
-                    if (fileNameController.text.isNotEmpty) {
-                      storage.uploadPdfFile(
-                          fileNameController.text, pdfFile!, settableMetadata!);
-                    }
                     if (titleController.text.isNotEmpty &&
                         commentsController.text.isNotEmpty) {
                       context.read<tc.TaskCubit>().createTask({
@@ -209,7 +234,8 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                         "startOfWork": startWorkDateTime.toString(),
                         "endOfWork": endWorkDateTime.toString(),
                         "imageUrl": imageNameController.text,
-                        "fileUrl": fileNameController.text,
+                        "fileUrl": pdfPath,
+                        "fileName": fileNameController.text,
                         "contractorCompany": companyController.text,
                         "responsibleMaster": masterController.text,
                         "representative": representativeController.text,
@@ -227,13 +253,11 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                               title: "Новая задача",
                               body:
                                   "Пользователь ${userId?.username} добавил «${titleController.text}: ${commentsController.text}»");
-                          // print("yes");
                         } else {
                           AppNotifications().showNotification(
                               title: "Новая задача",
                               body:
                                   "Пользователь ${userId?.username} добавил «${titleController.text}: ${commentsController.text}»");
-                          // print("no");
                         }
                       });
                       Navigator.pop(context);
@@ -597,7 +621,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                                     style: theme.textTheme.headlineSmall),
                                 MaterialButton(
                                   onPressed: () {
-                                    _getPdfFile();
+                                    _selectPdfFile();
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -636,13 +660,22 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                                           children: [
                                             ElevatedButton(
                                               onPressed: () {
-                                                if (pathPdf!.isNotEmpty) {
+                                                FileImgStorage()
+                                                    .createFileOfPdfUrl(
+                                                        pdfPath!)
+                                                    .then((path) {
+                                                  setState(() {
+                                                    pathPDF = path;
+                                                  });
+                                                });
+                                                if (pathPDF != null) {
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
                                                             PDFScreen(
-                                                                path: pathPdf)),
+                                                                path:
+                                                                    pathPDF!)),
                                                   );
                                                 }
                                               },
