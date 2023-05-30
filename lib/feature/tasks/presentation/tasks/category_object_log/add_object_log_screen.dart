@@ -96,6 +96,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
       selectableDayPredicate: _decideWhichDayToEnable,
+      locale: const Locale("ru", "RU"),
     );
     if (selected != null && selected != selectedDate) {
       setState(() {
@@ -114,14 +115,29 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
 
   // Select for Time
   Future<TimeOfDay> _selectTime() async {
+    final currentTime = DateTime.now();
     final selected = await showTimePicker(
       context: context,
-      initialTime: selectedTime,
+      initialTime: TimeOfDay.fromDateTime(currentTime),
     );
-    if (selected != null && selected != selectedTime) {
-      setState(() {
-        selectedTime = selected;
-      });
+    if (selected != null) {
+      final selectedDateTime = DateTime(
+        currentTime.year,
+        currentTime.month,
+        currentTime.day,
+        selected.hour,
+        selected.minute,
+      );
+
+      if (selectedDateTime.isAfter(currentTime)) {
+        setState(() {
+          selectedTime = selected;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Выберите будущее время')),
+        );
+      }
     }
     return selectedTime;
   }
@@ -224,7 +240,7 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                       Navigator.pop(context);
                     } else {
                       AppSnackBar.showSnackBarWithMessage(
-                          context, "Заполните поля Название и Описание задачи");
+                          context, "Укажите название и комментарий к журналу");
                     }
                   },
                   icon: const Icon(Icons.done),

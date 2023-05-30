@@ -145,7 +145,6 @@ class SignUpScreen extends StatelessWidget {
                     final email = emailController.text;
                     final username = usernameController.text;
                     final password = passwordController.text;
-                    final authCubit = context.read<AuthCubit>();
                     if (passwordRepeatController.text != password) {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Пароли должны совпадать")));
@@ -156,6 +155,7 @@ class SignUpScreen extends StatelessWidget {
                               username: username,
                               context: context)
                           .then((_) async {
+                        _onTapToSignUpButton(context.read<AuthCubit>());
                         await Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -163,8 +163,6 @@ class SignUpScreen extends StatelessWidget {
                                 isEmailUpdated: false),
                           ),
                         );
-
-                        _onTapToSignUpButton(authCubit);
                       });
                     }
                   },

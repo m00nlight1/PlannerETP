@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/domain/app_builder.dart';
 import 'package:planner_etp/app/presentation/config/router/app_router.dart';
@@ -12,8 +13,13 @@ import 'package:planner_etp/feature/tasks/domain/task_repository.dart';
 class MainAppBuilder implements AppBuilder {
   @override
   Widget buildApp() {
+    final FlutterLocalization localization = FlutterLocalization.instance;
     return _GlobalProviders(
       child: MaterialApp(
+        localizationsDelegates: localization.localizationsDelegates,
+        supportedLocales: const [
+          Locale('ru', 'RU'),
+        ],
         debugShowCheckedModeBanner: false,
         theme: lightTheme,
         home: const RootScreen(),

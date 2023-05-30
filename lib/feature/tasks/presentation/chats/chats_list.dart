@@ -16,7 +16,7 @@ class ChatsList extends StatefulWidget {
 
 class _ChatsListState extends State<ChatsList> {
   TextEditingController textSearchEditingController = TextEditingController();
-  List<MessageEntity> result = [];
+  List<MessageEntity?> result = [];
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +50,8 @@ class _ChatsListState extends State<ChatsList> {
                             result = state.chatsList;
                             context.read<TaskCubit>().fetchChats();
                           } else {
-                            result = state.chatsList
-                                .where((element) => element.task!.title
+                            result = filterChatList
+                                .where((element) => element!.task!.title
                                     .toLowerCase()
                                     .contains(textSearchEditingController.text
                                         .toLowerCase()))
@@ -68,7 +68,7 @@ class _ChatsListState extends State<ChatsList> {
                     shrinkWrap: true,
                     itemCount: result.length,
                     itemBuilder: (context, index) {
-                      return ChatItem(messageEntity: result[index]);
+                      return ChatItem(messageEntity: result[index]!);
                     },
                   ),
                 )

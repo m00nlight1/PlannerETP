@@ -8,6 +8,7 @@ import 'package:getwidget/getwidget.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:planner_etp/app/di/init_di.dart';
+import 'package:planner_etp/app/presentation/components/app_snack_bar.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
 import 'package:planner_etp/feature/tasks/domain/file_pdf_service.dart';
 import 'package:planner_etp/feature/tasks/domain/image_storage_service.dart';
@@ -223,30 +224,36 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                 storage.uploadPdfFile(
                     fileNameController!.text, pdfFile!, settableMetadata!);
               }
-              context.read<DetailTaskCubit>().updateTask({
-                "title": titleController?.text,
-                "content": commentsController?.text,
-                "startOfWork": startWorkDateTime.toString(),
-                "endOfWork": endWorkDateTime.toString(),
-                "imageUrl": fileName,
-                "fileUrl": fileNameController!.text,
-                "contractorCompany": companyController?.text,
-                "responsibleMaster": masterController?.text,
-                "representative": representativeController?.text,
-                "equipmentLevel": equipmentLevelController?.text,
-                "staffLevel": staffLevelController?.text,
-                "resultsOfTheWork": resultsOfTheWorkController?.text,
-                "expenses": null,
-                "idCategory": 1,
-                "idStatus": null,
-                "idIndustry": null,
-                "idTaskType": null
-              }).then((_) {
-                context.read<DetailTaskCubit>().fetchTask();
-                context.read<TaskCubit>().fetchTasks();
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              });
+              if (titleController!.text.isNotEmpty &&
+                  commentsController!.text.isNotEmpty) {
+                context.read<DetailTaskCubit>().updateTask({
+                  "title": titleController?.text,
+                  "content": commentsController?.text,
+                  "startOfWork": startWorkDateTime.toString(),
+                  "endOfWork": endWorkDateTime.toString(),
+                  "imageUrl": fileName,
+                  "fileUrl": fileNameController!.text,
+                  "contractorCompany": companyController?.text,
+                  "responsibleMaster": masterController?.text,
+                  "representative": representativeController?.text,
+                  "equipmentLevel": equipmentLevelController?.text,
+                  "staffLevel": staffLevelController?.text,
+                  "resultsOfTheWork": resultsOfTheWorkController?.text,
+                  "expenses": null,
+                  "idCategory": 1,
+                  "idStatus": null,
+                  "idIndustry": null,
+                  "idTaskType": null
+                }).then((_) {
+                  context.read<DetailTaskCubit>().fetchTask();
+                  context.read<TaskCubit>().fetchTasks();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                });
+              } else {
+                AppSnackBar.showSnackBarWithMessage(
+                    context, "Укажите название и комментарий к журналу");
+              }
             },
             icon: const Icon(Icons.done),
           ),

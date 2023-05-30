@@ -92,6 +92,7 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
       selectableDayPredicate: _decideWhichDayToEnable,
+      locale: const Locale("ru", "RU"),
     );
     if (selected != null && selected != selectedDate) {
       setState(() {
@@ -110,14 +111,29 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
 
   // Select for Time
   Future<TimeOfDay> _selectTime() async {
+    final currentTime = DateTime.now();
     final selected = await showTimePicker(
       context: context,
-      initialTime: selectedTime,
+      initialTime: TimeOfDay.fromDateTime(currentTime),
     );
-    if (selected != null && selected != selectedTime) {
-      setState(() {
-        selectedTime = selected;
-      });
+    if (selected != null) {
+      final selectedDateTime = DateTime(
+        currentTime.year,
+        currentTime.month,
+        currentTime.day,
+        selected.hour,
+        selected.minute,
+      );
+
+      if (selectedDateTime.isAfter(currentTime)) {
+        setState(() {
+          selectedTime = selected;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Выберите будущее время')),
+        );
+      }
     }
     return selectedTime;
   }
@@ -164,7 +180,7 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                           fileNameController.text, pdfFile!, settableMetadata!);
                     }
                     if (titleController.text.isNotEmpty &&
-                        commentsController.text.isNotEmpty) {
+                        commentsController.text.isNotEmpty && selectedItemId != null) {
                       context.read<TaskCubit>().createTask({
                         "title": titleController.text,
                         "content": commentsController.text,
@@ -202,7 +218,7 @@ class _AddSimpleTaskScreenState extends State<AddSimpleTaskScreen> {
                       Navigator.pop(context);
                     } else {
                       AppSnackBar.showSnackBarWithMessage(
-                          context, "Заполните поля Название и Описание задачи");
+                          context, "Укажите название, описание и статус задачи");
                     }
                   },
                   icon: const Icon(Icons.done),

@@ -156,6 +156,7 @@ class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
       if (user != null) {
         await user.updateEmail(email);
         await user.updateDisplayName(username);
+        user.emailVerified == false;
       }
       return user;
     } on FirebaseAuthException catch (error) {
@@ -213,18 +214,18 @@ class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
                     final username = usernameController.text;
                     final authCubit = context.read<AuthCubit>();
                     updateProfile(
-                            email: email, username: username, context: context)
-                        .then((_) async {
+                            email: email, username: username, context: context).then((_) async {
                       if (auth.currentUser != null) {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (ctx) => const EmailVerificationScreen(
-                                isEmailUpdated: true),
-                          ),
-                        );
-
-                        await authCubit
+                        if (auth.currentUser!.emailVerified == false) {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (ctx) => const EmailVerificationScreen(
+                                  isEmailUpdated: true),
+                            ),
+                          );
+                        }
+                        authCubit
                             .updateUser(email: email, username: username)
                             .then((_) {
                           Navigator.pop(context);
