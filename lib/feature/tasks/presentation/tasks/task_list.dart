@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
 import 'package:planner_etp/app/presentation/components/search_text_field.dart';
+import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:planner_etp/feature/tasks/presentation/tasks/task_item.dart';
 
 class TaskList extends StatefulWidget {
-  const TaskList({super.key});
+  const TaskList({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _TaskListState();
@@ -16,26 +18,18 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   TextEditingController textSearchEditingController = TextEditingController();
 
-  List<TaskEntity> result = [];
-  List<TaskEntity> openTasksResult = [];
-  List<TaskEntity> openTasksSearchResult = [];
-  List<TaskEntity> inWorkTasksResult = [];
-  List<TaskEntity> inWorkTasksSearchResult = [];
-  List<TaskEntity> solvedTasksResult = [];
-  List<TaskEntity> solvedTasksSearchResult = [];
-  List<TaskEntity> closedTasksResult = [];
-  List<TaskEntity> closedTasksSearchResult = [];
-  List<TaskEntity> withoutStatusTasksResult = [];
-  List<TaskEntity> withoutStatusTasksSearchResult = [];
-
   final List<String> filteringCategories = [
-    // 'Мои задачи',
-    // 'Все',
+    'Мои посты',
     'Журнал объекта',
     'Задача',
     'Предписание авторского надзора',
   ];
   List<String> selectedCategories = [];
+
+  final userId = locator
+      .get<AuthCubit>()
+      .state
+      .whenOrNull(authorized: (userEntity) => userEntity.id);
 
   @override
   Widget build(BuildContext context) {
@@ -44,53 +38,32 @@ class _TaskListState extends State<TaskList> {
       builder: (context, state) {
         if (state.taskList.isNotEmpty) {
           final filterTasks = state.taskList.where((task) {
+            if (selectedCategories.contains('Мои посты')) {
+              return task.user!.id == userId;
+            }
             return selectedCategories.isEmpty ||
                 selectedCategories.contains(task.category?.name);
           }).toList();
-          final filterTasksSearch = result.where((task) {
-            return selectedCategories.isEmpty ||
-                selectedCategories.contains(task.category?.name);
+          final filterTasksSearch = filterTasks.where((task) {
+            if (selectedCategories.contains('Мои посты')) {
+              return task.user!.id == userId;
+            }
+            return task.title.toLowerCase().contains(textSearchEditingController.text.toLowerCase());
           }).toList();
-          objOpen(open) => open.status?.id == 1;
-          openTasksResult = filterTasks.where(objOpen).toList();
-          openTasksSearchResult = filterTasksSearch.where(objOpen).toList();
-          objInWork(worked) => worked.status?.id == 2;
-          inWorkTasksResult = filterTasks.where(objInWork).toList();
-          inWorkTasksSearchResult = filterTasksSearch.where(objInWork).toList();
-          objSolved(solved) => solved.status?.id == 3;
-          solvedTasksResult = filterTasks.where(objSolved).toList();
-          solvedTasksSearchResult = filterTasksSearch.where(objSolved).toList();
-          objClosed(closed) => closed.status?.id == 4;
-          closedTasksResult = filterTasks.where(objClosed).toList();
-          closedTasksSearchResult = filterTasksSearch.where(objClosed).toList();
-          objWithoutStatus(withoutStatus) => withoutStatus.category?.id == 1;
-          withoutStatusTasksResult = filterTasks.where(objWithoutStatus).toList();
-          withoutStatusTasksSearchResult = filterTasksSearch.where(objWithoutStatus).toList();
+
           return SingleChildScrollView(
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 14.0, vertical: 6.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 6.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SearchTextField(
-                          controller: textSearchEditingController,
-                          onChange: (value) {
-                            if (textSearchEditingController.text.isEmpty) {
-                              result = state.taskList;
-                              context.read<TaskCubit>().fetchTasks();
-                            } else {
-                              result = state.taskList
-                                  .where((element) => element.title
-                                  .toLowerCase()
-                                  .contains(textSearchEditingController.text
-                                  .toLowerCase()))
-                                  .toList();
-                              context.read<TaskCubit>().fetchTasks();
-                            }
-                          }
+                        controller: textSearchEditingController,
+                        onChange: (value) {
+                          setState(() {});
+                        },
                       ),
                       const SizedBox(height: 10),
                       Wrap(
@@ -98,26 +71,27 @@ class _TaskListState extends State<TaskList> {
                         children: filteringCategories
                             .map(
                               (category) => FilterChip(
-                                  selected:
-                                      selectedCategories.contains(category),
-                                  label: Text(category),
-                                  labelStyle: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600),
-                                  backgroundColor: const Color(0xFF0d74ba),
-                                  selectedColor: Colors.lightGreen,
-                                  checkmarkColor: Colors.white,
-                                  onSelected: (selected) {
-                                    setState(() {
-                                      if (selected) {
-                                        selectedCategories.add(category);
-                                      } else {
-                                        selectedCategories.remove(category);
-                                      }
-                                    });
-                                  }),
-                            )
+                            selected: selectedCategories.contains(category),
+                            label: Text(category),
+                            labelStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            backgroundColor: const Color(0xFF0d74ba),
+                            selectedColor: Colors.lightGreen,
+                            checkmarkColor: Colors.white,
+                            onSelected: (selected) {
+                              setState(() {
+                                if (selected) {
+                                  selectedCategories.add(category);
+                                } else {
+                                  selectedCategories.remove(category);
+                                }
+                              });
+                            },
+                          ),
+                        )
                             .toList(),
                       ),
                     ],
@@ -126,190 +100,50 @@ class _TaskListState extends State<TaskList> {
                 if (textSearchEditingController.text.isNotEmpty)
                   Column(
                     children: [
-                      ExpansionTile(
-                        initiallyExpanded: true,
-                        title: Text(
-                            "Открыто (${openTasksSearchResult.length.toString()})"),
-                        children: [
-                          SingleChildScrollView(
-                            child: Expanded(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: openTasksSearchResult.length,
-                                itemBuilder: (context, index) {
-                                  return TaskItem(
-                                      taskEntity: openTasksSearchResult[index]);
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
+                      buildExpansionTile(
+                        title: "Открыто (${filterTasksSearch.where((task) => task.status?.id == 1).length.toString()})",
+                        tasks: filterTasksSearch.where((task) => task.status?.id == 1).toList(),
                       ),
-                      ExpansionTile(
-                        initiallyExpanded: true,
-                        title: Text(
-                            "В работе (${inWorkTasksSearchResult.length.toString()})"),
-                        children: [
-                          SingleChildScrollView(
-                            child: Expanded(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: inWorkTasksSearchResult.length,
-                                itemBuilder: (context, index) {
-                                  return TaskItem(
-                                      taskEntity:
-                                          inWorkTasksSearchResult[index]);
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
+                      buildExpansionTile(
+                        title: "В работе (${filterTasksSearch.where((task) => task.status?.id == 2).length.toString()})",
+                        tasks: filterTasksSearch.where((task) => task.status?.id == 2).toList(),
                       ),
-                      ExpansionTile(
-                        initiallyExpanded: true,
-                        title: Text(
-                            "Решено (${solvedTasksSearchResult.length.toString()})"),
-                        children: [
-                          SingleChildScrollView(
-                            child: Expanded(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: solvedTasksSearchResult.length,
-                                itemBuilder: (context, index) {
-                                  return TaskItem(
-                                      taskEntity:
-                                          solvedTasksSearchResult[index]);
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
+                      buildExpansionTile(
+                        title: "Решено (${filterTasksSearch.where((task) => task.status?.id == 3).length.toString()})",
+                        tasks: filterTasksSearch.where((task) => task.status?.id == 3).toList(),
                       ),
-                      ExpansionTile(
-                        initiallyExpanded: true,
-                        title: Text(
-                            "Закрыто (${closedTasksSearchResult.length.toString()})"),
-                        children: [
-                          SingleChildScrollView(
-                            child: Expanded(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: closedTasksSearchResult.length,
-                                itemBuilder: (context, index) {
-                                  return TaskItem(
-                                      taskEntity:
-                                          closedTasksSearchResult[index]);
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
+                      buildExpansionTile(
+                        title: "Закрыто (${filterTasksSearch.where((task) => task.status?.id == 4).length.toString()})",
+                        tasks: filterTasksSearch.where((task) => task.status?.id == 4).toList(),
                       ),
-                      ExpansionTile(
-                        initiallyExpanded: true,
-                        title: Text(
-                            "Без статуса (${withoutStatusTasksSearchResult.length.toString()})"),
-                        children: [
-                          SingleChildScrollView(
-                            child: Expanded(
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: withoutStatusTasksSearchResult.length,
-                                itemBuilder: (context, index) {
-                                  return TaskItem(
-                                      taskEntity:
-                                      withoutStatusTasksSearchResult[index]);
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
+                      buildExpansionTile(
+                        title: "Без статуса (${filterTasksSearch.where((task) => task.category?.id == 1).length.toString()})",
+                        tasks: filterTasksSearch.where((task) => task.category?.id == 1).toList(),
                       ),
                     ],
                   )
                 else
                   Column(
                     children: [
-                      ExpansionTile(
-                        initiallyExpanded: true,
-                        title: Text(
-                            "Открыто (${openTasksResult.length.toString()})"),
-                        children: [
-                          ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: openTasksResult.length,
-                            itemBuilder: (context, index) {
-                              return TaskItem(
-                                  taskEntity: openTasksResult[index]);
-                            },
-                          ),
-                        ],
+                      buildExpansionTile(
+                        title: "Открыто (${filterTasks.where((task) => task.status?.id == 1).length.toString()})",
+                        tasks: filterTasks.where((task) => task.status?.id == 1).toList(),
                       ),
-                      ExpansionTile(
-                        initiallyExpanded: true,
-                        title: Text(
-                            "В работе (${inWorkTasksResult.length.toString()})"),
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: inWorkTasksResult.length,
-                            itemBuilder: (context, index) {
-                              return TaskItem(
-                                  taskEntity: inWorkTasksResult[index]);
-                            },
-                          ),
-                        ],
+                      buildExpansionTile(
+                        title: "В работе (${filterTasks.where((task) => task.status?.id == 2).length.toString()})",
+                        tasks: filterTasks.where((task) => task.status?.id == 2).toList(),
                       ),
-                      ExpansionTile(
-                        initiallyExpanded: true,
-                        title: Text(
-                            "Решено (${solvedTasksResult.length.toString()})"),
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: solvedTasksResult.length,
-                            itemBuilder: (context, index) {
-                              return TaskItem(
-                                  taskEntity: solvedTasksResult[index]);
-                            },
-                          ),
-                        ],
+                      buildExpansionTile(
+                        title: "Решено (${filterTasks.where((task) => task.status?.id == 3).length.toString()})",
+                        tasks: filterTasks.where((task) => task.status?.id == 3).toList(),
                       ),
-                      ExpansionTile(
-                        initiallyExpanded: true,
-                        title: Text(
-                            "Закрыто (${closedTasksResult.length.toString()})"),
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: closedTasksResult.length,
-                            itemBuilder: (context, index) {
-                              return TaskItem(
-                                  taskEntity: closedTasksResult[index]);
-                            },
-                          ),
-                        ],
+                      buildExpansionTile(
+                        title: "Закрыто (${filterTasks.where((task) => task.status?.id == 4).length.toString()})",
+                        tasks: filterTasks.where((task) => task.status?.id == 4).toList(),
                       ),
-                      ExpansionTile(
-                        initiallyExpanded: true,
-                        title: Text(
-                            "Без статуса (${withoutStatusTasksResult.length.toString()})"),
-                        children: [
-                          ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: withoutStatusTasksResult.length,
-                            itemBuilder: (context, index) {
-                              return TaskItem(
-                                  taskEntity:
-                                  withoutStatusTasksResult[index]);
-                            },
-                          ),
-                        ],
+                      buildExpansionTile(
+                        title: "Без статуса (${filterTasks.where((task) => task.category?.id == 1).length.toString()})",
+                        tasks: filterTasks.where((task) => task.category?.id == 1).toList(),
                       ),
                     ],
                   ),
@@ -324,8 +158,7 @@ class _TaskListState extends State<TaskList> {
           child: Container(
             alignment: Alignment.center,
             child: Padding(
-              padding:
-              const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
+              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
               child: Text(
                 "Задач нет",
                 style: TextStyle(
@@ -338,6 +171,25 @@ class _TaskListState extends State<TaskList> {
           ),
         );
       },
+    );
+  }
+
+  ExpansionTile buildExpansionTile({required String title, required List<TaskEntity> tasks}) {
+    return ExpansionTile(
+      initiallyExpanded: true,
+      title: Text("$title"),
+      children: [
+        SingleChildScrollView(
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: tasks.length,
+            itemBuilder: (context, index) {
+              return TaskItem(taskEntity: tasks[index]);
+            },
+          ),
+        ),
+      ],
     );
   }
 }
