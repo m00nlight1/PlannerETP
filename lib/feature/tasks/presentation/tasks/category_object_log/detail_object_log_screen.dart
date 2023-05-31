@@ -175,20 +175,20 @@ class _DetailTaskItem extends StatefulWidget {
 }
 
 class _DetailTaskItemState extends State<_DetailTaskItem> {
-  final FileImgStorage storage = FileImgStorage();
   Future<String>? imgDownload;
-  Future<String>? fileDownload;
-  Future<String>? fileMetadataPath;
+  String? pathPDF;
 
   @override
   void initState() {
     if (widget.taskEntity.imageUrl != null) {
-      imgDownload = storage.downloadImage(widget.taskEntity.imageUrl ?? "");
+      imgDownload = FileImgStorage().downloadImage(widget.taskEntity.imageUrl ?? "");
     }
     if (widget.taskEntity.fileUrl != null) {
-      fileDownload = storage.downloadPdfFile(widget.taskEntity.fileUrl ?? "");
-      fileMetadataPath =
-          storage.downloadPdfFilePath(widget.taskEntity.fileUrl ?? "");
+      FileImgStorage().createFileOfPdfUrl(widget.taskEntity.fileUrl!).then((path) {
+        setState(() {
+          pathPDF = path;
+        });
+      });
     }
     super.initState();
   }
@@ -507,8 +507,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
               Card(
                 margin: const EdgeInsets.only(left: 12, right: 12),
                 color: Colors.grey.shade200,
-                child: widget.taskEntity.fileUrl == null ||
-                        widget.taskEntity.fileUrl == ""
+                child: widget.taskEntity.fileName!.isEmpty
                     ? SizedBox(
                         width: 365,
                         child: Padding(
@@ -527,47 +526,36 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                         boxFit: BoxFit.cover,
                         color: Colors.grey.shade200,
                         margin: EdgeInsets.zero,
-                        content: FutureBuilder(
-                          future: fileMetadataPath,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<String> snapshot) {
-                            if (snapshot.connectionState ==
-                                    ConnectionState.done &&
-                                snapshot.hasData) {
-                              final String path = snapshot.data!;
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Документ',
-                                      style: theme.textTheme.headlineSmall),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(widget.taskEntity.fileUrl ?? ""),
-                                      MaterialButton(
-                                        onPressed: () {
-                                          if (fileDownload != null) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      PDFScreen(path: path)),
-                                            );
-                                          }
-                                        },
-                                        child: Text('Просмотр',
-                                            style:
-                                                theme.textTheme.headlineSmall),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return const SizedBox();
-                            }
-                          },
+                        content: SizedBox(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Документ',
+                                    style: theme.textTheme.headlineSmall),
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(widget.taskEntity.fileName ?? ""),
+                                    MaterialButton(
+                                      onPressed: () {
+                                        if (pathPDF != null) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => PDFScreen(path: pathPDF!),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: Text('Просмотр',
+                                          style:
+                                          theme.textTheme.headlineSmall),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                         ),
                       ),
               ),
