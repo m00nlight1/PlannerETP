@@ -7,10 +7,10 @@ import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/domain/app_notifications.dart';
 import 'package:planner_etp/app/presentation/components/bar_action_button.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
-import 'package:planner_etp/feature/tasks/domain/firebase_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class ActionBar extends StatefulWidget {
   final TaskEntity taskEntity;
@@ -23,8 +23,6 @@ class ActionBar extends StatefulWidget {
 
 class ActionBarState extends State<ActionBar> {
   final ImagePicker _picker = ImagePicker();
-  final FileImgStorage storage = FileImgStorage();
-  Future<String>? imgDownload;
   File? imageFile;
   final messageController = TextEditingController();
   final imageNameController = TextEditingController();
@@ -35,9 +33,6 @@ class ActionBarState extends State<ActionBar> {
       .whenOrNull(authorized: (userEntity) => userEntity);
 
   Future<void> _sendMessage() async {
-    if (imageFile != null && imageNameController.text.isNotEmpty) {
-      storage.uploadImage(imageFile!.path, imageNameController.text);
-    }
     context.read<DetailTaskCubit>().sentMessage({
       "content": messageController.text,
       "imageUrl": imageNameController.text,
@@ -64,11 +59,28 @@ class ActionBarState extends State<ActionBar> {
       maxHeight: 320,
     );
     if (pickedFile != null) {
+      File file = File(pickedFile.path);
+      imageNameController.text = pickedFile.name;
+      String imageUrl = await _uploadImage(file);
       setState(() {
-        imageFile = File(pickedFile.path);
-        imageNameController.text = storage.getRandomString(7);
+        imageFile = file;
+        imageNameController.text = imageUrl;
       });
     }
+  }
+
+  Future<String> _uploadImage(File imageFile) async {
+    firebase_storage.Reference storageReference = firebase_storage
+        .FirebaseStorage.instance
+        .ref()
+        .child('task/img/${imageNameController.text}');
+    firebase_storage.UploadTask uploadTask =
+    storageReference.putFile(imageFile);
+    await uploadTask;
+
+    String imageUrl = await storageReference.getDownloadURL();
+
+    return imageUrl;
   }
 
   @override
@@ -87,7 +99,6 @@ class ActionBarState extends State<ActionBar> {
                       children: [
                         Column(
                           children: [
-                            Text('${imageNameController.text}.jpg'),
                             SizedBox(
                               width: 100,
                               height: 100,
@@ -141,15 +152,6 @@ class ActionBarState extends State<ActionBar> {
                 child: GestureDetector(
                   onTap: () {
                     _getImgFromGallery();
-                    // if (imageFile != null) {
-                    //   fileName = storage.getRandomString(7);
-                    //   storage.uploadImage(imageFile!.path, fileName!);
-                    // }
-                    // context.read<DetailTaskCubit>().sentMessage({
-                    //   "content": fileName.toString(),
-                    //   "idTask": widget.taskEntity.id,
-                    // });
-                    // context.read<DetailTaskCubit>().getTaskChat();
                   },
                   child: const Padding(
                     padding: EdgeInsets.only(),

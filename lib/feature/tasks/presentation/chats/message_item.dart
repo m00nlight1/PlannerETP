@@ -31,19 +31,6 @@ class _MessageItemState extends State<MessageItem> {
         } else {
           return _MessageTile(message: widget.messageEntity);
         }
-        // return Align(
-        //   alignment: messageEntity.user?.id == userEntity?.id
-        //       ? Alignment.centerRight
-        //       : Alignment.centerLeft,
-        //   child: Card(
-        //     elevation: 8,
-        //     color: Colors.white,
-        //     child: Column(children: [
-        //       Text(messageEntity.content),
-        //       Text(messageEntity.user?.email ?? ""),
-        //     ]),
-        //   ),
-        // );
       },
       listener: (context, state) {},
     );
@@ -63,16 +50,10 @@ class _MessageTile extends StatefulWidget {
 }
 
 class _MessageTileState extends State<_MessageTile> {
-  final FileImgStorage storage = FileImgStorage();
-  Future<String>? imgDownload;
-
   static const _borderRadius = 26.0;
 
   @override
   void initState() {
-    if (widget.message.imageUrl != null) {
-      imgDownload = storage.downloadImage(widget.message.imageUrl ?? "");
-    }
     super.initState();
   }
 
@@ -97,46 +78,65 @@ class _MessageTileState extends State<_MessageTile> {
               ),
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("${widget.message.user?.username}"),
-                    const SizedBox(height: 7),
-                    Text(
-                      widget.message.content!,
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                    widget.message.imageUrl == ""
+                    Text(widget.message.content!,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        )),
+                    widget.message.imageUrl!.isEmpty ||
+                            widget.message.imageUrl == null
                         ? const SizedBox.shrink()
-                        : const SizedBox(height: 5),
-                    GestureDetector(
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) =>
-                                _OpenImageDialog(widget.message));
-                      },
-                      child: FutureBuilder(
-                        future: imgDownload,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<String> snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.done &&
-                              snapshot.hasData) {
-                            return Image.network(
-                              snapshot.data ?? "",
-                              fit: BoxFit.contain,
-                            );
-                          } else {
-                            return const SizedBox.shrink();
-                          }
-                        },
-                      ),
-                    ),
+                        : widget.message.content!.isNotEmpty
+                            ? GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          _OpenImageDialog(widget.message));
+                                },
+                                child: Column(
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    SizedBox(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Image.network(
+                                            widget.message.imageUrl!,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          _OpenImageDialog(widget.message));
+                                },
+                                child: SizedBox(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Image.network(
+                                        widget.message.imageUrl!,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                   ],
                 ),
-                // child: Text(message.content ?? ''),
               ),
             ),
             Padding(
@@ -204,7 +204,7 @@ class _MessageOwnTileState extends State<_MessageOwnTile> {
               ),
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -212,33 +212,55 @@ class _MessageOwnTileState extends State<_MessageOwnTile> {
                         style: const TextStyle(
                           color: Colors.white,
                         )),
-                    widget.message.imageUrl == ""
+                    widget.message.imageUrl!.isEmpty ||
+                            widget.message.imageUrl == null
                         ? const SizedBox.shrink()
-                        : const SizedBox(height: 5),
-                    GestureDetector(
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) =>
-                                _OpenImageDialog(widget.message));
-                      },
-                      child: FutureBuilder(
-                        future: imgDownload,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<String> snapshot) {
-                          if (snapshot.connectionState ==
-                                  ConnectionState.done &&
-                              snapshot.hasData) {
-                            return Image.network(
-                              snapshot.data ?? "",
-                              fit: BoxFit.contain,
-                            );
-                          } else {
-                            return const SizedBox.shrink();
-                          }
-                        },
-                      ),
-                    ),
+                        : widget.message.content!.isNotEmpty
+                            ? GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          _OpenImageDialog(widget.message));
+                                },
+                                child: Column(
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    SizedBox(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Image.network(
+                                            widget.message.imageUrl!,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          _OpenImageDialog(widget.message));
+                                },
+                                child: SizedBox(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Image.network(
+                                        widget.message.imageUrl!,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                   ],
                 ),
               ),
@@ -271,14 +293,8 @@ class _OpenImageDialog extends StatefulWidget {
 }
 
 class _OpenImageDialogState extends State<_OpenImageDialog> {
-  final FileImgStorage storage = FileImgStorage();
-  Future<String>? imgDownload;
-
   @override
   void initState() {
-    if (widget.messageEntity.imageUrl != null) {
-      imgDownload = storage.downloadImage(widget.messageEntity.imageUrl ?? "");
-    }
     super.initState();
   }
 
@@ -286,19 +302,9 @@ class _OpenImageDialogState extends State<_OpenImageDialog> {
   Widget build(BuildContext context) {
     return SimpleDialog(
       children: [
-        FutureBuilder(
-          future: imgDownload,
-          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done &&
-                snapshot.hasData) {
-              return Image.network(
-                snapshot.data ?? "",
-                fit: BoxFit.fill,
-              );
-            } else {
-              return const SizedBox.shrink();
-            }
-          },
+        Image.network(
+          widget.messageEntity.imageUrl ?? "",
+          fit: BoxFit.cover,
         ),
       ],
     );
