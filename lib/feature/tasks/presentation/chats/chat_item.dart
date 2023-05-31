@@ -48,6 +48,7 @@ class _ChatItemState extends State<ChatItem> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     initializeDateFormatting("ru");
+    String bodyText = widget.messageEntity.content != "" ? "${widget.messageEntity.user!.username!}: ${widget.messageEntity.content}" : "${widget.messageEntity.user!.username!}: Изображение";
     return GestureDetector(
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
           builder: (context) =>
@@ -69,7 +70,7 @@ class _ChatItemState extends State<ChatItem> {
               children: [
                 Flexible(
                   child: Text(
-                      "${widget.messageEntity.user!.username!}: ${widget.messageEntity.content!}",
+                      bodyText,
                       maxLines: 2,
                       style: theme.textTheme.bodyMedium),
                 ),

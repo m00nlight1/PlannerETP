@@ -46,15 +46,9 @@ class ActionBarState extends State<ActionBar> {
     });
   }
 
-  // void takeImageFromCamera() async {
-  //   XFile? image =
-  //   await _picker.pickImage(source: ImageSource.camera, imageQuality: 50);
-  //   imageFile = File(image!.path);
-  // }
-
-  void _getImgFromGallery() async {
+  Future<void> _getImage(ImageSource source) async {
     XFile? pickedFile = await _picker.pickImage(
-      source: ImageSource.gallery,
+      source: source,
       maxWidth: 320,
       maxHeight: 320,
     );
@@ -151,7 +145,35 @@ class ActionBarState extends State<ActionBar> {
                 ),
                 child: GestureDetector(
                   onTap: () {
-                    _getImgFromGallery();
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Выберите источник'),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: <Widget> [
+                                  GestureDetector(
+                                    child: const Text('Сделать фото'),
+                                    onTap: () {
+                                      _getImage(ImageSource.camera);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  const Padding(padding: EdgeInsets.all(8.0)),
+                                  GestureDetector(
+                                    child: const Text('Загрузить из галереи'),
+                                    onTap: () {
+                                      _getImage(ImageSource.gallery);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                    );
                   },
                   child: const Padding(
                     padding: EdgeInsets.only(),
@@ -177,10 +199,10 @@ class ActionBarState extends State<ActionBar> {
                     ),
                     onSubmitted: (_) {
                       _sendMessage();
+                      String bodyText = messageController.text != "" ? "${userId?.username}: ${messageController.text}" : "${userId?.username}: Изображение";
                       AppNotifications().showNotification(
                           title: "Новое сообщение",
-                          body:
-                          "${userId?.username}: ${messageController.text}");
+                          body: bodyText);
                     },
                   ),
                 ),
@@ -195,10 +217,10 @@ class ActionBarState extends State<ActionBar> {
                       if (imageNameController.text.isNotEmpty ||
                           messageController.text.isNotEmpty) {
                         _sendMessage();
+                        String bodyText = messageController.text != "" ? "${userId?.username}: ${messageController.text}" : "${userId?.username}: Изображение";
                         AppNotifications().showNotification(
                             title: "Новое сообщение",
-                            body:
-                            "${userId?.username}: ${messageController.text}");
+                            body: bodyText);
                       }
                     }),
               ),
