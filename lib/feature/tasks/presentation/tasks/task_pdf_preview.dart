@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:planner_etp/feature/tasks/domain/pdf_storage_service.dart';
+import 'package:planner_etp/feature/tasks/domain/pdf_generator.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:printing/printing.dart';
@@ -11,7 +11,7 @@ class TaskPdfPreview extends StatelessWidget {
 
   final TaskEntity taskEntity;
 
-  final PdfStorage storage = PdfStorage();
+  final PdfGenerator storage = PdfGenerator();
 
   @override
   Widget build(BuildContext context) {

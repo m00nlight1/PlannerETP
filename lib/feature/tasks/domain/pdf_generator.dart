@@ -4,7 +4,7 @@ import 'package:pdf/widgets.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
 import 'package:printing/printing.dart';
 
-class PdfStorage {
+class PdfGenerator {
   String? logo;
   String? pdfPath;
 

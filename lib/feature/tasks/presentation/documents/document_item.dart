@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:planner_etp/feature/tasks/domain/document/document_entity.dart';
-import 'package:planner_etp/feature/tasks/domain/file_pdf_service.dart';
+import 'package:planner_etp/feature/tasks/presentation/pdf_viewer_screen.dart';
 import 'package:planner_etp/feature/tasks/domain/firebase_storage_service.dart';
 
 class DocumentItem extends StatefulWidget {

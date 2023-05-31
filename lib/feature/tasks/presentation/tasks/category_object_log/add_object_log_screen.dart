@@ -3,7 +3,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:planner_etp/app/di/init_di.dart';
 import 'package:planner_etp/app/domain/app_notifications.dart';
 import 'package:planner_etp/app/presentation/app_loader.dart';
@@ -11,7 +10,8 @@ import 'package:planner_etp/app/presentation/components/app_snack_bar.dart';
 import 'package:planner_etp/app/presentation/components/app_text_field.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
 import 'package:planner_etp/feature/auth/domain/entities/user_entity/user_entity.dart';
-import 'package:planner_etp/feature/tasks/domain/file_pdf_service.dart';
+import 'package:planner_etp/feature/tasks/domain/datetime_service.dart';
+import 'package:planner_etp/feature/tasks/presentation/pdf_viewer_screen.dart';
 import 'package:planner_etp/feature/tasks/domain/firebase_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart' as tc;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -65,11 +65,28 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
       maxHeight: 320,
     );
     if (pickedFile != null) {
+      File file = File(pickedFile.path);
+      imageNameController.text = pickedFile.name;
+      String imageUrl = await _uploadImage(file);
       setState(() {
-        imageFile = File(pickedFile.path);
-        imageNameController.text = storage.getRandomString(7);
+        imageFile = file;
+        imageNameController.text = imageUrl;
       });
     }
+  }
+
+  Future<String> _uploadImage(File imageFile) async {
+    firebase_storage.Reference storageReference = firebase_storage
+        .FirebaseStorage.instance
+        .ref()
+        .child('task/img/${imageNameController.text}');
+    firebase_storage.UploadTask uploadTask =
+        storageReference.putFile(imageFile);
+    await uploadTask;
+
+    String imageUrl = await storageReference.getDownloadURL();
+
+    return imageUrl;
   }
 
   Future<void> _selectPdfFile() async {
@@ -117,96 +134,6 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
     }
   }
 
-  // Select for Date
-  Future<DateTime> _selectDate(BuildContext context) async {
-    final selected = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
-      selectableDayPredicate: _decideWhichDayToEnable,
-      locale: const Locale("ru", "RU"),
-    );
-    if (selected != null && selected != selectedDate) {
-      setState(() {
-        selectedDate = selected;
-      });
-    }
-    return selectedDate;
-  }
-
-  bool _decideWhichDayToEnable(DateTime day) {
-    if ((day.isAfter(DateTime.now().subtract(const Duration(days: 1))))) {
-      return true;
-    }
-    return false;
-  }
-
-  // Select for Time
-  Future<TimeOfDay> _selectTime() async {
-    final currentTime = DateTime.now();
-    final selected = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(currentTime),
-    );
-    if (selected != null) {
-      final selectedDateTime = DateTime(
-        currentTime.year,
-        currentTime.month,
-        currentTime.day,
-        selected.hour,
-        selected.minute,
-      );
-
-      if (selectedDateTime.isAfter(currentTime)) {
-        setState(() {
-          selectedTime = selected;
-        });
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Выберите будущее время')),
-        );
-      }
-    }
-    return selectedTime;
-  }
-
-  Future _selectStartWorkDateTime(BuildContext context) async {
-    final date = await _selectDate(context);
-    final time = await _selectTime();
-
-    setState(() {
-      startWorkDateTime = DateTime(
-        date.year,
-        date.month,
-        date.day,
-        time.hour,
-        time.minute,
-      );
-    });
-  }
-
-  Future _selectEndWorkDateTime(BuildContext context) async {
-    final date = await _selectDate(context);
-    final time = await _selectTime();
-
-    setState(() {
-      endWorkDateTime = DateTime(
-        date.year,
-        date.month,
-        date.day,
-        time.hour,
-        time.minute,
-      );
-    });
-  }
-
-  String getStartWorkDateTime() =>
-      DateFormat('yyyy-MM-dd kk:mm').format(startWorkDateTime);
-
-  String getEndWorkDateTime() =>
-      DateFormat('yyyy-MM-dd – kk:mm').format(endWorkDateTime);
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -221,11 +148,6 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                 userList = state.usersList.toList();
                 return IconButton(
                   onPressed: () {
-                    if (imageFile != null &&
-                        imageNameController.text.isNotEmpty) {
-                      storage.uploadImage(
-                          imageFile!.path, imageNameController.text);
-                    }
                     if (titleController.text.isNotEmpty &&
                         commentsController.text.isNotEmpty) {
                       context.read<tc.TaskCubit>().createTask({
@@ -326,16 +248,26 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                                   showStartWorkDateTime
                                       ? Flexible(
                                           child: Text(
-                                          getStartWorkDateTime(),
+                                          DateTimeService()
+                                              .getStartWorkDateTime(
+                                                  startWorkDateTime),
                                           style: theme.textTheme.bodyMedium,
                                         ))
                                       : const SizedBox(),
                                 ],
                               ),
                               MaterialButton(
-                                onPressed: () {
-                                  _selectStartWorkDateTime(context);
-                                  showStartWorkDateTime = true;
+                                onPressed: () async {
+                                  await DateTimeService.selectStartWorkDateTime(
+                                      context, startWorkDateTime,
+                                      (DateTime dateTime) {
+                                    setState(() {
+                                      startWorkDateTime = dateTime;
+                                    });
+                                  });
+                                  setState(() {
+                                    showStartWorkDateTime = true;
+                                  });
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -376,16 +308,25 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                                   showEndWorkDateTime
                                       ? Flexible(
                                           child: Text(
-                                          getEndWorkDateTime(),
+                                          DateTimeService().getEndWorkDateTime(
+                                              endWorkDateTime),
                                           style: theme.textTheme.bodyMedium,
                                         ))
                                       : const SizedBox(),
                                 ],
                               ),
                               MaterialButton(
-                                onPressed: () {
-                                  _selectEndWorkDateTime(context);
-                                  showEndWorkDateTime = true;
+                                onPressed: () async {
+                                  await DateTimeService.selectEndWorkDateTime(
+                                      context, endWorkDateTime,
+                                      (DateTime dateTime) {
+                                    setState(() {
+                                      endWorkDateTime = dateTime;
+                                    });
+                                  });
+                                  setState(() {
+                                    showEndWorkDateTime = true;
+                                  });
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(

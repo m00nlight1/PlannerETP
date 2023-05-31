@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/components/card/gf_card.dart';
@@ -10,7 +8,7 @@ import 'package:planner_etp/app/presentation/app_loader.dart';
 import 'package:planner_etp/app/presentation/components/app_snack_bar.dart';
 import 'package:planner_etp/app/presentation/components/message_action_bar.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
-import 'package:planner_etp/feature/tasks/domain/file_pdf_service.dart';
+import 'package:planner_etp/feature/tasks/presentation/pdf_viewer_screen.dart';
 import 'package:planner_etp/feature/tasks/domain/firebase_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
@@ -175,16 +173,14 @@ class _DetailTaskItem extends StatefulWidget {
 }
 
 class _DetailTaskItemState extends State<_DetailTaskItem> {
-  Future<String>? imgDownload;
   String? pathPDF;
 
   @override
   void initState() {
-    if (widget.taskEntity.imageUrl != null) {
-      imgDownload = FileImgStorage().downloadImage(widget.taskEntity.imageUrl ?? "");
-    }
     if (widget.taskEntity.fileUrl != null) {
-      FileImgStorage().createFileOfPdfUrl(widget.taskEntity.fileUrl!).then((path) {
+      FileImgStorage()
+          .createFileOfPdfUrl(widget.taskEntity.fileUrl!)
+          .then((path) {
         setState(() {
           pathPDF = path;
         });
@@ -217,8 +213,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Название', style: theme.textTheme.headlineSmall),
                         Text(widget.taskEntity.title,
-                            maxLines: 10,
-                            style: theme.textTheme.bodyMedium),
+                            maxLines: 10, style: theme.textTheme.bodyMedium),
                       ],
                     ),
                   ),
@@ -306,11 +301,13 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Компания исполнитель',
                             style: theme.textTheme.headlineSmall),
-                        widget.taskEntity.contractorCompany!.isNotEmpty ?
-                        Text(
-                            widget.taskEntity.contractorCompany ?? "Не указано",
-                            maxLines: 10,
-                            style: theme.textTheme.bodyMedium) : const Text("Не указано"),
+                        widget.taskEntity.contractorCompany!.isNotEmpty
+                            ? Text(
+                                widget.taskEntity.contractorCompany ??
+                                    "Не указано",
+                                maxLines: 10,
+                                style: theme.textTheme.bodyMedium)
+                            : const Text("Не указано"),
                       ],
                     ),
                   ),
@@ -329,11 +326,13 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Ответственный мастер',
                             style: theme.textTheme.headlineSmall),
-                        widget.taskEntity.responsibleMaster!.isNotEmpty ?
-                        Text(
-                            widget.taskEntity.responsibleMaster ?? "Не указано",
-                            maxLines: 10,
-                            style: theme.textTheme.bodyMedium) : const Text("Не указано"),
+                        widget.taskEntity.responsibleMaster!.isNotEmpty
+                            ? Text(
+                                widget.taskEntity.responsibleMaster ??
+                                    "Не указано",
+                                maxLines: 10,
+                                style: theme.textTheme.bodyMedium)
+                            : const Text("Не указано"),
                       ],
                     ),
                   ),
@@ -352,10 +351,13 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Представитель',
                             style: theme.textTheme.headlineSmall),
-                        widget.taskEntity.representative!.isNotEmpty ?
-                        Text(widget.taskEntity.representative ?? "Не указано",
-                            maxLines: 10,
-                            style: theme.textTheme.bodyMedium) : const Text("Не указано"),
+                        widget.taskEntity.representative!.isNotEmpty
+                            ? Text(
+                                widget.taskEntity.representative ??
+                                    "Не указано",
+                                maxLines: 10,
+                                style: theme.textTheme.bodyMedium)
+                            : const Text("Не указано"),
                       ],
                     ),
                   ),
@@ -367,7 +369,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 margin: const EdgeInsets.only(left: 12, right: 12),
                 color: Colors.grey.shade200,
                 child: widget.taskEntity.imageUrl == null ||
-                        widget.taskEntity.imageUrl == ""
+                        widget.taskEntity.imageUrl!.isEmpty
                     ? SizedBox(
                         width: 365,
                         height: 100,
@@ -377,6 +379,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Фото',
+                                  maxLines: 3,
                                   style: theme.textTheme.headlineSmall),
                             ],
                           ),
@@ -386,31 +389,18 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                         boxFit: BoxFit.cover,
                         color: Colors.grey.shade200,
                         margin: EdgeInsets.zero,
-                        content: FutureBuilder(
-                          future: imgDownload,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<String> snapshot) {
-                            if (snapshot.connectionState ==
-                                    ConnectionState.done &&
-                                snapshot.hasData) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Фото',
-                                      style: theme.textTheme.headlineSmall),
-                                  Image.network(
-                                    snapshot.data ?? "",
-                                    height: MediaQuery.of(context).size.height *
-                                        0.2,
-                                    width: MediaQuery.of(context).size.width,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return const SizedBox();
-                            }
-                          },
+                        content: SizedBox(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Фото',
+                                  style: theme.textTheme.headlineSmall),
+                              Image.network(
+                                widget.taskEntity.imageUrl!,
+                                fit: BoxFit.cover,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
               ),
@@ -427,10 +417,13 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Уровень оснащения',
                             style: theme.textTheme.headlineSmall),
-                        widget.taskEntity.equipmentLevel!.isNotEmpty ?
-                        Text(widget.taskEntity.equipmentLevel ?? "Не указано",
-                            maxLines: 10,
-                            style: theme.textTheme.bodyMedium) : const Text("Не указано"),
+                        widget.taskEntity.equipmentLevel!.isNotEmpty
+                            ? Text(
+                                widget.taskEntity.equipmentLevel ??
+                                    "Не указано",
+                                maxLines: 10,
+                                style: theme.textTheme.bodyMedium)
+                            : const Text("Не указано"),
                       ],
                     ),
                   ),
@@ -449,10 +442,10 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Уровень персонала',
                             style: theme.textTheme.headlineSmall),
-                        widget.taskEntity.staffLevel!.isNotEmpty ?
-                        Text(widget.taskEntity.staffLevel ?? "Не указано",
-                            maxLines: 10,
-                            style: theme.textTheme.bodyMedium) : const Text("Не указано"),
+                        widget.taskEntity.staffLevel!.isNotEmpty
+                            ? Text(widget.taskEntity.staffLevel ?? "Не указано",
+                                maxLines: 10, style: theme.textTheme.bodyMedium)
+                            : const Text("Не указано"),
                       ],
                     ),
                   ),
@@ -471,11 +464,8 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                       children: [
                         Text('Результаты работы',
                             style: theme.textTheme.headlineSmall),
-                        Text(
-                              widget.taskEntity.resultsOfTheWork ??
-                                  "Не указано",
-                              maxLines: 10,
-                              style: theme.textTheme.bodyMedium),
+                        Text(widget.taskEntity.resultsOfTheWork ?? "Не указано",
+                            maxLines: 10, style: theme.textTheme.bodyMedium),
                       ],
                     ),
                   ),
@@ -495,8 +485,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                         Text('Комментарии',
                             style: theme.textTheme.headlineSmall),
                         Text(widget.taskEntity.content ?? "Не указано",
-                              maxLines: 10,
-                              style: theme.textTheme.bodyMedium),
+                            maxLines: 10, style: theme.textTheme.bodyMedium),
                       ],
                     ),
                   ),
@@ -527,35 +516,35 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                         color: Colors.grey.shade200,
                         margin: EdgeInsets.zero,
                         content: SizedBox(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Документ',
-                                    style: theme.textTheme.headlineSmall),
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(widget.taskEntity.fileName ?? ""),
-                                    MaterialButton(
-                                      onPressed: () {
-                                        if (pathPDF != null) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => PDFScreen(path: pathPDF!),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      child: Text('Просмотр',
-                                          style:
-                                          theme.textTheme.headlineSmall),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Документ',
+                                  style: theme.textTheme.headlineSmall),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(widget.taskEntity.fileName ?? ""),
+                                  MaterialButton(
+                                    onPressed: () {
+                                      if (pathPDF != null) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                PDFScreen(path: pathPDF!),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: Text('Просмотр',
+                                        style: theme.textTheme.headlineSmall),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
               ),

@@ -13,15 +13,6 @@ class FileImgStorage {
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   final Random _rand = Random();
 
-  Future<void> uploadPdfFile(
-      String fileName, File file, SettableMetadata metadata) async {
-    try {
-      await storage.ref('task/files/$fileName').putFile(file, metadata);
-    } on FirebaseException catch (e) {
-      print("Failed with error '${e.code}': ${e.message}");
-    }
-  }
-
   Future<void> uploadImage(String filePath, String fileName) async {
     File file = File(filePath);
     try {
@@ -65,19 +56,6 @@ class FileImgStorage {
       await file.writeAsBytes(bytes);
     }
     return file.path;
-  }
-
-  Future<String> downloadPdfFile(String fileName) async {
-    String downloadUrl =
-        await storage.ref('task/files/$fileName').getDownloadURL();
-    return downloadUrl;
-  }
-
-  Future<String> downloadPdfFilePath(String fileName) async {
-    FullMetadata metadata =
-        await storage.ref('task/files/$fileName').getMetadata();
-    final path = metadata.contentType ?? "";
-    return path;
   }
 
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(

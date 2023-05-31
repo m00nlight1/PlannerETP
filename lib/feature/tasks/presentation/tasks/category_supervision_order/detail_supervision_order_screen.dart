@@ -8,7 +8,7 @@ import 'package:planner_etp/app/presentation/app_loader.dart';
 import 'package:planner_etp/app/presentation/components/app_snack_bar.dart';
 import 'package:planner_etp/app/presentation/components/message_action_bar.dart';
 import 'package:planner_etp/feature/auth/domain/auth_state/auth_cubit.dart';
-import 'package:planner_etp/feature/tasks/domain/file_pdf_service.dart';
+import 'package:planner_etp/feature/tasks/presentation/pdf_viewer_screen.dart';
 import 'package:planner_etp/feature/tasks/domain/firebase_storage_service.dart';
 import 'package:planner_etp/feature/tasks/domain/state/detail/detail_task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
@@ -173,16 +173,14 @@ class _DetailTaskItem extends StatefulWidget {
 }
 
 class _DetailTaskItemState extends State<_DetailTaskItem> {
-  Future<String>? imgDownload;
   String? pathPDF;
 
   @override
   void initState() {
-    if (widget.taskEntity.imageUrl != null) {
-      imgDownload = FileImgStorage().downloadImage(widget.taskEntity.imageUrl ?? "");
-    }
     if (widget.taskEntity.fileUrl != null) {
-      FileImgStorage().createFileOfPdfUrl(widget.taskEntity.fileUrl!).then((path) {
+      FileImgStorage()
+          .createFileOfPdfUrl(widget.taskEntity.fileUrl!)
+          .then((path) {
         setState(() {
           pathPDF = path;
         });
@@ -348,7 +346,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 margin: const EdgeInsets.only(left: 12, right: 12),
                 color: Colors.grey.shade200,
                 child: widget.taskEntity.imageUrl == null ||
-                        widget.taskEntity.imageUrl == ""
+                        widget.taskEntity.imageUrl!.isEmpty
                     ? SizedBox(
                         width: 365,
                         height: 100,
@@ -358,6 +356,7 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Фото',
+                                  maxLines: 3,
                                   style: theme.textTheme.headlineSmall),
                             ],
                           ),
@@ -367,31 +366,18 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                         boxFit: BoxFit.cover,
                         color: Colors.grey.shade200,
                         margin: EdgeInsets.zero,
-                        content: FutureBuilder(
-                          future: imgDownload,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<String> snapshot) {
-                            if (snapshot.connectionState ==
-                                    ConnectionState.done &&
-                                snapshot.hasData) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Фото',
-                                      style: theme.textTheme.headlineSmall),
-                                  Image.network(
-                                    snapshot.data ?? "",
-                                    height: MediaQuery.of(context).size.height *
-                                        0.2,
-                                    width: MediaQuery.of(context).size.width,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return const SizedBox();
-                            }
-                          },
+                        content: SizedBox(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Фото',
+                                  style: theme.textTheme.headlineSmall),
+                              Image.network(
+                                widget.taskEntity.imageUrl!,
+                                fit: BoxFit.cover,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
               ),
@@ -432,55 +418,55 @@ class _DetailTaskItemState extends State<_DetailTaskItem> {
                 color: Colors.grey.shade200,
                 child: widget.taskEntity.fileName!.isEmpty
                     ? SizedBox(
-                  width: 365,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Документы',
-                            maxLines: 3,
-                            style: theme.textTheme.headlineSmall),
-                      ],
-                    ),
-                  ),
-                )
-                    : GFCard(
-                  boxFit: BoxFit.cover,
-                  color: Colors.grey.shade200,
-                  margin: EdgeInsets.zero,
-                  content: SizedBox(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Документ',
-                            style: theme.textTheme.headlineSmall),
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(widget.taskEntity.fileName ?? ""),
-                            MaterialButton(
-                              onPressed: () {
-                                if (pathPDF != null) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => PDFScreen(path: pathPDF!),
-                                    ),
-                                  );
-                                }
-                              },
-                              child: Text('Просмотр',
-                                  style:
-                                  theme.textTheme.headlineSmall),
-                            ),
-                          ],
+                        width: 365,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Документы',
+                                  maxLines: 3,
+                                  style: theme.textTheme.headlineSmall),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      )
+                    : GFCard(
+                        boxFit: BoxFit.cover,
+                        color: Colors.grey.shade200,
+                        margin: EdgeInsets.zero,
+                        content: SizedBox(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Документ',
+                                  style: theme.textTheme.headlineSmall),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(widget.taskEntity.fileName ?? ""),
+                                  MaterialButton(
+                                    onPressed: () {
+                                      if (pathPDF != null) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                PDFScreen(path: pathPDF!),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: Text('Просмотр',
+                                        style: theme.textTheme.headlineSmall),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
               ),
               const SizedBox(height: 10),
               //status
