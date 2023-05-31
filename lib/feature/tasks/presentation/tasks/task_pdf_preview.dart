@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:planner_etp/app/presentation/components/app_snack_bar.dart';
 import 'package:planner_etp/feature/tasks/domain/pdf_generator.dart';
 import 'package:planner_etp/feature/tasks/domain/state/task_cubit.dart';
 import 'package:planner_etp/feature/tasks/domain/task/task_entity.dart';
@@ -51,6 +52,7 @@ class TaskPdfPreview extends StatelessWidget {
       "filePath": fileUrl,
       "idTask": taskEntity.id,
     }).then((_) {
+      AppSnackBar.showSnackBarWithMessage(context, "Файл добавлен в раздел документов");
       context.read<TaskCubit>().fetchDocuments();
     });
   }
