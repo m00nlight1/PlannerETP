@@ -37,68 +37,29 @@ class _TaskItemState extends State<TaskItem> {
     return GestureDetector(
       onTap: () {
         if (widget.taskEntity.category?.id == 1) {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-              DetailObjectLogScreen(id: widget.taskEntity.id.toString(),
-                  taskEntity: widget.taskEntity)
-          ));
-        } if (widget.taskEntity.category?.id == 3) {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-              DetailSimpleTaskScreen(id: widget.taskEntity.id.toString(),
-                  taskEntity: widget.taskEntity)
-          ));
-        } if (widget.taskEntity.category?.id == 2) {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-              DetailSupervisionOrderScreen(id: widget.taskEntity.id.toString(),
-                  taskEntity: widget.taskEntity)
-          ));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => DetailObjectLogScreen(
+                  id: widget.taskEntity.id.toString(),
+                  taskEntity: widget.taskEntity)));
+        }
+        if (widget.taskEntity.category?.id == 3) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => DetailSimpleTaskScreen(
+                  id: widget.taskEntity.id.toString(),
+                  taskEntity: widget.taskEntity)));
+        }
+        if (widget.taskEntity.category?.id == 2) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => DetailSupervisionOrderScreen(
+                  id: widget.taskEntity.id.toString(),
+                  taskEntity: widget.taskEntity)));
         }
       },
       child: GFCard(
         boxFit: BoxFit.cover,
-        content: FutureBuilder(
-          future: imgDownload,
-          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-            if (snapshot.connectionState == ConnectionState.done &&
-                snapshot.hasData) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                          "Создано ${widget.taskEntity.user?.username ?? ""} \n(${widget.taskEntity.user?.email ?? ""})"),
-                      Text(DateFormat.yMMMd("ru").format(widget.taskEntity.createdAt)),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Text(widget.taskEntity.title,
-                      style: theme.textTheme.headlineMedium),
-                  const SizedBox(height: 10),
-                  widget.taskEntity.status == null
-                      ? const SizedBox.shrink()
-                      : CustomPaint(
-                    painter: CurvePainter(),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 22, top: 6),
-                      child: Text(widget.taskEntity.status?.name ?? "",
-                          style: theme.textTheme.displayMedium),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(widget.taskEntity.content ?? "",
-                      style: theme.textTheme.headlineSmall),
-                  const SizedBox(height: 5),
-                  Image.network(
-                    snapshot.data ?? "",
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    width: MediaQuery.of(context).size.width,
-                    fit: BoxFit.cover,
-                  ),
-                ],
-              );
-            } else {
-              return Column(
+        content: widget.taskEntity.imageUrl == null ||
+                widget.taskEntity.imageUrl!.isEmpty
+            ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -106,7 +67,8 @@ class _TaskItemState extends State<TaskItem> {
                     children: [
                       Text(
                           "Создано ${widget.taskEntity.user?.username ?? ""} \n(${widget.taskEntity.user?.email ?? ""})"),
-                      Text(DateFormat.yMMMd("ru").format(widget.taskEntity.createdAt))
+                      Text(DateFormat.yMMMd("ru")
+                          .format(widget.taskEntity.createdAt))
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -116,22 +78,55 @@ class _TaskItemState extends State<TaskItem> {
                   widget.taskEntity.status == null
                       ? const SizedBox.shrink()
                       : CustomPaint(
-                    painter: CurvePainter(),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 22, top: 6),
-                      child: Text(widget.taskEntity.status?.name ?? "",
-                          style: theme.textTheme.displayMedium),
-                    ),
-                  ),
+                          painter: CurvePainter(),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 22, top: 6),
+                            child: Text(widget.taskEntity.status?.name ?? "",
+                                style: theme.textTheme.displayMedium),
+                          ),
+                        ),
                   const SizedBox(height: 10),
                   Text(widget.taskEntity.content ?? "",
                       style: theme.textTheme.headlineSmall),
                   const SizedBox(height: 5),
                 ],
-              );
-            }
-          },
-        ),
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                          "Создано ${widget.taskEntity.user?.username ?? ""} \n(${widget.taskEntity.user?.email ?? ""})"),
+                      Text(DateFormat.yMMMd("ru")
+                          .format(widget.taskEntity.createdAt)),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(widget.taskEntity.title,
+                      style: theme.textTheme.headlineMedium),
+                  const SizedBox(height: 10),
+                  widget.taskEntity.status == null
+                      ? const SizedBox.shrink()
+                      : CustomPaint(
+                          painter: CurvePainter(),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 22, top: 6),
+                            child: Text(widget.taskEntity.status?.name ?? "",
+                                style: theme.textTheme.displayMedium),
+                          ),
+                        ),
+                  const SizedBox(height: 10),
+                  Text(widget.taskEntity.content ?? "",
+                      style: theme.textTheme.headlineSmall),
+                  const SizedBox(height: 5),
+                  Image.network(
+                    widget.taskEntity.imageUrl!,
+                    fit: BoxFit.cover,
+                  ),
+                ],
+              ),
       ),
     );
   }
