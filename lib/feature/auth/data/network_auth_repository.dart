@@ -63,8 +63,8 @@ class NetworkAuthRepository implements AuthRepository {
   Future<String> updatePassword(
       {required String oldPassword, required String newPassword}) async {
     try {
-      final Response response =
-          await appApi.updatePassword(newPassword: newPassword, oldPassword: oldPassword);
+      final Response response = await appApi.updatePassword(
+          newPassword: newPassword, oldPassword: oldPassword);
       return response.data["message"];
     } catch (_) {
       rethrow;

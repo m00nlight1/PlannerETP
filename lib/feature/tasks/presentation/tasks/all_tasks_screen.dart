@@ -28,5 +28,4 @@ class AllTasksScreen extends StatelessWidget {
       ),
     );
   }
-
 }

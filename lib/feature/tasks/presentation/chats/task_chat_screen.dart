@@ -16,13 +16,13 @@ class TaskChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) =>
-            DetailTaskCubit(locator.get<TaskRepository>(), id)..getTaskChat(),
+      create: (context) =>
+          DetailTaskCubit(locator.get<TaskRepository>(), id)..getTaskChat(),
       child: _TaskChatScreenView(taskEntity, id),
     );
   }
-
 }
+
 class _TaskChatScreenView extends StatelessWidget {
   const _TaskChatScreenView(this.taskEntity, this.id);
 

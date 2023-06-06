@@ -262,7 +262,6 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                       color: Colors.grey.shade200,
                       child: SizedBox(
                         width: 166,
-                        height: 135,
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Column(
@@ -326,7 +325,6 @@ class _UpdateTaskViewState extends State<_UpdateTaskView> {
                       color: Colors.grey.shade200,
                       child: SizedBox(
                         width: 166,
-                        height: 135,
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Column(

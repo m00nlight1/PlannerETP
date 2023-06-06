@@ -229,7 +229,6 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                       color: Colors.grey.shade200,
                       child: SizedBox(
                         width: 166,
-                        height: 135,
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Column(
@@ -289,7 +288,6 @@ class _AddObjectLogScreenState extends State<AddObjectLogScreen> {
                       color: Colors.grey.shade200,
                       child: SizedBox(
                         width: 166,
-                        height: 135,
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Column(

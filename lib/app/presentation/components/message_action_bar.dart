@@ -69,7 +69,7 @@ class ActionBarState extends State<ActionBar> {
         .ref()
         .child('task/img/${imageNameController.text}');
     firebase_storage.UploadTask uploadTask =
-    storageReference.putFile(imageFile);
+        storageReference.putFile(imageFile);
     await uploadTask;
 
     String imageUrl = await storageReference.getDownloadURL();
@@ -152,7 +152,7 @@ class ActionBarState extends State<ActionBar> {
                             title: const Text('Выберите источник'),
                             content: SingleChildScrollView(
                               child: ListBody(
-                                children: <Widget> [
+                                children: <Widget>[
                                   GestureDetector(
                                     child: const Text('Сделать фото'),
                                     onTap: () {
@@ -172,8 +172,7 @@ class ActionBarState extends State<ActionBar> {
                               ),
                             ),
                           );
-                        }
-                    );
+                        });
                   },
                   child: const Padding(
                     padding: EdgeInsets.only(),
@@ -199,10 +198,11 @@ class ActionBarState extends State<ActionBar> {
                     ),
                     onSubmitted: (_) {
                       _sendMessage();
-                      String bodyText = messageController.text != "" ? "${userId?.username}: ${messageController.text}" : "${userId?.username}: Изображение";
+                      String bodyText = messageController.text != ""
+                          ? "${userId?.username}: ${messageController.text}"
+                          : "${userId?.username}: Изображение";
                       AppNotifications().showNotification(
-                          title: "Новое сообщение",
-                          body: bodyText);
+                          title: "Новое сообщение", body: bodyText);
                     },
                   ),
                 ),
@@ -217,10 +217,11 @@ class ActionBarState extends State<ActionBar> {
                       if (imageNameController.text.isNotEmpty ||
                           messageController.text.isNotEmpty) {
                         _sendMessage();
-                        String bodyText = messageController.text != "" ? "${userId?.username}: ${messageController.text}" : "${userId?.username}: Изображение";
+                        String bodyText = messageController.text != ""
+                            ? "${userId?.username}: ${messageController.text}"
+                            : "${userId?.username}: Изображение";
                         AppNotifications().showNotification(
-                            title: "Новое сообщение",
-                            body: bodyText);
+                            title: "Новое сообщение", body: bodyText);
                       }
                     }),
               ),

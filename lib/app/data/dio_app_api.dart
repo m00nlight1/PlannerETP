@@ -163,7 +163,7 @@ class DioAppApi implements AppApi {
 
   @override
   Future sentMessage(Map args) {
-    return dio.post("/data/messages", data:  {
+    return dio.post("/data/messages", data: {
       "content": args["content"],
       "imageUrl": args["imageUrl"],
       "idTask": args["idTask"],
@@ -192,7 +192,7 @@ class DioAppApi implements AppApi {
 
   @override
   Future createDocument(Map args) {
-    return dio.post("/data/documents", data:  {
+    return dio.post("/data/documents", data: {
       "name": args["name"],
       "filePath": args["filePath"],
       "idTask": args["idTask"],

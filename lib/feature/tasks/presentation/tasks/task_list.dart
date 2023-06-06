@@ -48,14 +48,17 @@ class _TaskListState extends State<TaskList> {
             if (selectedCategories.contains('Мои посты')) {
               return task.user!.id == userId;
             }
-            return task.title.toLowerCase().contains(textSearchEditingController.text.toLowerCase());
+            return task.title
+                .toLowerCase()
+                .contains(textSearchEditingController.text.toLowerCase());
           }).toList();
 
           return SingleChildScrollView(
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 6.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 14.0, vertical: 6.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -71,27 +74,27 @@ class _TaskListState extends State<TaskList> {
                         children: filteringCategories
                             .map(
                               (category) => FilterChip(
-                            selected: selectedCategories.contains(category),
-                            label: Text(category),
-                            labelStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            backgroundColor: const Color(0xFF0d74ba),
-                            selectedColor: Colors.lightGreen,
-                            checkmarkColor: Colors.white,
-                            onSelected: (selected) {
-                              setState(() {
-                                if (selected) {
-                                  selectedCategories.add(category);
-                                } else {
-                                  selectedCategories.remove(category);
-                                }
-                              });
-                            },
-                          ),
-                        )
+                                selected: selectedCategories.contains(category),
+                                label: Text(category),
+                                labelStyle: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                backgroundColor: const Color(0xFF0d74ba),
+                                selectedColor: Colors.lightGreen,
+                                checkmarkColor: Colors.white,
+                                onSelected: (selected) {
+                                  setState(() {
+                                    if (selected) {
+                                      selectedCategories.add(category);
+                                    } else {
+                                      selectedCategories.remove(category);
+                                    }
+                                  });
+                                },
+                              ),
+                            )
                             .toList(),
                       ),
                     ],
@@ -101,24 +104,39 @@ class _TaskListState extends State<TaskList> {
                   Column(
                     children: [
                       buildExpansionTile(
-                        title: "Открыто (${filterTasksSearch.where((task) => task.status?.id == 1).length.toString()})",
-                        tasks: filterTasksSearch.where((task) => task.status?.id == 1).toList(),
+                        title:
+                            "Открыто (${filterTasksSearch.where((task) => task.status?.id == 1).length.toString()})",
+                        tasks: filterTasksSearch
+                            .where((task) => task.status?.id == 1)
+                            .toList(),
                       ),
                       buildExpansionTile(
-                        title: "В работе (${filterTasksSearch.where((task) => task.status?.id == 2).length.toString()})",
-                        tasks: filterTasksSearch.where((task) => task.status?.id == 2).toList(),
+                        title:
+                            "В работе (${filterTasksSearch.where((task) => task.status?.id == 2).length.toString()})",
+                        tasks: filterTasksSearch
+                            .where((task) => task.status?.id == 2)
+                            .toList(),
                       ),
                       buildExpansionTile(
-                        title: "Решено (${filterTasksSearch.where((task) => task.status?.id == 3).length.toString()})",
-                        tasks: filterTasksSearch.where((task) => task.status?.id == 3).toList(),
+                        title:
+                            "Решено (${filterTasksSearch.where((task) => task.status?.id == 3).length.toString()})",
+                        tasks: filterTasksSearch
+                            .where((task) => task.status?.id == 3)
+                            .toList(),
                       ),
                       buildExpansionTile(
-                        title: "Закрыто (${filterTasksSearch.where((task) => task.status?.id == 4).length.toString()})",
-                        tasks: filterTasksSearch.where((task) => task.status?.id == 4).toList(),
+                        title:
+                            "Закрыто (${filterTasksSearch.where((task) => task.status?.id == 4).length.toString()})",
+                        tasks: filterTasksSearch
+                            .where((task) => task.status?.id == 4)
+                            .toList(),
                       ),
                       buildExpansionTile(
-                        title: "Без статуса (${filterTasksSearch.where((task) => task.category?.id == 1).length.toString()})",
-                        tasks: filterTasksSearch.where((task) => task.category?.id == 1).toList(),
+                        title:
+                            "Без статуса (${filterTasksSearch.where((task) => task.category?.id == 1).length.toString()})",
+                        tasks: filterTasksSearch
+                            .where((task) => task.category?.id == 1)
+                            .toList(),
                       ),
                     ],
                   )
@@ -126,24 +144,39 @@ class _TaskListState extends State<TaskList> {
                   Column(
                     children: [
                       buildExpansionTile(
-                        title: "Открыто (${filterTasks.where((task) => task.status?.id == 1).length.toString()})",
-                        tasks: filterTasks.where((task) => task.status?.id == 1).toList(),
+                        title:
+                            "Открыто (${filterTasks.where((task) => task.status?.id == 1).length.toString()})",
+                        tasks: filterTasks
+                            .where((task) => task.status?.id == 1)
+                            .toList(),
                       ),
                       buildExpansionTile(
-                        title: "В работе (${filterTasks.where((task) => task.status?.id == 2).length.toString()})",
-                        tasks: filterTasks.where((task) => task.status?.id == 2).toList(),
+                        title:
+                            "В работе (${filterTasks.where((task) => task.status?.id == 2).length.toString()})",
+                        tasks: filterTasks
+                            .where((task) => task.status?.id == 2)
+                            .toList(),
                       ),
                       buildExpansionTile(
-                        title: "Решено (${filterTasks.where((task) => task.status?.id == 3).length.toString()})",
-                        tasks: filterTasks.where((task) => task.status?.id == 3).toList(),
+                        title:
+                            "Решено (${filterTasks.where((task) => task.status?.id == 3).length.toString()})",
+                        tasks: filterTasks
+                            .where((task) => task.status?.id == 3)
+                            .toList(),
                       ),
                       buildExpansionTile(
-                        title: "Закрыто (${filterTasks.where((task) => task.status?.id == 4).length.toString()})",
-                        tasks: filterTasks.where((task) => task.status?.id == 4).toList(),
+                        title:
+                            "Закрыто (${filterTasks.where((task) => task.status?.id == 4).length.toString()})",
+                        tasks: filterTasks
+                            .where((task) => task.status?.id == 4)
+                            .toList(),
                       ),
                       buildExpansionTile(
-                        title: "Без статуса (${filterTasks.where((task) => task.category?.id == 1).length.toString()})",
-                        tasks: filterTasks.where((task) => task.category?.id == 1).toList(),
+                        title:
+                            "Без статуса (${filterTasks.where((task) => task.category?.id == 1).length.toString()})",
+                        tasks: filterTasks
+                            .where((task) => task.category?.id == 1)
+                            .toList(),
                       ),
                     ],
                   ),
@@ -158,7 +191,8 @@ class _TaskListState extends State<TaskList> {
           child: Container(
             alignment: Alignment.center,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12),
               child: Text(
                 "Задач нет",
                 style: TextStyle(
@@ -174,7 +208,8 @@ class _TaskListState extends State<TaskList> {
     );
   }
 
-  ExpansionTile buildExpansionTile({required String title, required List<TaskEntity> tasks}) {
+  ExpansionTile buildExpansionTile(
+      {required String title, required List<TaskEntity> tasks}) {
     return ExpansionTile(
       initiallyExpanded: true,
       title: Text("$title"),

@@ -22,7 +22,9 @@ class DocumentItemState extends State<DocumentItem> {
   void initState() {
     super.initState();
     initializeDateFormatting("ru");
-    FileImgStorage().createFileOfPdfUrl(widget.documentEntity.filePath).then((path) {
+    FileImgStorage()
+        .createFileOfPdfUrl(widget.documentEntity.filePath)
+        .then((path) {
       setState(() {
         pathPDF = path;
       });

@@ -38,12 +38,14 @@ class TaskPdfPreview extends StatelessWidget {
     final pdfBytes = await storage.generatePdf(taskEntity);
     final pdfFileName = '${taskEntity.title}.pdf';
 
-    final firebase_storage.Reference storageRef =
-    firebase_storage.FirebaseStorage.instance.ref().child('task/files/$pdfFileName');
+    final firebase_storage.Reference storageRef = firebase_storage
+        .FirebaseStorage.instance
+        .ref()
+        .child('task/files/$pdfFileName');
 
     final firebase_storage.UploadTask uploadTask = storageRef.putData(pdfBytes);
     final firebase_storage.TaskSnapshot taskSnapshot =
-    await uploadTask.whenComplete(() {});
+        await uploadTask.whenComplete(() {});
 
     final String fileUrl = await taskSnapshot.ref.getDownloadURL();
 
@@ -52,7 +54,8 @@ class TaskPdfPreview extends StatelessWidget {
       "filePath": fileUrl,
       "idTask": taskEntity.id,
     }).then((_) {
-      AppSnackBar.showSnackBarWithMessage(context, "Файл добавлен в раздел документов");
+      AppSnackBar.showSnackBarWithMessage(
+          context, "Файл добавлен в раздел документов");
       context.read<TaskCubit>().fetchDocuments();
     });
   }

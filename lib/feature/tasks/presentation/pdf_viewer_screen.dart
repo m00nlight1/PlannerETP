@@ -38,7 +38,6 @@ class PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
             defaultPage: currentPage!,
             fitPolicy: FitPolicy.BOTH,
             preventLinkNavigation: false,
-            // if set to true the link is handled in flutter
             onRender: (pages) {
               setState(() {
                 pages = pages;

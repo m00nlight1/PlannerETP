@@ -4,11 +4,11 @@ int id = 0;
 
 class AppNotifications {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   Future<void> initNotification() async {
     AndroidInitializationSettings initializationSettingsAndroid =
-    const AndroidInitializationSettings('app_icon');
+        const AndroidInitializationSettings('app_icon');
 
     var initializationSettingsIOS = DarwinInitializationSettings(
         requestAlertPermission: true,

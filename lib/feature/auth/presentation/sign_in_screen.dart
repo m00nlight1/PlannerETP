@@ -49,14 +49,6 @@ class SignInScreen extends StatelessWidget {
     }
   }
 
-  // Future<void> sendPasswordResetEmail(String email) async {
-  //   try {
-  //     await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-  //   } catch (_) {
-  //     rethrow;
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

@@ -44,13 +44,15 @@ class _AllDocumentsScreenState extends State<AllDocumentsScreen> {
 
   Future<void> _uploadPDFFile(File file) async {
     try {
-      final firebase_storage.Reference storageRef =
-      firebase_storage.FirebaseStorage.instance.ref().child('task/files/${fileNameController.text}');
+      final firebase_storage.Reference storageRef = firebase_storage
+          .FirebaseStorage.instance
+          .ref()
+          .child('task/files/${fileNameController.text}');
 
       final firebase_storage.UploadTask uploadTask = storageRef.putFile(file);
 
       final firebase_storage.TaskSnapshot taskSnapshot =
-      await uploadTask.whenComplete(() => null);
+          await uploadTask.whenComplete(() => null);
 
       final String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 

@@ -22,7 +22,6 @@ class ProfileScreen extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () {
-                // Navigator.pop(context);
                 context.read<AuthCubit>().logOut();
               },
               icon: const Icon(Icons.logout)),
@@ -214,7 +213,8 @@ class _UpdateProfileDialogState extends State<_UpdateProfileDialog> {
                     final username = usernameController.text;
                     final authCubit = context.read<AuthCubit>();
                     updateProfile(
-                            email: email, username: username, context: context).then((_) async {
+                            email: email, username: username, context: context)
+                        .then((_) async {
                       if (auth.currentUser != null) {
                         if (auth.currentUser!.emailVerified == false) {
                           await Navigator.push(

@@ -104,7 +104,7 @@ class PdfGenerator {
                 //Компания исполнитель
                 Row(
                   children: [
-                    Text('Компания исполнитель:',
+                    Text(taskEntity.contractorCompany != null ? 'Компания исполнитель:' : "",
                         style: TextStyle(font: boldFont)),
                     SizedBox(width: 10),
                     Text(taskEntity.contractorCompany ?? "",
@@ -114,7 +114,7 @@ class PdfGenerator {
                 //Ответственный мастер
                 Row(
                   children: [
-                    Text('Ответственный мастер:',
+                    Text(taskEntity.responsibleMaster != null ? 'Ответственный мастер:' : "",
                         style: TextStyle(font: boldFont)),
                     SizedBox(width: 10),
                     Text(taskEntity.responsibleMaster ?? "",
@@ -124,9 +124,60 @@ class PdfGenerator {
                 //Представитель
                 Row(
                   children: [
-                    Text('Представитель:', style: TextStyle(font: boldFont)),
+                    Text(taskEntity.representative != null ?'Представитель:' : "",
+                        style: TextStyle(font: boldFont)),
                     SizedBox(width: 10),
                     Text(taskEntity.representative ?? "",
+                        style: TextStyle(font: font)),
+                  ],
+                ),
+                //Уровень оснащения
+                Row(
+                  children: [
+                    Text(taskEntity.equipmentLevel != null ? 'Уровень оснащения:' : "",
+                        style: TextStyle(font: boldFont)),
+                    SizedBox(width: 10),
+                    Text(taskEntity.equipmentLevel ?? "",
+                        style: TextStyle(font: font)),
+                  ],
+                ),
+                //Уровень персонала
+                Row(
+                  children: [
+                    Text(taskEntity.staffLevel != null ?'Уровень персонала:' : "",
+                        style: TextStyle(font: boldFont)),
+                    SizedBox(width: 10),
+                    Text(taskEntity.staffLevel ?? "",
+                        style: TextStyle(font: font)),
+                  ],
+                ),
+                //Отрасль
+                Row(
+                  children: [
+                    Text(taskEntity.industry != null ?'Отрасль:' : "",
+                        style: TextStyle(font: boldFont)),
+                    SizedBox(width: 10),
+                    Text(taskEntity.industry!.name ?? "",
+                        style: TextStyle(font: font)),
+                  ],
+                ),
+                //Тип предписания
+                Row(
+                  children: [
+                    Text(taskEntity.taskType != null ? 'Тип предписания:' : "",
+                        style: TextStyle(font: boldFont)),
+                    SizedBox(width: 10),
+                    Text(taskEntity.taskType!.name ?? "",
+                        style: TextStyle(font: font)),
+                  ],
+                ),
+                //Расходы
+                Row(
+                  children: [
+                    Text(taskEntity.expenses != null ?'Расходы:' : "",
+                        style: TextStyle(font: boldFont)),
+                    SizedBox(width: 10),
+                    Text(taskEntity.expenses ?? "",
                         style: TextStyle(font: font)),
                   ],
                 ),
@@ -163,7 +214,24 @@ class PdfGenerator {
           children: [
             Text('Описание:', style: TextStyle(font: boldFont)),
             SizedBox(height: 10),
-            Text(taskEntity.content ?? "", style: TextStyle(font: font)),
+            Text(
+              taskEntity.content ?? "",
+              style: TextStyle(font: font),
+            ),
+
+          ],
+        ),
+        Divider(),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(taskEntity.resultsOfTheWork != null ? 'Результаты работ:' : "", style: TextStyle(font: boldFont)),
+            SizedBox(height: 10),
+            Text(
+              taskEntity.resultsOfTheWork ?? "",
+              style: TextStyle(font: font),
+            ),
+
           ],
         ),
       ],
@@ -171,4 +239,5 @@ class PdfGenerator {
 
     return pdf.save();
   }
+
 }
