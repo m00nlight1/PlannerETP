@@ -84,7 +84,7 @@ class _MessageTileState extends State<_MessageTile> {
                   children: [
                     Text(widget.message.content!,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                         )),
                     widget.message.imageUrl!.isEmpty ||
                             widget.message.imageUrl == null
